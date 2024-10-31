@@ -8,6 +8,7 @@ class ProgramMemory
 public:
     ProgramMemory();
     void allocate(const std::string& value);
+    const std::string& retrieve(int address);
 private:
     int highestPtr;  // To determine free memory
     std::unordered_map<int, std::string> memory;
