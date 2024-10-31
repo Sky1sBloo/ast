@@ -12,3 +12,11 @@ TEST(PROGRAM_MEMORY_TEST, ALLOCATION_AND_ACCESS)
 
     ASSERT_EQ(value, testValue);
 }
+
+TEST(PROGRAM_MEMORY_TEST, INVALID_ACCESS)
+{
+    ProgramMemory programMemory;
+    std::string value = programMemory.retrieve(20);
+
+    ASSERT_EQ(value, "INVALID_ACCESS");
+}
