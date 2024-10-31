@@ -13,6 +13,12 @@ public:
      * @return The address of the memory
     */
     int allocate(const std::string& value);
+
+    /**
+     * Retrieves the value of address
+     *
+     * Throws std::out_of_range if address is invalid
+    */
     const std::string& retrieve(int address);
 private:
     int highestPtr;  // To determine free memory

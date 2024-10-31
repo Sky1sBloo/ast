@@ -1,8 +1,8 @@
 #include "ProgramMemory.hpp"
+#include <stdexcept>
 
 ProgramMemory::ProgramMemory() :
-    highestPtr(1),
-    memory({{0, "INVALID_ACCESS"}})
+    highestPtr(0)
 {
 }
 
@@ -19,5 +19,5 @@ const std::string& ProgramMemory::retrieve(int address)
     if (memory.contains(address)) {
         return memory[address];
     }
-    return memory[0];
+    throw std::out_of_range("Invalid address access");
 }
