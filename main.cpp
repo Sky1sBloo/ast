@@ -1,8 +1,6 @@
-#include <iostream>
 #include "ParseNodes.hpp"
+#include <iostream>
 
 int main()
 {
-    ConstExpr<int> test(5);
-    std::cout << test.getValue() << std::endl;
 }
