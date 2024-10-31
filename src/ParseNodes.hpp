@@ -2,15 +2,17 @@
 #include <memory>
 #include <string>
 #include <variant>
+#include "DataTypes.hpp"
 
 class ExprNode;
 using ExprNodePtr = std::unique_ptr<ExprNode>;
 
 class LiteralExpr {
 public:
-    LiteralExpr(const std::string& newValue);
+    LiteralExpr(DataType newDataType, const std::string& newValue);
 
 private:
+    DataType type;
     const std::string value;
 };
 
@@ -20,6 +22,7 @@ public:
 
 private:
     const std::string id;
+    int memoryAddress;
 };
 
 class BinaryConditionExpr {
