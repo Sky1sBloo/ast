@@ -24,7 +24,7 @@ private:
 
 class BinaryConditionExpr {
 public:
-    enum class Type {
+    enum class Types {
         EQUALS,
         GREATER,
         LESS,
@@ -32,13 +32,13 @@ public:
         LESS_EQUAL
     };
 
-    BinaryConditionExpr(Type conditionType, ExprNodePtr newExprA, ExprNodePtr newExprB);
+    BinaryConditionExpr(Types conditionType, ExprNodePtr newExprA, ExprNodePtr newExprB);
     bool getCondition();
 
 private:
+    Types type;
     ExprNodePtr exprA;
     ExprNodePtr exprB;
-    Type type;
 };
 
 class ExprNode {
