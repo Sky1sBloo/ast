@@ -1,6 +1,10 @@
 #pragma once
 #include <string>
+#include <memory>
 #include <variant>
+
+class ExprNode;
+using ExprNodePtr = std::unique_ptr<ExprNode>;
 
 class LiteralExpr {
 public:
