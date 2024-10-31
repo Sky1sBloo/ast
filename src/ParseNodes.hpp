@@ -24,7 +24,7 @@ public:
 };
 
 template <typename T>
-class ConstExpr {
+class ConstExpr : public Expr<T> {
 public:
     ConstExpr(const T& newValue)
         : value(newValue)
@@ -37,7 +37,7 @@ private:
 };
 
 template <typename T>
-class BinaryConditionExpr {
+class BinaryConditionExpr : public Expr<T> {
 public:
     enum class Types {
         EQUALS,
