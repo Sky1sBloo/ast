@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
 #include <memory>
+#include <string>
 #include <variant>
 
 class ExprNode;
@@ -20,6 +20,25 @@ public:
 
 private:
     const std::string id;
+};
+
+class BinaryConditionExpr {
+public:
+    enum class Type {
+        EQUALS,
+        GREATER,
+        LESS,
+        GREATER_EQUAL,
+        LESS_EQUAL
+    };
+
+    BinaryConditionExpr(Type conditionType, ExprNodePtr newExprA, ExprNodePtr newExprB);
+    bool getCondition();
+
+private:
+    ExprNodePtr exprA;
+    ExprNodePtr exprB;
+    Type type;
 };
 
 class ExprNode {
