@@ -3,7 +3,6 @@
 #include <string>
 
 // Class handling program memory such as variables
-#include <unordered_map>
 class ProgramMemory 
 {
 public:
