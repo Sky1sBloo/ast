@@ -6,10 +6,11 @@ ProgramMemory::ProgramMemory() :
 {
 }
 
-void ProgramMemory::allocate(const std::string& value)
+int ProgramMemory::allocate(const std::string& value)
 {
     memory.insert({highestPtr, value});
     highestPtr++;
+    return highestPtr - 1;
 }
 
 

@@ -7,7 +7,12 @@ class ProgramMemory
 {
 public:
     ProgramMemory();
-    void allocate(const std::string& value);
+    /**
+     * Allocates a value to the memory
+     *
+     * @return The address of the memory
+    */
+    int allocate(const std::string& value);
     const std::string& retrieve(int address);
 private:
     int highestPtr;  // To determine free memory
