@@ -12,7 +12,7 @@ template <typename T>
 class ConditionExpr;
 
 template <typename T>
-using ExprNode = std::variant<Expr<T>, ConstExpr<T>, ConditionExpr<T>>;
+using ExprNode = std::variant<ConstExpr<T>, ConditionExpr<T>>;
 
 
 
@@ -20,7 +20,7 @@ template <typename T>
 class Expr {
 public:
     virtual ~Expr() {}
-    virtual const T& getValue() const;
+    virtual const T& getValue() const = 0;
 };
 
 template <typename T>
