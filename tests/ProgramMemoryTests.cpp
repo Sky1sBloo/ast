@@ -21,3 +21,20 @@ TEST(PROGRAM_MEMORY_TEST, INVALID_ACCESS)
     ProgramMemory programMemory;
     EXPECT_THROW(std::string value = programMemory.retrieve(20), std::out_of_range);
 }
+
+TEST(PROGRAM_MEMORY_TEST, SET)
+{
+    ProgramMemory programMemory;
+    std::string testValue = "123";
+    std::string updatedValue = "234";
+
+    int addr = programMemory.allocate(testValue);
+    EXPECT_NO_THROW({
+        programMemory.set(addr, updatedValue);
+    });
+
+    EXPECT_NO_THROW({
+        std::string value = programMemory.retrieve(addr);
+        ASSERT_EQ(value, updatedValue);
+    });
+}
