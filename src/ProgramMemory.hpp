@@ -28,6 +28,6 @@ public:
     */
     void set(int address, const std::string& value);
 private:
-    int highestPtr;  // To determine free memory
-    std::unordered_map<int, std::string> memory;
+    int _highestPtr;  // To determine free memory
+    std::unordered_map<int, std::string> _memory;
 };

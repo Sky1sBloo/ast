@@ -36,8 +36,8 @@ public:
     void setValue(const std::string& id, const std::string& value);
 
 private:
-    std::unordered_map<std::string, int> variables;
-    std::shared_ptr<ProgramMemory> memory;
+    std::unordered_map<std::string, int> _variables;
+    std::shared_ptr<ProgramMemory> _memory;
 };
 
 class BadVariableHandling : public std::runtime_error {
