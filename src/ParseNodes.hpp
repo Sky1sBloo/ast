@@ -18,10 +18,12 @@ private:
     const std::string value;
 };
 
-class VariableInitializationExpr {
+/**
+ */
+class InitializationExpr {
 public:
-    VariableInitializationExpr(const std::string& newId, std::shared_ptr<ProgramMemory> programMemory);
-    VariableInitializationExpr(const std::string& newId, const std::string& value, std::shared_ptr<ProgramMemory> programMemory);
+    InitializationExpr(const std::string& newId, std::shared_ptr<ProgramMemory> programMemory);
+    InitializationExpr(const std::string& newId, const std::string& value, std::shared_ptr<ProgramMemory> programMemory);
 private:
     const std::string id;
     int memoryAddress; // -1 if unallocated
@@ -33,11 +35,7 @@ private:
  */
 class AssignExpr {
 public:
-    AssignExpr(std::shared_ptr<VariableExpr> toAssign, ExprNodePtr value);
-
 private:
-    std::shared_ptr<VariableExpr> expr;
-    ExprNodePtr value;
 };
 
 class BinaryConditionExpr {
@@ -67,5 +65,5 @@ public:
     }
 
 private:
-    std::variant<LiteralExpr, VariableExpr> type;
+    std::variant<LiteralExpr, InitializationExpr> type;
 };
