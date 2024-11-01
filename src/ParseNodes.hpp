@@ -23,6 +23,8 @@ public:
     VariableExpr(const std::string& newId, std::shared_ptr<ProgramMemory> programMemory);
     VariableExpr(const std::string& newId, const std::string& value, std::shared_ptr<ProgramMemory> programMemory);
 
+    void setValue(const std::string& newValue);
+
     const std::string& getValue() const;
 
 private:
@@ -31,8 +33,13 @@ private:
     std::shared_ptr<ProgramMemory> memory;
 };
 
+/**
+ * Node for assigning values to variables
+ */
 class AssignExpr {
 public:
+    AssignExpr(std::shared_ptr<VariableExpr> toAssign, ExprNodePtr value);
+
 private:
     std::shared_ptr<VariableExpr> expr;
     ExprNodePtr value;
