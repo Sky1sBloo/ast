@@ -13,7 +13,7 @@ using ExprNodePtr = std::unique_ptr<ExprNode>;
  */
 class ReturnableExpr {
 public:
-    virtual ~ReturnableExpr() = 0;
+    virtual ~ReturnableExpr() = default;
     virtual const std::string& getValue() const = 0;
 };
 
@@ -22,7 +22,7 @@ public:
  */
 class TerminalExpr {
 public:
-    virtual ~TerminalExpr() = 0;
+    virtual ~TerminalExpr() = default;
     virtual void performAction() = 0;
 };
 
