@@ -42,13 +42,16 @@ private:
 /**
  * Node for initialializing variables
  */
-class InitializationExpr {
+class InitializationExpr : public TerminalExpr {
 public:
-    InitializationExpr(ProgramMemory& programMemory);
-    InitializationExpr(std::unique_ptr<ReturnableExpr> exprNode, ProgramMemory& programMemory);
+    InitializationExpr(std::shared_ptr<ProgramMemory> programMemory);
+    InitializationExpr(std::unique_ptr<ReturnableExpr> exprNode, std::shared_ptr<ProgramMemory> programMemory);
+
+    void performAction() override;
 
 private:
     std::unique_ptr<ReturnableExpr> value;
+    std::shared_ptr<ProgramMemory> memory;
 };
 
 /**

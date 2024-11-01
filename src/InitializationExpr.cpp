@@ -1,12 +1,18 @@
 #include "ParseNodes.hpp"
 
-InitializationExpr::InitializationExpr(ProgramMemory& programMemory)
+InitializationExpr::InitializationExpr(std::shared_ptr<ProgramMemory> programMemory)
+    : value(nullptr)
+    , memory(programMemory)
 {
-    programMemory.allocate("");
 }
 
-InitializationExpr::InitializationExpr(std::unique_ptr<ReturnableExpr> exprNode, ProgramMemory& programMemory) :
-    value(std::move(exprNode))
+InitializationExpr::InitializationExpr(std::unique_ptr<ReturnableExpr> exprNode, std::shared_ptr<ProgramMemory> programMemory)
+    : value(std::move(exprNode))
+    , memory(programMemory)
 {
-    programMemory.allocate(value->getValue());
+}
+
+void InitializationExpr::performAction()
+{
+    memory->allocate(value ? value->getValue() : "");
 }
