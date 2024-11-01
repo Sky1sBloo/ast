@@ -26,7 +26,7 @@ public:
      *
      * Throws BadVariableHandling on fail
     */
-    const std::string& getValue(const std::string& id);
+    const std::string& getValue(const std::string& id) const;
 
 private:
     std::unordered_map<std::string, int> variables;

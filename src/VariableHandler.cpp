@@ -14,7 +14,7 @@ void VariableHandler::allocate(const std::string& id, const std::string& value)
     variables.insert({ id, memory->allocate(value) });
 }
 
-const std::string& VariableHandler::getValue(const std::string& id)
+const std::string& VariableHandler::getValue(const std::string& id) const
 {
     if (!variables.contains(id)) {
         throw BadVariableHandling("Tried to access nonexisting variable");
