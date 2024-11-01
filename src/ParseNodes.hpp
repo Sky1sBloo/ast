@@ -25,9 +25,6 @@ class InitializationExpr {
 public:
     InitializationExpr(std::shared_ptr<ProgramMemory> programMemory);
     InitializationExpr(const std::string& value, std::shared_ptr<ProgramMemory> programMemory);
-private:
-    int memoryAddress; // -1 if unallocated
-    std::shared_ptr<ProgramMemory> memory;
 };
 
 /**
