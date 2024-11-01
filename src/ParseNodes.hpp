@@ -2,7 +2,9 @@
 #include <memory>
 #include <string>
 #include <variant>
+
 #include "DataTypes.hpp"
+#include "ProgramMemory.hpp"
 
 class ExprNode;
 using ExprNodePtr = std::unique_ptr<ExprNode>;
@@ -18,11 +20,22 @@ private:
 
 class VariableExpr {
 public:
-    VariableExpr(const std::string& id);
+    VariableExpr(const std::string& newId, std::shared_ptr<ProgramMemory> programMemory);
+    VariableExpr(const std::string& newId, const std::string& value, std::shared_ptr<ProgramMemory> programMemory);
+
+    const std::string& getValue() const;
 
 private:
     const std::string id;
-    int memoryAddress;
+    int memoryAddress; // -1 if unallocated
+    std::shared_ptr<ProgramMemory> memory;
+};
+
+class AssignExpr {
+public:
+private:
+    std::shared_ptr<VariableExpr> expr;
+    ExprNodePtr value;
 };
 
 class BinaryConditionExpr {
