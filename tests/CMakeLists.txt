@@ -1,6 +1,7 @@
 add_executable(
     ast-unit-tests
     ProgramMemoryTests.cpp
+    VariableHandlerTests.cpp
     ParseNodesTests.cpp
 )
 

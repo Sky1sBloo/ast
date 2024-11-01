@@ -1,18 +1,23 @@
 #include "ParseNodes.hpp"
-
-InitializationExpr::InitializationExpr(std::shared_ptr<ProgramMemory> programMemory)
-    : value(nullptr)
-    , memory(programMemory)
+InitializationExpr::InitializationExpr(const std::string& varId, std::shared_ptr<VariableHandler> variableHandler)
+    : id(varId)
+    , value(nullptr)
+    , handler(variableHandler)
 {
 }
 
-InitializationExpr::InitializationExpr(std::unique_ptr<ReturnableExpr> exprNode, std::shared_ptr<ProgramMemory> programMemory)
-    : value(std::move(exprNode))
-    , memory(programMemory)
+InitializationExpr::InitializationExpr(const std::string& varId, std::unique_ptr<ReturnableExpr> exprNode, std::shared_ptr<VariableHandler> variableHandler)
+    : id(varId)
+    , value(std::move(exprNode))
+    , handler(variableHandler)
 {
 }
 
 void InitializationExpr::performAction()
 {
-    memory->allocate(value ? value->getValue() : "");
+    if (value) {
+        handler->allocate(id, value->getValue());
+    } else {
+        handler->allocate(id);
+    }
 }

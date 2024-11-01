@@ -3,7 +3,7 @@
 #include <string>
 
 #include "DataTypes.hpp"
-#include "ProgramMemory.hpp"
+#include "VariableHandler.hpp"
 
 class ExprNode;
 using ExprNodePtr = std::unique_ptr<ExprNode>;
@@ -44,14 +44,15 @@ private:
  */
 class InitializationExpr : public TerminalExpr {
 public:
-    InitializationExpr(std::shared_ptr<ProgramMemory> programMemory);
-    InitializationExpr(std::unique_ptr<ReturnableExpr> exprNode, std::shared_ptr<ProgramMemory> programMemory);
+    InitializationExpr(const std::string& varId, std::shared_ptr<VariableHandler> variableHandler);
+    InitializationExpr(const std::string& varId, std::unique_ptr<ReturnableExpr> exprNode, std::shared_ptr<VariableHandler> variableHandler);
 
     void performAction() override;
 
 private:
+    const std::string id;
     std::unique_ptr<ReturnableExpr> value;
-    std::shared_ptr<ProgramMemory> memory;
+    std::shared_ptr<VariableHandler> handler;
 };
 
 /**
@@ -59,12 +60,12 @@ private:
  */
 class AssignExpr : public TerminalExpr {
 public:
-    AssignExpr(int setAddress, std::unique_ptr<ReturnableExpr> exprNode, std::shared_ptr<ProgramMemory> programMemory);
+    AssignExpr(const std::string& varId, std::unique_ptr<ReturnableExpr> exprNode, std::shared_ptr<VariableHandler> variableHandler);
 
     void performAction() override;
 private:
-    int address;
+    const std::string id;
     std::unique_ptr<ReturnableExpr> value;
-    std::shared_ptr<ProgramMemory> memory;
+    std::shared_ptr<VariableHandler> handler;
 };
 
