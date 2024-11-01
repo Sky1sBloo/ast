@@ -68,24 +68,3 @@ private:
     std::shared_ptr<ProgramMemory> memory;
 };
 
-class BinaryConditionExpr : public ReturnableExpr {
-public:
-    enum class Types {
-        EQUALS,
-        GREATER,
-        LESS,
-        GREATER_EQUAL,
-        LESS_EQUAL
-    };
-
-    BinaryConditionExpr(Types conditionType, std::unique_ptr<ReturnableExpr> newExprA, std::unique_ptr<ReturnableExpr> newExprB);
-    bool getCondition();
-
-    const std::string& getValue() const override { return answer; }
-
-private:
-    Types type;
-    std::unique_ptr<ReturnableExpr> exprA;
-    std::unique_ptr<ReturnableExpr> exprB;
-    std::string answer = "BinaryCondition";
-};
