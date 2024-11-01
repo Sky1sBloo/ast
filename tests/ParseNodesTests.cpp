@@ -21,16 +21,17 @@ TEST(PARSE_NOTES_TEST, ASSIGNMENT_EXPR_TEST)
 
     const std::string initialValue = "3";
     const std::string expectedValue = "6";
+    const int addr = 0;
 
     InitializationExpr initExpr(std::make_unique<LiteralExpr>(DataType::INT, initialValue), memory);
     initExpr.performAction();
-    std::string retrievedValue = memory->retrieve(0);
+    std::string retrievedValue = memory->retrieve(addr);
 
     EXPECT_EQ(retrievedValue, initialValue);
 
-    AssignExpr assignExpr(1, std::make_unique<LiteralExpr>(DataType::INT, expectedValue), memory);
+    AssignExpr assignExpr(addr, std::make_unique<LiteralExpr>(DataType::INT, expectedValue), memory);
     assignExpr.performAction();
-    retrievedValue = memory->retrieve(0);
+    retrievedValue = memory->retrieve(addr);
 
     EXPECT_EQ(retrievedValue, expectedValue);
 }
