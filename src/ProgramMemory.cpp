@@ -2,22 +2,22 @@
 #include <stdexcept>
 
 ProgramMemory::ProgramMemory() :
-    highestPtr(0)
+    _highestPtr(0)
 {
 }
 
 int ProgramMemory::allocate(const std::string& value)
 {
-    memory.insert({highestPtr, value});
-    highestPtr++;
-    return highestPtr - 1;
+    _memory.insert({_highestPtr, value});
+    _highestPtr++;
+    return _highestPtr - 1;
 }
 
 
 const std::string& ProgramMemory::retrieve(int address)
 {
-    if (memory.contains(address)) {
-        return memory[address];
+    if (_memory.contains(address)) {
+        return _memory[address];
     }
     throw std::out_of_range("ProgramMemory at retrieve: Invalid address access");
 }
@@ -25,9 +25,9 @@ const std::string& ProgramMemory::retrieve(int address)
 
 void ProgramMemory::set(int address, const std::string& value)
 {
-    if (!memory.contains(address)) {
+    if (!_memory.contains(address)) {
         throw std::out_of_range("ProgramMemory set: Invalid address access");
     }
 
-    memory[address] = value;
+    _memory[address] = value;
 }

@@ -1,7 +1,7 @@
 #include "ParseNodes.hpp"
 
-LiteralExpr::LiteralExpr(DataType newDataType, const std::string& newValue)
-    : type(newDataType)
-    , value(newValue)
+LiteralExpr::LiteralExpr(DataType type, const std::string& value)
+    : _type(type)
+    , _value(value)
 {
 }

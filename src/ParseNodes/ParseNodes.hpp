@@ -31,12 +31,12 @@ public:
  */
 class LiteralExpr : public ReturnableExpr {
 public:
-    LiteralExpr(DataType newDataType, const std::string& newValue);
-    const std::string& getValue() const override { return value; }
+    LiteralExpr(DataType type, const std::string& value);
+    const std::string& getValue() const override { return _value; }
 
 private:
-    DataType type;
-    const std::string value;
+    DataType _type;
+    const std::string _value;
 };
 
 /**
@@ -44,15 +44,15 @@ private:
  */
 class InitializationExpr : public TerminalExpr {
 public:
-    InitializationExpr(const std::string& varId, std::shared_ptr<VariableHandler> variableHandler);
-    InitializationExpr(const std::string& varId, std::unique_ptr<ReturnableExpr> exprNode, std::shared_ptr<VariableHandler> variableHandler);
+    InitializationExpr(const std::string& id, std::shared_ptr<VariableHandler> handler);
+    InitializationExpr(const std::string& id, std::unique_ptr<ReturnableExpr> value, std::shared_ptr<VariableHandler> handler);
 
     void performAction() override;
 
 private:
-    const std::string id;
-    std::unique_ptr<ReturnableExpr> value;
-    std::shared_ptr<VariableHandler> handler;
+    const std::string _id;
+    std::unique_ptr<ReturnableExpr> _value;
+    std::shared_ptr<VariableHandler> _handler;
 };
 
 /**
@@ -60,12 +60,12 @@ private:
  */
 class AssignExpr : public TerminalExpr {
 public:
-    AssignExpr(const std::string& varId, std::unique_ptr<ReturnableExpr> exprNode, std::shared_ptr<VariableHandler> variableHandler);
+    AssignExpr(const std::string& id, std::unique_ptr<ReturnableExpr> value, std::shared_ptr<VariableHandler> handler);
 
     void performAction() override;
 private:
-    const std::string id;
-    std::unique_ptr<ReturnableExpr> value;
-    std::shared_ptr<VariableHandler> handler;
+    const std::string _id;
+    std::unique_ptr<ReturnableExpr> _value;
+    std::shared_ptr<VariableHandler> _handler;
 };
 
