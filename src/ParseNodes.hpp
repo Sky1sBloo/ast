@@ -18,15 +18,10 @@ private:
     const std::string value;
 };
 
-class VariableExpr {
+class VariableInitializationExpr {
 public:
-    VariableExpr(const std::string& newId, std::shared_ptr<ProgramMemory> programMemory);
-    VariableExpr(const std::string& newId, const std::string& value, std::shared_ptr<ProgramMemory> programMemory);
-
-    void setValue(const std::string& newValue);
-
-    const std::string& getValue() const;
-
+    VariableInitializationExpr(const std::string& newId, std::shared_ptr<ProgramMemory> programMemory);
+    VariableInitializationExpr(const std::string& newId, const std::string& value, std::shared_ptr<ProgramMemory> programMemory);
 private:
     const std::string id;
     int memoryAddress; // -1 if unallocated
