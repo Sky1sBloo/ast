@@ -19,13 +19,13 @@ private:
 };
 
 /**
+ * Node for initialializing variables
  */
 class InitializationExpr {
 public:
-    InitializationExpr(const std::string& newId, std::shared_ptr<ProgramMemory> programMemory);
-    InitializationExpr(const std::string& newId, const std::string& value, std::shared_ptr<ProgramMemory> programMemory);
+    InitializationExpr(std::shared_ptr<ProgramMemory> programMemory);
+    InitializationExpr(const std::string& value, std::shared_ptr<ProgramMemory> programMemory);
 private:
-    const std::string id;
     int memoryAddress; // -1 if unallocated
     std::shared_ptr<ProgramMemory> memory;
 };
