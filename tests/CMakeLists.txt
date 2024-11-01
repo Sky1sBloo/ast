@@ -1,6 +1,7 @@
 add_executable(
     ast-unit-tests
     ProgramMemoryTests.cpp
+    ParseNodesTests.cpp
 )
 
 target_link_libraries(
