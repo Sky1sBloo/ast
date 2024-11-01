@@ -1,13 +1,13 @@
 #include "ParseNodes.hpp"
 
-AssignExpr::AssignExpr(int setAddress, std::unique_ptr<ReturnableExpr> exprNode, std::shared_ptr<ProgramMemory> programMemory)
-    : address(setAddress)
+AssignExpr::AssignExpr(const std::string& varId, std::unique_ptr<ReturnableExpr> exprNode, std::shared_ptr<VariableHandler> variableHandler)
+    : id(varId)
     , value(std::move(exprNode))
-    , memory(programMemory)
+    , handler(variableHandler)
 {
 }
 
 void AssignExpr::performAction()
 {
-    memory->set(address, value->getValue());
+    handler->setValue(id, value->getValue());
 }
