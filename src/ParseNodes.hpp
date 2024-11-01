@@ -57,9 +57,15 @@ private:
 /**
  * Node for assigning values to variables
  */
-class AssignExpr {
+class AssignExpr : public TerminalExpr {
 public:
+    AssignExpr(int setAddress, std::unique_ptr<ReturnableExpr> exprNode, std::shared_ptr<ProgramMemory> programMemory);
+
+    void performAction() override;
 private:
+    int address;
+    std::unique_ptr<ReturnableExpr> value;
+    std::shared_ptr<ProgramMemory> memory;
 };
 
 class BinaryConditionExpr : public ReturnableExpr {
