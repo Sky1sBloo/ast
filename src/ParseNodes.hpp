@@ -23,8 +23,8 @@ private:
  */
 class InitializationExpr {
 public:
-    InitializationExpr(std::shared_ptr<ProgramMemory> programMemory);
-    InitializationExpr(const std::string& value, std::shared_ptr<ProgramMemory> programMemory);
+    InitializationExpr(ProgramMemory& programMemory);
+    InitializationExpr(const std::string& value, ProgramMemory& programMemory);
 };
 
 /**

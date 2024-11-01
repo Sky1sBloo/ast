@@ -1,11 +1,11 @@
 #include "ParseNodes.hpp"
 
-InitializationExpr::InitializationExpr(std::shared_ptr<ProgramMemory> programMemory)
+InitializationExpr::InitializationExpr(ProgramMemory& programMemory)
 {
-    programMemory->allocate("");
+    programMemory.allocate("");
 }
 
-InitializationExpr::InitializationExpr(const std::string& value, std::shared_ptr<ProgramMemory> programMemory)
+InitializationExpr::InitializationExpr(const std::string& value, ProgramMemory& programMemory)
 {
-    programMemory->allocate(value);
+    programMemory.allocate(value);
 }
