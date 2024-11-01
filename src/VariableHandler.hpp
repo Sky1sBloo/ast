@@ -28,6 +28,13 @@ public:
     */
     const std::string& getValue(const std::string& id) const;
 
+    /**
+     * Sets the value of the allocated variable
+     *
+     * Throws BadVariableHandling on fail
+    */
+    void setValue(const std::string& id, const std::string& value);
+
 private:
     std::unordered_map<std::string, int> variables;
     std::shared_ptr<ProgramMemory> memory;

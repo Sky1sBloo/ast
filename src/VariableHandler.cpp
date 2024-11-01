@@ -21,3 +21,12 @@ const std::string& VariableHandler::getValue(const std::string& id) const
     }
     return memory->retrieve(variables.at(id));
 }
+
+
+void VariableHandler::setValue(const std::string& id, const std::string& value)
+{
+    if (!variables.contains(id)) {
+        throw BadVariableHandling("Tried to set nonexisting variable");
+    }
+    memory->set(variables.at(id), value);
+}
