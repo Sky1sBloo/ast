@@ -5,7 +5,8 @@ InitializationExpr::InitializationExpr(ProgramMemory& programMemory)
     programMemory.allocate("");
 }
 
-InitializationExpr::InitializationExpr(const std::string& value, ProgramMemory& programMemory)
+InitializationExpr::InitializationExpr(std::unique_ptr<ReturnableExpr> exprNode, ProgramMemory& programMemory) :
+    value(std::move(exprNode))
 {
-    programMemory.allocate(value);
+    programMemory.allocate(value->getValue());
 }

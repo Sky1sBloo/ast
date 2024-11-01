@@ -1,7 +1,6 @@
 #pragma once
 #include <memory>
 #include <string>
-#include <variant>
 
 #include "DataTypes.hpp"
 #include "ProgramMemory.hpp"
@@ -9,9 +8,31 @@
 class ExprNode;
 using ExprNodePtr = std::unique_ptr<ExprNode>;
 
-class LiteralExpr {
+/**
+ * Base class for all values that can contains value
+ */
+class ReturnableExpr {
+public:
+    virtual ~ReturnableExpr() = 0;
+    virtual const std::string& getValue() const = 0;
+};
+
+/**
+ * Base class representing a terminal action
+ */
+class TerminalExpr {
+public:
+    virtual ~TerminalExpr() = 0;
+    virtual void performAction() = 0;
+};
+
+/**
+ * Node containing constant literals
+ */
+class LiteralExpr : public ReturnableExpr {
 public:
     LiteralExpr(DataType newDataType, const std::string& newValue);
+    const std::string& getValue() const override { return value; }
 
 private:
     DataType type;
@@ -24,7 +45,10 @@ private:
 class InitializationExpr {
 public:
     InitializationExpr(ProgramMemory& programMemory);
-    InitializationExpr(const std::string& value, ProgramMemory& programMemory);
+    InitializationExpr(std::unique_ptr<ReturnableExpr> exprNode, ProgramMemory& programMemory);
+
+private:
+    std::unique_ptr<ReturnableExpr> value;
 };
 
 /**
@@ -35,7 +59,7 @@ public:
 private:
 };
 
-class BinaryConditionExpr {
+class BinaryConditionExpr : public ReturnableExpr {
 public:
     enum class Types {
         EQUALS,
@@ -45,22 +69,14 @@ public:
         LESS_EQUAL
     };
 
-    BinaryConditionExpr(Types conditionType, ExprNodePtr newExprA, ExprNodePtr newExprB);
+    BinaryConditionExpr(Types conditionType, std::unique_ptr<ReturnableExpr> newExprA, std::unique_ptr<ReturnableExpr> newExprB);
     bool getCondition();
+
+    const std::string& getValue() const override { return answer; }
 
 private:
     Types type;
-    ExprNodePtr exprA;
-    ExprNodePtr exprB;
-};
-
-class ExprNode {
-public:
-    auto& getType()
-    {
-        return type;
-    }
-
-private:
-    std::variant<LiteralExpr, InitializationExpr> type;
+    std::unique_ptr<ReturnableExpr> exprA;
+    std::unique_ptr<ReturnableExpr> exprB;
+    std::string answer = "BinaryCondition";
 };
