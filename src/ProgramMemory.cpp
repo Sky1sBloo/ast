@@ -19,5 +19,15 @@ const std::string& ProgramMemory::retrieve(int address)
     if (memory.contains(address)) {
         return memory[address];
     }
-    throw std::out_of_range("Invalid address access");
+    throw std::out_of_range("ProgramMemory at retrieve: Invalid address access");
+}
+
+
+void ProgramMemory::set(int address, const std::string& value)
+{
+    if (!memory.contains(address)) {
+        throw std::out_of_range("ProgramMemory set: Invalid address access");
+    }
+
+    memory[address] = value;
 }

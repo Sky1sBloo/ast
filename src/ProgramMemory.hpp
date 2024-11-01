@@ -20,6 +20,13 @@ public:
      * Throws std::out_of_range if address is invalid
     */
     const std::string& retrieve(int address);
+
+    /**
+     * Sets the value on the adddress pointed
+     *
+     * Throws std::out_of_range if address is invalid
+    */
+    void set(int address, const std::string& value);
 private:
     int highestPtr;  // To determine free memory
     std::unordered_map<int, std::string> memory;
