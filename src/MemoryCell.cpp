@@ -5,9 +5,16 @@
 
 MemoryCell::MemoryCell(const std::string& value)
 {
-    if (strToFloat(value)) {
-        return;
-    }
+    typeDeducer(value);
+}
+
+void MemoryCell::typeDeducer(const std::string& value)
+{
+    if (strToFloat(value)) return;
+    if (strToInt(value)) return;
+    if (strToBool(value)) return;
+
+    _value = value;
 }
 
 bool MemoryCell::strToFloat(const std::string& value)
@@ -37,6 +44,22 @@ bool MemoryCell::strToFloat(const std::string& value)
     return true;
 }
 
+bool MemoryCell::strToInt(const std::string& value)
+{
+    int output = 0;
+    for (char c : value) {
+        if (std::isdigit(c)) {
+            output *= 10;
+            output += c - '0';
+        } else {
+            return false;
+        }
+    }
+
+    _value = output;
+    return true;
+}
+
 bool MemoryCell::strToBool(const std::string& value)
 {
     if (value == "True" || value == "true") {
@@ -51,3 +74,5 @@ bool MemoryCell::strToBool(const std::string& value)
 
     return false;
 }
+
+
