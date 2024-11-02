@@ -8,10 +8,15 @@
  */
 class MemoryCell {
 public:
-    MemoryCell(const std::string& value);
+    /**
+     * Constructor for memory MemoryCell
+     *
+     * Empty string implies std::monostate
+     */
+    MemoryCell(const std::string& value = "");
 
 private:
-    std::variant<int, float, bool, std::string> _value;
+    std::variant<int, float, bool, std::string, std::monostate> _value;
 
     /**
      * Deduces the type based on string and sets it to _value
