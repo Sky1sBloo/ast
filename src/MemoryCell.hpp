@@ -11,7 +11,7 @@ public:
     MemoryCell(const std::string& value);
 
 private:
-    std::variant<int, float, std::string> _value;
+    std::variant<int, float, bool, std::string> _value;
 
     /**
      * Converts string to Float
@@ -20,4 +20,12 @@ private:
      * @return If operation is success
      */
     bool strToFloat(const std::string& value);
+
+    /**
+     * Converts string to bool
+     * If successful, sets it to _value
+     *
+     * @return If operation is success
+     */
+    bool strToBool(const std::string& value);
 };

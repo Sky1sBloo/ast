@@ -1,13 +1,13 @@
 #include "MemoryCell.hpp"
 #include <cctype>
 #include <cmath>
+#include <cstring>
 
 MemoryCell::MemoryCell(const std::string& value)
 {
     if (strToFloat(value)) {
         return;
     }
-
 }
 
 bool MemoryCell::strToFloat(const std::string& value)
@@ -35,4 +35,19 @@ bool MemoryCell::strToFloat(const std::string& value)
 
     _value = output;
     return true;
+}
+
+bool MemoryCell::strToBool(const std::string& value)
+{
+    if (value == "True" || value == "true") {
+        _value = true;
+        return true;
+    }
+
+    if (value == "False" || value == "false") {
+        _value = false;
+        return true;
+    }
+
+    return false;
 }
