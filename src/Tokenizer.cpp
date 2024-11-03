@@ -39,6 +39,9 @@ TokenTypes Tokenizer::identitfyType(const std::string& word)
     if (isAssignment(word)) {
         return TokenTypes::ASSIGN;
     }
+    if (isLiteral(word)) {
+        return TokenTypes::LITERAL;
+    }
 
     return TokenTypes::IDENTIFIER;
 };

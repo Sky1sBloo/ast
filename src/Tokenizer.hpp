@@ -29,6 +29,8 @@ class Tokenizer {
 public:
     Tokenizer(std::stringstream& sourceCode);
 
+    const std::vector<Token>& getTokens() const { return _tokens; }
+
 private:
     std::vector<Token> _tokens;
 
@@ -59,6 +61,6 @@ private:
         "true", "True", "false", "False"
     };
 
-    constexpr static std::string _assignmentRuleset = "==";
+    constexpr static std::string _assignmentRuleset = "=";
     constexpr static char _terminationChar = ';';
 };
