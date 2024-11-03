@@ -1,6 +1,8 @@
 #pragma once
-#include <string>
 #include <unordered_map>
+#include <memory>
+
+#include "MemoryCell.hpp"
 
 // Class handling program memory such as variables
 class ProgramMemory {
@@ -18,7 +20,7 @@ public:
      *
      * Throws std::out_of_range if address is invalid
      */
-    const std::string& retrieve(int address);
+    const MemoryCell& retrieve(int address) const;
 
     /**
      * Sets the value on the adddress pointed
@@ -29,5 +31,5 @@ public:
 
 private:
     int _highestPtr; // To determine free memory
-    std::unordered_map<int, std::string> _memory;
+    std::unordered_map<int, std::unique_ptr<MemoryCell>> _memory;
 };

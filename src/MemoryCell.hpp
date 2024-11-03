@@ -1,6 +1,9 @@
 #pragma once
+#include <optional>
 #include <string>
 #include <variant>
+
+#include "DataTypes.hpp"
 
 /**
  * Class that will be stored in ProgramMemory
@@ -18,6 +21,23 @@ public:
 
     void set(const std::string& value = "");
     const TypeVariants& get() const { return _value; }
+
+    /**
+     * Returns type of memory cell
+     */
+    DataType getType() const;
+
+    /**
+     * Gets the value on specified type
+     */
+    template <typename T>
+    std::optional<T> getAs() const
+    {
+        if (auto ptr = std::get_if<T>(&_value)) {
+            return *ptr;
+        }
+        return std::nullopt;
+    }
 
 private:
     TypeVariants _value;

@@ -13,11 +13,32 @@ void MemoryCell::set(const std::string& value)
     typeDeducer(value);
 }
 
+DataType MemoryCell::getType() const
+{
+    return std::visit([](auto&& value) -> DataType {
+        using T = std::decay_t<decltype(value)>;
+        if constexpr (std::is_same_v<T, int>) {
+            return DataType::INT;
+        }
+        if constexpr (std::is_same_v<T, float>) {
+            return DataType::FLOAT;
+        }
+        if constexpr (std::is_same_v<T, bool>) {
+            return DataType::BOOL;
+        }
+        if constexpr (std::is_same_v<T, std::string>) {
+            return DataType::STRING;
+        }
+        return DataType::NULL_TYPE;
+    },
+        _value);
+};
+
 void MemoryCell::typeDeducer(const std::string& value)
 {
-    if (strToFloat(value))
-        return;
     if (strToInt(value))
+        return;
+    if (strToFloat(value))
         return;
     if (strToBool(value))
         return;
