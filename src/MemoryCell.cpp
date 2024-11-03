@@ -8,11 +8,19 @@ MemoryCell::MemoryCell(const std::string& value)
     typeDeducer(value);
 }
 
+void MemoryCell::set(const std::string& value)
+{
+    typeDeducer(value);
+}
+
 void MemoryCell::typeDeducer(const std::string& value)
 {
-    if (strToFloat(value)) return;
-    if (strToInt(value)) return;
-    if (strToBool(value)) return;
+    if (strToFloat(value))
+        return;
+    if (strToInt(value))
+        return;
+    if (strToBool(value))
+        return;
     if (value != "") {
         _value = value;
     }
@@ -75,5 +83,3 @@ bool MemoryCell::strToBool(const std::string& value)
 
     return false;
 }
-
-

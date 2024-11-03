@@ -8,6 +8,7 @@
  */
 class MemoryCell {
 public:
+    using TypeVariants = std::variant<int, float, bool, std::string, std::monostate>;
     /**
      * Constructor for memory MemoryCell
      *
@@ -15,8 +16,11 @@ public:
      */
     MemoryCell(const std::string& value = "");
 
+    void set(const std::string& value = "");
+    const TypeVariants& get() const { return _value; }
+
 private:
-    std::variant<int, float, bool, std::string, std::monostate> _value;
+    TypeVariants _value;
 
     /**
      * Deduces the type based on string and sets it to _value
@@ -36,7 +40,7 @@ private:
      * If successful, sets it to _value
      *
      * @return If operation is successful
-    */
+     */
     bool strToInt(const std::string& value);
 
     /**
