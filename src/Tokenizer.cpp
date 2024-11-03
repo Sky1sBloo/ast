@@ -14,9 +14,11 @@ Tokenizer::Tokenizer(std::stringstream& sourceCode)
         }
 
         TokenTypes type = identitfyType(word);
+        _tokens.push_back(Token(type, word));
 
         if (containsTermination) {
-            _tokens.push_back(Token(TokenTypes::STATEMENT_TERMINATE, ";"));
+            std::string terminationStr(1, _terminationChar);
+            _tokens.push_back(Token(TokenTypes::STATEMENT_TERMINATE, terminationStr));
         }
     }
 }
