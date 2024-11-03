@@ -2,8 +2,8 @@
 #include <memory>
 #include <string>
 
-#include "DataTypes.hpp"
 #include "VariableHandler.hpp"
+#include "MemoryCell.hpp"
 
 class ExprNode;
 using ExprNodePtr = std::unique_ptr<ExprNode>;
@@ -14,7 +14,7 @@ using ExprNodePtr = std::unique_ptr<ExprNode>;
 class ReturnableExpr {
 public:
     virtual ~ReturnableExpr() = default;
-    virtual const std::string& getValue() const = 0;
+    virtual const MemoryCell& getValue() const = 0;
 };
 
 /**
@@ -31,12 +31,11 @@ public:
  */
 class LiteralExpr : public ReturnableExpr {
 public:
-    LiteralExpr(DataType type, const std::string& value);
-    const std::string& getValue() const override { return _value; }
+    LiteralExpr(const std::string& value);
+    const MemoryCell& getValue() const override { return _value; }
 
 private:
-    DataType _type;
-    const std::string _value;
+    const MemoryCell _value;
 };
 
 /**
@@ -68,4 +67,5 @@ private:
     std::unique_ptr<ReturnableExpr> _value;
     std::shared_ptr<VariableHandler> _handler;
 };
+
 

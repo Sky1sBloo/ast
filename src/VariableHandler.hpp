@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include "ProgramMemory.hpp"
+#include "MemoryCell.hpp"
 
 /**
  * Class designed for allocation and deallocation of variables
@@ -20,13 +21,14 @@ public:
      * Throws BadVariableHandling on fail
      */
     void allocate(const std::string& id, const std::string& value = "NULL");
+    void allocate(const std::string& id, const MemoryCell& cell);
 
     /**
      * Retrieves value of allocated variable
      *
      * Throws BadVariableHandling on fail
     */
-    const std::string& getValue(const std::string& id) const;
+    const MemoryCell& getValue(const std::string& id) const;
 
     /**
      * Sets the value of the allocated variable
@@ -34,6 +36,7 @@ public:
      * Throws BadVariableHandling on fail
     */
     void setValue(const std::string& id, const std::string& value);
+    void setValue(const std::string& id, const MemoryCell& cell);
 
 private:
     std::unordered_map<std::string, int> _variables;
