@@ -1,5 +1,6 @@
 add_executable(
     ast-unit-tests
+    TokenizerTests.cpp
     MemoryCellTests.cpp
     ProgramMemoryTests.cpp
     VariableHandlerTests.cpp
