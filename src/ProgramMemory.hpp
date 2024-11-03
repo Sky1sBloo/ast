@@ -14,6 +14,7 @@ public:
      * @return The address of the memory
      */
     int allocate(const std::string& value);
+    int allocate(const MemoryCell& cell);
 
     /**
      * Retrieves the value of address
@@ -28,6 +29,8 @@ public:
      * Throws std::out_of_range if address is invalid
      */
     void set(int address, const std::string& value);
+    void set(int address, const MemoryCell& cell);
+
 
 private:
     int _highestPtr; // To determine free memory

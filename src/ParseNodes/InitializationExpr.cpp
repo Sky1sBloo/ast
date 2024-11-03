@@ -17,7 +17,7 @@ InitializationExpr::InitializationExpr(const std::string& id, std::unique_ptr<Re
 void InitializationExpr::performAction()
 {
     if (_value) {
-        _handler->allocate(_id, _value->getValue());
+        _handler->allocate(_id, std::move(_value->getValue()));
     } else {
         _handler->allocate(_id);
     }

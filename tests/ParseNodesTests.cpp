@@ -12,7 +12,7 @@ TEST(PARSE_NOTES_TEST, INITIALIZATION_EXPR_TEST)
     int expectedVal = 5;
     const std::string testVar = "TestVar";
 
-    InitializationExpr initExpr(testVar, std::make_unique<LiteralExpr>(DataType::INT, expectedValue), varHandler);
+    InitializationExpr initExpr(testVar, std::make_unique<LiteralExpr>(expectedValue), varHandler);
     initExpr.performAction();
     EXPECT_NO_THROW({
         int retrievedValue = varHandler->getValue(testVar).getAs<int>().value();
@@ -32,7 +32,7 @@ TEST(PARSE_NOTES_TEST, ASSIGNMENT_EXPR_TEST)
     int expectFinalValue = 6;
     const std::string testVar = "TestVar";
 
-    InitializationExpr initExpr(testVar, std::make_unique<LiteralExpr>(DataType::INT, initialValue), varHandler);
+    InitializationExpr initExpr(testVar, std::make_unique<LiteralExpr>(initialValue), varHandler);
     initExpr.performAction();
     int retrievedValue;
     EXPECT_NO_THROW({
@@ -40,7 +40,7 @@ TEST(PARSE_NOTES_TEST, ASSIGNMENT_EXPR_TEST)
         EXPECT_EQ(retrievedValue, expectInitValue);
     });
 
-    AssignExpr assignExpr(testVar, std::make_unique<LiteralExpr>(DataType::INT, expectedValue), varHandler);
+    AssignExpr assignExpr(testVar, std::make_unique<LiteralExpr>(expectedValue), varHandler);
     assignExpr.performAction();
     retrievedValue = varHandler->getValue(testVar).getAs<int>().value();
 

@@ -21,6 +21,7 @@ public:
      * Throws BadVariableHandling on fail
      */
     void allocate(const std::string& id, const std::string& value = "NULL");
+    void allocate(const std::string& id, const MemoryCell& cell);
 
     /**
      * Retrieves value of allocated variable
@@ -35,6 +36,7 @@ public:
      * Throws BadVariableHandling on fail
     */
     void setValue(const std::string& id, const std::string& value);
+    void setValue(const std::string& id, const MemoryCell& cell);
 
 private:
     std::unordered_map<std::string, int> _variables;
