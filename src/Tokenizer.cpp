@@ -13,8 +13,10 @@ Tokenizer::Tokenizer(std::stringstream& sourceCode)
             word.pop_back();
         }
 
-        TokenTypes type = identitfyType(word);
-        _tokens.push_back(Token(type, word));
+        if (!word.empty()) {
+            TokenTypes type = identitfyType(word);
+            _tokens.push_back(Token(type, word));
+        }
 
         if (containsTermination) {
             std::string terminationStr(1, _terminationChar);
