@@ -2,11 +2,8 @@
 #include <memory>
 #include <string>
 
-#include "VariableHandler.hpp"
 #include "MemoryCell.hpp"
-
-class ExprNode;
-using ExprNodePtr = std::unique_ptr<ExprNode>;
+#include "VariableHandler.hpp"
 
 /**
  * Base class for all values that can contains value
@@ -62,10 +59,9 @@ public:
     AssignExpr(const std::string& id, std::unique_ptr<ReturnableExpr> value, std::shared_ptr<VariableHandler> handler);
 
     void performAction() override;
+
 private:
     const std::string _id;
     std::unique_ptr<ReturnableExpr> _value;
     std::shared_ptr<VariableHandler> _handler;
 };
-
-
