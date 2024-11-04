@@ -45,6 +45,7 @@ private:
     bool isOperation(const std::string& word) const;
     bool isAssignment(const std::string& word) const;
     bool isLiteral(const std::string& word) const;
+    bool isIdentifier(const std::string& word) const;
 
 private:
     // RULESETS
@@ -59,6 +60,9 @@ private:
     };
     constexpr static std::array<std::string, 4> _booleanLiteralRuleset = {
         "true", "True", "false", "False"
+    };
+    constexpr static std::array<char, 8> _identifierInvalidCharacters = {
+        '\"', '\'', ';', '+', '-', '*', '/', '='
     };
 
     constexpr static std::string _assignmentRuleset = "=";

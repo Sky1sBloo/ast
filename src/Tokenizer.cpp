@@ -44,8 +44,11 @@ TokenTypes Tokenizer::identitfyType(const std::string& word)
     if (isLiteral(word)) {
         return TokenTypes::LITERAL;
     }
+    if (isIdentifier(word)) {
+        return TokenTypes::IDENTIFIER;
+    }
 
-    return TokenTypes::IDENTIFIER;
+    return TokenTypes::INVALID;
 };
 
 bool Tokenizer::isKeyword(const std::string& word) const
@@ -81,4 +84,14 @@ bool Tokenizer::isLiteral(const std::string& word) const
     }
 
     return false;
+}
+
+bool Tokenizer::isIdentifier(const std::string& word) const
+{
+    for (const char c : word) {
+        if (std::ranges::find(_identifierInvalidCharacters, c) != _identifierInvalidCharacters.end()) {
+            return false;
+        }
+    }
+    return true;
 }
