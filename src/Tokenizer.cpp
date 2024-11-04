@@ -65,13 +65,11 @@ bool Tokenizer::isAssignment(const std::string& word) const
 
 bool Tokenizer::isLiteral(const std::string& word) const
 {
-    // Check if numerical
     bool isNumerical = std::ranges::all_of(word, [](char c) { return (std::isdigit(c) || c == '.'); });
     if (isNumerical) {
         return true;
     }
 
-    // Check if string
     bool isString = word.front() == word.back() && std::ranges::find(_stringLiteralRuleset, word.front()) != _stringLiteralRuleset.end();
     if (isString) {
         return true;
