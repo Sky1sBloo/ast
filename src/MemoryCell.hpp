@@ -3,8 +3,13 @@
 #include <string>
 #include <variant>
 
-#include "DataTypes.hpp"
-
+enum class DataType {
+    NULL_TYPE,
+    INT,
+    FLOAT,
+    BOOL,
+    STRING
+};
 /**
  * Class that will be stored in ProgramMemory
  * Can deduce types based on string
