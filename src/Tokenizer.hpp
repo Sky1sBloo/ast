@@ -23,6 +23,15 @@ struct Token {
         , value(newValue)
     {
     }
+
+    /**
+     * Lists all tokens that are action
+     */
+    constexpr static std::array<TokenTypes, 3> terminalTokens = {
+        TokenTypes::ASSIGN,
+        TokenTypes::KEYWORD,
+        TokenTypes::OPERATOR
+    };
 };
 
 class Tokenizer {
