@@ -1,6 +1,5 @@
 #pragma once
 #include <unordered_map>
-#include <memory>
 
 #include "MemoryCell.hpp"
 
@@ -34,5 +33,5 @@ public:
 
 private:
     int _highestPtr; // To determine free memory
-    std::unordered_map<int, std::unique_ptr<MemoryCell>> _memory;
+    std::unordered_map<int, MemoryCell> _memory;
 };
