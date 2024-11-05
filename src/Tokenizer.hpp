@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <sstream>
 #include <vector>
@@ -24,6 +25,14 @@ struct Token {
     {
     }
 
+    bool isTerminal() const {
+        return std::ranges::find(terminalTokens, type) != terminalTokens.end();
+    }
+
+    bool isValue() const {
+        return std::ranges::find(valueTokens, type) != terminalTokens.end();
+    }
+private:
     /**
      * Lists all tokens that are action
      */
@@ -31,6 +40,11 @@ struct Token {
         TokenTypes::ASSIGN,
         TokenTypes::KEYWORD,
         TokenTypes::OPERATOR
+    };
+
+    constexpr static std::array<TokenTypes, 2> valueTokens = {
+        TokenTypes::IDENTIFIER,
+        TokenTypes::LITERAL
     };
 };
 
