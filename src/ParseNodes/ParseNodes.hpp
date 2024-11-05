@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "MemoryCell.hpp"
 #include "VariableHandler.hpp"
@@ -21,6 +22,14 @@ class TerminalExpr {
 public:
     virtual ~TerminalExpr() = default;
     virtual void performAction() = 0;
+};
+
+class StatementContainer : public TerminalExpr {
+public:
+    StatementContainer(std::unique_ptr<std::vector<TerminalExpr>> statements);
+    void performAction() override;
+private:
+    std::unique_ptr<std::vector<TerminalExpr>> _statements;
 };
 
 /**
