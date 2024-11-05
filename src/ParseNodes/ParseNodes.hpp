@@ -26,10 +26,12 @@ public:
 
 class StatementContainer : public TerminalExpr {
 public:
-    StatementContainer(std::unique_ptr<std::vector<TerminalExpr>> statements);
+    StatementContainer() : _statements() {}
+    StatementContainer(std::vector<std::unique_ptr<TerminalExpr>> statements);
     void performAction() override;
+    void insertExpr(std::unique_ptr<TerminalExpr> expr);
 private:
-    std::unique_ptr<std::vector<TerminalExpr>> _statements;
+    std::vector<std::unique_ptr<TerminalExpr>> _statements;
 };
 
 /**

@@ -4,11 +4,10 @@
 #include <vector>
 
 ParseTreeBuilder::ParseTreeBuilder(const std::vector<Token>& tokens, std::shared_ptr<VariableHandler> handler)
-    : _container(nullptr)
+    : _container(std::make_unique<StatementContainer>())
     , _handler(handler)
 {
     std::queue<StatementToken> statements = getStatements(tokens);
-    std::unique_ptr<std::vector<TerminalExpr>> exprs;
 
     // Iterate each statement
     while (!statements.empty()) {
@@ -31,15 +30,12 @@ ParseTreeBuilder::ParseTreeBuilder(const std::vector<Token>& tokens, std::shared
                 }
 
                 auto literalExpr = std::make_unique<LiteralExpr>(value.value);
-                auto assignExpr = std::make_unique<AssignExpr>(identifier.value, std::move(literalExpr), _handler);
-
-                //AssignExpr expr(identifier, value, handler);
+                _container->insertExpr(std::make_unique<AssignExpr>(identifier.value, std::move(literalExpr), _handler));
                 continue;
             }
         }
         statements.pop();
     }
-    _container = std::make_unique<StatementContainer>(std::move(exprs));
 }
 
 std::queue<std::unique_ptr<std::vector<Token>>> ParseTreeBuilder::getStatements(const std::vector<Token>& tokens)

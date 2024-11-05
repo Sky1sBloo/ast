@@ -1,13 +1,20 @@
 #include "ParseNodes.hpp"
 
-StatementContainer::StatementContainer(std::unique_ptr<std::vector<TerminalExpr>> statements)
-    : _statements(std::move(statements))
+StatementContainer::StatementContainer(std::vector<std::unique_ptr<TerminalExpr>> statements)
 {
+    for (auto& statement : statements) {
+        _statements.push_back(std::move(statement));
+    }
 }
 
 void StatementContainer::performAction()
 {
-    for (TerminalExpr& statement : *_statements) {
-        statement.performAction();
+    for (auto& statement : _statements) {
+        statement->performAction();
     }
+}
+
+void StatementContainer::insertExpr(std::unique_ptr<TerminalExpr> expr)
+{
+    _statements.push_back(std::move(expr));
 }
