@@ -19,6 +19,7 @@ ParseTreeBuilder::ParseTreeBuilder(const std::vector<Token>& tokens, std::shared
                 if (i == 0) {
                     throw;
                 }
+
                 const Token& identifier = statement->at(i - 1);
                 if (identifier.type != TokenTypes::IDENTIFIER) {
                     throw;

@@ -6,7 +6,7 @@
 #include <memory>
 #include <string>
 
-TEST(PARSE_NOTES_TEST, INITIALIZATION_EXPR_TEST)
+TEST(PARSE_NODES_TEST, INITIALIZATION_EXPR_TEST)
 {
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> varHandler = std::make_shared<VariableHandler>(memory);
@@ -23,7 +23,7 @@ TEST(PARSE_NOTES_TEST, INITIALIZATION_EXPR_TEST)
     });
 }
 
-TEST(PARSE_NOTES_TEST, ASSIGNMENT_EXPR_TEST)
+TEST(PARSE_NODES_TEST, ASSIGNMENT_EXPR_TEST)
 {
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> varHandler = std::make_shared<VariableHandler>(memory);
