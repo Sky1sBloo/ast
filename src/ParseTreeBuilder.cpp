@@ -15,13 +15,13 @@ ParseTreeBuilder::ParseTreeBuilder(const std::vector<Token>& tokens, std::shared
         for (int i = 0; i < statement->size(); i++) {
             const Token& token = statement->at(i);
 
-            if (token.type == TokenTypes::ASSIGN) {
+            if (token.type == Token::Types::ASSIGN) {
                 if (i == 0) {
                     throw;
                 }
 
                 const Token& identifier = statement->at(i - 1);
-                if (identifier.type != TokenTypes::IDENTIFIER) {
+                if (identifier.type != Token::Types::IDENTIFIER) {
                     throw;
                 }
 
@@ -46,7 +46,7 @@ std::queue<std::unique_ptr<std::vector<Token>>> ParseTreeBuilder::getStatements(
 
     // TODO READ UNTIL STATEMENT_END
     for (const Token& token : tokens) {
-        if (token.type == TokenTypes::STATEMENT_TERMINATE) {
+        if (token.type == Token::Types::STATEMENT_TERMINATE) {
             statements.push(std::move(statement));
             continue;
         }

@@ -5,46 +5,50 @@
 #include <sstream>
 #include <vector>
 
-enum class TokenTypes {
-    INVALID,
-    LITERAL,
-    KEYWORD,
-    IDENTIFIER,
-    OPERATOR,
-    ASSIGN,
-    STATEMENT_TERMINATE
-};
+class Token {
+public:
+    enum class Types {
+        INVALID,
+        LITERAL,
+        KEYWORD,
+        IDENTIFIER,
+        OPERATOR,
+        ASSIGN,
+        STATEMENT_TERMINATE
+    };
 
-struct Token {
-    TokenTypes type;
+    Types type;
     std::string value;
 
-    Token(TokenTypes newType, const std::string& newValue)
+    Token(Types newType, const std::string& newValue)
         : type(newType)
         , value(newValue)
     {
     }
 
-    bool isTerminal() const {
+    bool isTerminal() const
+    {
         return std::ranges::find(terminalTokens, type) != terminalTokens.end();
     }
 
-    bool isValue() const {
+    bool isValue() const
+    {
         return std::ranges::find(valueTokens, type) != terminalTokens.end();
     }
+
 private:
     /**
      * Lists all tokens that are action
      */
-    constexpr static std::array<TokenTypes, 3> terminalTokens = {
-        TokenTypes::ASSIGN,
-        TokenTypes::KEYWORD,
-        TokenTypes::OPERATOR
+    constexpr static std::array<Types, 3> terminalTokens = {
+        Types::ASSIGN,
+        Types::KEYWORD,
+        Types::OPERATOR
     };
 
-    constexpr static std::array<TokenTypes, 2> valueTokens = {
-        TokenTypes::IDENTIFIER,
-        TokenTypes::LITERAL
+    constexpr static std::array<Types, 2> valueTokens = {
+        Types::IDENTIFIER,
+        Types::LITERAL
     };
 };
 
@@ -57,7 +61,7 @@ public:
 private:
     std::vector<Token> _tokens;
 
-    TokenTypes identitfyType(const std::string& word);
+    Token::Types identitfyType(const std::string& word);
     /**
      * Checks the edge of string if it has termination character
      */

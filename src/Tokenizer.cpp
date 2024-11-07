@@ -14,13 +14,13 @@ Tokenizer::Tokenizer(std::stringstream& sourceCode)
         }
 
         if (!word.empty()) {
-            TokenTypes type = identitfyType(word);
+            Token::Types type = identitfyType(word);
             _tokens.push_back(Token(type, word));
         }
 
         if (containsTermination) {
             std::string terminationStr(1, _terminationChar);
-            _tokens.push_back(Token(TokenTypes::STATEMENT_TERMINATE, terminationStr));
+            _tokens.push_back(Token(Token::Types::STATEMENT_TERMINATE, terminationStr));
         }
     }
 }
@@ -30,25 +30,25 @@ bool Tokenizer::hasTerminateChar(const std::string& word) const
     return (word.back() == _terminationChar);
 }
 
-TokenTypes Tokenizer::identitfyType(const std::string& word)
+Token::Types Tokenizer::identitfyType(const std::string& word)
 {
     if (isKeyword(word)) {
-        return TokenTypes::KEYWORD;
+        return Token::Types::KEYWORD;
     }
     if (isOperation(word)) {
-        return TokenTypes::OPERATOR;
+        return Token::Types::OPERATOR;
     }
     if (isAssignment(word)) {
-        return TokenTypes::ASSIGN;
+        return Token::Types::ASSIGN;
     }
     if (isLiteral(word)) {
-        return TokenTypes::LITERAL;
+        return Token::Types::LITERAL;
     }
     if (isIdentifier(word)) {
-        return TokenTypes::IDENTIFIER;
+        return Token::Types::IDENTIFIER;
     }
 
-    return TokenTypes::INVALID;
+    return Token::Types::INVALID;
 };
 
 bool Tokenizer::isKeyword(const std::string& word) const
