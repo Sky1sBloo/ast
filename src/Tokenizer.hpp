@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <optional>
 #include <sstream>
 #include <unordered_map>
 #include <vector>
@@ -39,15 +40,13 @@ public:
 
     /**
      * Gets the precedence of token
-     *
-     * @return -1 if invalid
      */
-    int getPrecedence() const
+    std::optional<int> getTerminalPrecedence() const
     {
         if (precedenceTokens.contains(type)) {
             return precedenceTokens.at(type);
         }
-        return -1;
+        return std::nullopt;
     }
 
 private:
