@@ -27,12 +27,12 @@ public:
     {
     }
 
-    bool isTerminal() const
+    constexpr bool isTerminal() const
     {
         return std::ranges::find(terminalTokens, type) != terminalTokens.end();
     }
 
-    bool isValue() const
+    constexpr bool isValue() const
     {
         return std::ranges::find(valueTokens, type) != terminalTokens.end();
     }
