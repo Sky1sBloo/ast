@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <sstream>
+#include <unordered_map>
 #include <vector>
 
 class Token {
@@ -36,6 +37,19 @@ public:
         return std::ranges::find(valueTokens, type) != terminalTokens.end();
     }
 
+    /**
+     * Gets the precedence of token
+     *
+     * @return -1 if invalid
+     */
+    int getPrecedence() const
+    {
+        if (precedenceTokens.contains(type)) {
+            return precedenceTokens.at(type);
+        }
+        return -1;
+    }
+
 private:
     /**
      * Lists all tokens that are action
@@ -49,6 +63,16 @@ private:
     constexpr static std::array<Types, 2> valueTokens = {
         Types::IDENTIFIER,
         Types::LITERAL
+    };
+
+    /**
+     * Precedence of tokens
+     * Higher number means earlier precedence
+     */
+    inline const static std::unordered_map<Types, int> precedenceTokens = {
+        { Types::ASSIGN, 0 },
+        { Types::KEYWORD, 1 },
+        { Types::OPERATOR, 2 },
     };
 };
 
