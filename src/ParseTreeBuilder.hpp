@@ -18,5 +18,8 @@ private:
     /**
      * Returns a queue of statements separated by termination statement
      */
+    StatementToken getPostFix(const std::vector<Token>& statement);
     std::queue<StatementToken> getStatements(const std::vector<Token>& tokens);
+
+    StatementToken getPostFix(StatementToken statement);
 };

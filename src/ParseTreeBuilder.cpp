@@ -1,6 +1,7 @@
 #include "ParseTreeBuilder.hpp"
 #include "ParseNodes.hpp"
 #include <queue>
+#include <stack>
 #include <vector>
 
 ParseTreeBuilder::ParseTreeBuilder(const std::vector<Token>& tokens, std::shared_ptr<VariableHandler> handler)
@@ -12,46 +13,52 @@ ParseTreeBuilder::ParseTreeBuilder(const std::vector<Token>& tokens, std::shared
     // Iterate each statement
     while (!statements.empty()) {
         auto& statement = statements.front();
-        for (int i = 0; i < statement->size(); i++) {
-            const Token& token = statement->at(i);
+        std::queue<Token> valueTokens;
 
-            if (token.type == Token::Types::ASSIGN) {
-                if (i == 0) {
-                    throw;
-                }
-
-                const Token& identifier = statement->at(i - 1);
-                if (identifier.type != Token::Types::IDENTIFIER) {
-                    throw;
-                }
-
-                const Token& value = statement->at(i + 1);
-                if (!value.isValue()) {
-                    throw;
-                }
-
-                auto literalExpr = std::make_unique<LiteralExpr>(value.value);
-                _container->insertExpr(std::make_unique<AssignExpr>(identifier.value, std::move(literalExpr), _handler));
-                continue;
+        for (Token token : *statement) {
+            if (token.isValue()) {
+                valueTokens.push(token);
             }
         }
-        statements.pop();
     }
 }
 
-std::queue<std::unique_ptr<std::vector<Token>>> ParseTreeBuilder::getStatements(const std::vector<Token>& tokens)
+std::queue<ParseTreeBuilder::StatementToken> ParseTreeBuilder::getStatements(const std::vector<Token>& tokens)
 {
     std::queue<StatementToken> statements;
-    StatementToken statement;
+    std::vector<Token> statement;
 
-    // TODO READ UNTIL STATEMENT_END
     for (const Token& token : tokens) {
         if (token.type == Token::Types::STATEMENT_TERMINATE) {
-            statements.push(std::move(statement));
+            StatementToken postFixStatement = getPostFix(statement);
+            statements.push(std::move(postFixStatement));
             continue;
         }
-        statement->push_back(token);
+        statement.push_back(token);
     }
 
     return statements;
+}
+
+ParseTreeBuilder::StatementToken ParseTreeBuilder::getPostFix(const std::vector<Token>& statement)
+{
+    StatementToken postFixToken;
+    std::stack<Token> terminalTokens;
+    for (const Token& token : statement) {
+        if (token.isTerminal()) {
+            if (terminalTokens.empty() || token.getTerminalPrecedence() > terminalTokens.top().getTerminalPrecedence()) {
+                terminalTokens.push(token);
+            } else {
+                while (terminalTokens.top().getTerminalPrecedence() >= token.getTerminalPrecedence()) {
+                    postFixToken->push_back(token);
+                    terminalTokens.pop();
+                }
+                terminalTokens.push(token);
+            }
+        } else {
+            postFixToken->push_back(token);
+        }
+    }
+
+    return postFixToken;
 }
