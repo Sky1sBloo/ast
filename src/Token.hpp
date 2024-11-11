@@ -43,9 +43,19 @@ public:
     ValueToken(Types newType, const std::string& newValue)
         : Token(newType, newValue)
     {
-        if (!isValidType()) {
+        if (!isValidType(type)) {
             throw std::invalid_argument("ValueToken inherits invalid type");
         }
+    }
+
+    constexpr static bool isValidType(Types typeCheck) noexcept
+    {
+        for (Types validType : valueTypes) {
+            if (typeCheck == validType) {
+                return true;
+            }
+        }
+        return false;
     }
 
 private:
@@ -53,26 +63,17 @@ private:
         Types::IDENTIFIER,
         Types::LITERAL
     };
-
-    constexpr bool isValidType()
-    {
-        for (Types validType : valueTypes) {
-            if (type == validType) {
-                return true;
-            }
-        }
-        return false;
-    }
 };
 
 /**
  * Token representing a terminal or non returnable
  */
 class TerminalToken : public Token {
+public:
     TerminalToken(Types newType, const std::string& newValue)
         : Token(newType, newValue)
     {
-        if (!isValidType()) {
+        if (!isValidType(newType)) {
             throw std::invalid_argument("Terminal Token inherits invalid type");
         }
     }
@@ -82,11 +83,22 @@ class TerminalToken : public Token {
         return precedenceTokens.at(type);
     }
 
+    constexpr static bool isValidType(Types typeCheck) noexcept
+    {
+        for (Types validType : terminalTypes) {
+            if (typeCheck == validType) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 private:
-    constexpr static std::array<Types, 3> terminalTypes = {
+    constexpr static std::array<Types, 4> terminalTypes = {
         Types::ASSIGN,
         Types::KEYWORD,
-        Types::OPERATOR
+        Types::OPERATOR,
+        Types::STATEMENT_TERMINATE
     };
 
     inline const static std::unordered_map<Types, int> precedenceTokens = {
@@ -94,19 +106,26 @@ private:
         { Types::KEYWORD, 1 },
         { Types::OPERATOR, 2 },
     };
-
-    constexpr bool isValidType()
-    {
-        for (Types validType : terminalTypes) {
-            if (type == validType) {
-                return true;
-            }
-        }
-        return false;
-    }
 };
 
 class TokenContainer {
 public:
-    std::variant<ValueToken, TerminalToken> token;
+    TokenContainer(Token::Types newType, const std::string& newValue)
+        : token(createTokenVariant(newType, newValue))
+    {
+    }
+    using TokenVariant = std::variant<ValueToken, TerminalToken>;
+    TokenVariant token;
+
+private:
+    constexpr TokenVariant createTokenVariant(Token::Types newType, const std::string& newValue) const
+    {
+        if (ValueToken::isValidType(newType)) {
+            return ValueToken(newType, newValue);
+        } else if (TerminalToken::isValidType(newType)) {
+            return TerminalToken(newType, newValue);
+        } else {
+            throw std::invalid_argument("Token container cant identifiy type");
+        }
+    }
 };
