@@ -1,7 +1,7 @@
 #include "ParseTreeBuilder.hpp"
-#include "ParseNodes.hpp"
 #include <queue>
 #include <stack>
+#include <stdexcept>
 #include <vector>
 
 ParseTreeBuilder::ParseTreeBuilder(const std::vector<Token>& tokens, std::shared_ptr<VariableHandler> handler)
@@ -13,11 +13,16 @@ ParseTreeBuilder::ParseTreeBuilder(const std::vector<Token>& tokens, std::shared
     // Iterate each statement
     while (!statements.empty()) {
         auto& statement = statements.front();
-        std::queue<Token> valueTokens;
+        std::stack<Token> valueTokens;
 
-        for (Token token : *statement) {
+        for (const Token& token : *statement) {
             if (token.isValue()) {
                 valueTokens.push(token);
+            } else {
+                if (token.type == Token::Types::ASSIGN) {
+                    auto assignExpr = getAssignmentExpr(valueTokens);
+                    _container->insertExpr(std::move(assignExpr));
+                }
             }
         }
     }
@@ -61,4 +66,21 @@ ParseTreeBuilder::StatementToken ParseTreeBuilder::getPostFix(const std::vector<
     }
 
     return postFixToken;
+}
+
+std::unique_ptr<AssignExpr> ParseTreeBuilder::getAssignmentExpr(std::stack<Token>& valueTokens)
+{
+    if (valueTokens.size() < 2) {
+        throw std::invalid_argument("Assignment Expression missing arguments");
+    }
+    const Token& value = valueTokens.top();
+    valueTokens.pop();
+    const Token& identifier = valueTokens.top();
+    valueTokens.pop();
+
+    if (identifier.type != Token::Types::IDENTIFIER) {
+        throw std::invalid_argument("Assignment Expression identifier not token");
+    }
+
+    return std::make_unique<AssignExpr>(identifier.value, std::make_unique<LiteralExpr>(value.value), _handler);
 }
