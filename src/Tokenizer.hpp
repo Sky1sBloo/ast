@@ -1,88 +1,18 @@
 #pragma once
 
-#include <algorithm>
 #include <array>
-#include <optional>
 #include <sstream>
-#include <unordered_map>
 #include <vector>
-
-class Token {
-public:
-    enum class Types {
-        INVALID,
-        LITERAL,
-        KEYWORD,
-        IDENTIFIER,
-        OPERATOR,
-        ASSIGN,
-        STATEMENT_TERMINATE
-    };
-
-    Types type;
-    std::string value;
-
-    Token(Types newType, const std::string& newValue)
-        : type(newType)
-        , value(newValue)
-    {
-    }
-
-    constexpr bool isTerminal() const
-    {
-        return std::ranges::find(terminalTokens, type) != terminalTokens.end();
-    }
-
-    constexpr bool isValue() const
-    {
-        return std::ranges::find(valueTokens, type) != terminalTokens.end();
-    }
-
-    /**
-     * Gets the precedence of token
-     */
-    std::optional<int> getTerminalPrecedence() const
-    {
-        if (precedenceTokens.contains(type)) {
-            return precedenceTokens.at(type);
-        }
-        return std::nullopt;
-    }
-
-private:
-    /**
-     * Lists all tokens that are action
-     */
-    constexpr static std::array<Types, 3> terminalTokens = {
-        Types::ASSIGN,
-        Types::KEYWORD,
-        Types::OPERATOR
-    };
-
-    constexpr static std::array<Types, 2> valueTokens = {
-        Types::IDENTIFIER,
-        Types::LITERAL
-    };
-
-    /**
-     * Precedence of tokens
-     * Higher number means earlier precedence
-     */
-    inline const static std::unordered_map<Types, int> precedenceTokens = {
-        { Types::ASSIGN, 0 },
-        { Types::KEYWORD, 1 },
-        { Types::OPERATOR, 2 },
-    };
-};
+#include "Token.hpp"
 
 class Tokenizer {
 public:
     Tokenizer(std::stringstream& sourceCode);
 
-    const std::vector<Token>& getTokens() const { return _tokens; }
+    const std::vector<TokenContainer>& getTokens() { return _tokens; }
 
 private:
-    std::vector<Token> _tokens;
+    std::vector<TokenContainer> _tokens;
 
     Token::Types identitfyType(const std::string& word);
     /**

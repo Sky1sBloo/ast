@@ -111,11 +111,12 @@ private:
 class TokenContainer {
 public:
     TokenContainer(Token::Types newType, const std::string& newValue)
-        : token(createTokenVariant(newType, newValue))
+        : _token(createTokenVariant(newType, newValue))
     {
     }
+
     using TokenVariant = std::variant<ValueToken, TerminalToken>;
-    TokenVariant token;
+    const TokenVariant& getToken() const { return _token; }
 
 private:
     constexpr TokenVariant createTokenVariant(Token::Types newType, const std::string& newValue) const
@@ -128,4 +129,6 @@ private:
             throw std::invalid_argument("Token container cant identifiy type");
         }
     }
+
+    TokenVariant _token;
 };

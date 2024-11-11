@@ -2,7 +2,9 @@
 #include <gtest/gtest.h>
 #include <ranges>
 #include <sstream>
+#include <variant>
 
+#include "Token.hpp"
 #include "Tokenizer.hpp"
 
 TEST(TOKENIZER_TESTS, READING)
@@ -31,7 +33,10 @@ TEST(TOKENIZER_TESTS, READING)
 
     Tokenizer tokenizer(source);
 
-    for (auto [token, expectedToken] : std::views::zip(tokenizer.getTokens(), expectedTypes)) {
-        EXPECT_EQ(token.type, expectedToken);
+    for (auto [tokenContainer, expectedToken] : std::views::zip(tokenizer.getTokens(), expectedTypes)) {
+        std::visit([&expectedToken](const auto& token) {
+            EXPECT_EQ(token.type, expectedToken);
+        },
+            tokenContainer.getToken());
     }
 }

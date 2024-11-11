@@ -15,12 +15,12 @@ Tokenizer::Tokenizer(std::stringstream& sourceCode)
 
         if (!word.empty()) {
             Token::Types type = identitfyType(word);
-            _tokens.push_back(Token(type, word));
+            _tokens.emplace_back(type, word);
         }
 
         if (containsTermination) {
             std::string terminationStr(1, _terminationChar);
-            _tokens.push_back(Token(Token::Types::STATEMENT_TERMINATE, terminationStr));
+            _tokens.emplace_back(Token::Types::STATEMENT_TERMINATE, terminationStr);
         }
     }
 }
