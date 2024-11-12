@@ -27,6 +27,7 @@ ParseTreeBuilder::ParseTreeBuilder(const std::vector<TokenContainer>& tokens, st
                 }
             }
         }
+        statements.pop();
     }
 }
 
