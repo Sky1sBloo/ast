@@ -55,10 +55,6 @@ std::queue<ParseTreeBuilder::StatementToken> ParseTreeBuilder::getStatements(con
     return statements;
 }
 
-template <class... TokenVariant>
-struct TokenVisitor : TokenVariant... {
-    using TokenVariant::operator()...;
-};
 ParseTreeBuilder::StatementToken ParseTreeBuilder::getPostFix(const std::vector<TokenContainer>& statement)
 {
     StatementToken postFixToken = std::make_unique<std::vector<TokenContainer>>();

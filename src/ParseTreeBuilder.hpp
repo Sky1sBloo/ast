@@ -7,6 +7,10 @@
 #include <queue>
 #include <stack>
 
+template <class... TokenVariant>
+struct TokenVisitor : TokenVariant... {
+    using TokenVariant::operator()...;
+};
 class ParseTreeBuilder {
     ParseTreeBuilder(const std::vector<TokenContainer>& tokens, std::shared_ptr<VariableHandler> handler);
 
@@ -19,8 +23,6 @@ private:
     /**
      * Returns a queue of statements separated by termination statement
      */
-    template<class... TokenVariant>
-    struct TokenVisitor : TokenVariant... { using TokenVariant::operator()...; };
     StatementToken getPostFix(const std::vector<TokenContainer>& statement);
     std::queue<StatementToken> getStatements(const std::vector<TokenContainer>& tokens);
 
@@ -29,6 +31,6 @@ private:
      *
      * @param valueStack contains value and identifier
      * Modifies valueStack
-    */
+     */
     std::unique_ptr<AssignExpr> getAssignmentExpr(std::stack<ValueToken>& valueStack);
 };
