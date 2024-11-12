@@ -39,17 +39,10 @@ std::queue<ParseTreeBuilder::StatementToken> ParseTreeBuilder::getStatements(con
         std::visit([&](const Token& token) {
             if (token.type == Token::Types::STATEMENT_TERMINATE) {
                 StatementToken postFixStatement = getPostFix(statement);
+                statements.push(std::move(postFixStatement));
             }
         },
             tokenContainer.getToken());
-        /*
-        if (token.type == Token::Types::STATEMENT_TERMINATE)
-        {
-            StatementToken postFixStatement = getPostFix(statement);
-            statements.push(std::move(postFixStatement));
-            continue;
-        }
-        statement.push_back(token); */
     }
 
     return statements;

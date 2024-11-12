@@ -15,8 +15,8 @@ class ParseTreeBuilder {
 public:
     ParseTreeBuilder(const std::vector<TokenContainer>& tokens, std::shared_ptr<VariableHandler> handler);
 
-    const StatementContainer& getTree() const {
-        return *_container;
+    std::unique_ptr<StatementContainer> getTree() {
+        return std::move(_container);
     } 
 private:
     std::shared_ptr<VariableHandler> _handler;
