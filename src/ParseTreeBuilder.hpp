@@ -12,6 +12,7 @@ struct TokenVisitor : TokenVariant... {
     using TokenVariant::operator()...;
 };
 class ParseTreeBuilder {
+public:
     ParseTreeBuilder(const std::vector<TokenContainer>& tokens, std::shared_ptr<VariableHandler> handler);
 
     const StatementContainer& getTree() const {
