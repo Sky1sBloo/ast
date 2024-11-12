@@ -1,5 +1,6 @@
 #include "ParseTreeBuilder.hpp"
 #include "Token.hpp"
+#include <iostream>
 #include <queue>
 #include <stack>
 #include <stdexcept>
@@ -33,6 +34,7 @@ ParseTreeBuilder::ParseTreeBuilder(const std::vector<TokenContainer>& tokens, st
 
 std::queue<ParseTreeBuilder::StatementToken> ParseTreeBuilder::getStatements(const std::vector<TokenContainer>& tokens)
 {
+    // Todo make this more efficient
     std::queue<StatementToken> statements;
     std::vector<TokenContainer> statement;
 
@@ -41,6 +43,8 @@ std::queue<ParseTreeBuilder::StatementToken> ParseTreeBuilder::getStatements(con
             if (token.type == Token::Types::STATEMENT_TERMINATE) {
                 StatementToken postFixStatement = getPostFix(statement);
                 statements.push(std::move(postFixStatement));
+            } else {
+                statement.push_back(tokenContainer);
             }
         },
             tokenContainer.getToken());
@@ -91,5 +95,5 @@ std::unique_ptr<AssignExpr> ParseTreeBuilder::getAssignmentExpr(std::stack<Value
         throw std::invalid_argument("Assignment Expression identifier not token");
     }
 
-    return std::make_unique<AssignExpr>(identifier.value, std::make_unique<LiteralExpr>(value.value), _handler); 
+    return std::make_unique<AssignExpr>(identifier.value, std::make_unique<LiteralExpr>(value.value), _handler);
 }
