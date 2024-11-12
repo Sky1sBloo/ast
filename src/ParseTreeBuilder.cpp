@@ -70,6 +70,7 @@ ParseTreeBuilder::StatementToken ParseTreeBuilder::getPostFix(const std::vector<
 
     while (!terminalTokens.empty()) {
         postFixToken->emplace_back(terminalTokens.top().type, terminalTokens.top().value);
+        terminalTokens.pop();
     }
 
     return postFixToken;
