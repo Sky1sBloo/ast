@@ -3,10 +3,29 @@
 #include <cctype>
 #include <string>
 
-Tokenizer::Tokenizer(std::stringstream& sourceCode)
+Tokenizer::Tokenizer(std::string& sourceCode)
 {
-    std::string word;
-    while (sourceCode >> word) {
+    std::string tokenStr;
+    Token::Types prevType = Token::Types::INVALID;
+
+    for (char c : sourceCode) {
+        if (c == ' ') {
+            Token::Types type = identitfyType(tokenStr);
+            _tokens.emplace_back(type, tokenStr);
+            continue;
+        }
+
+        if (c == _terminationChar) {
+            if (!tokenStr.empty()) {
+                Token::Types type = identitfyType(tokenStr);
+                _tokens.emplace_back(type, tokenStr);
+            }
+            _tokens.emplace_back(Token::Types::STATEMENT_TERMINATE);
+            continue;
+        }
+
+        tokenStr += c;
+        /*
         // To avoid checking terminate character on identifying type
         bool containsTermination = hasTerminateChar(word);
         if (containsTermination) {
@@ -21,7 +40,7 @@ Tokenizer::Tokenizer(std::stringstream& sourceCode)
         if (containsTermination) {
             std::string terminationStr(1, _terminationChar);
             _tokens.emplace_back(Token::Types::STATEMENT_TERMINATE, terminationStr);
-        }
+        } */
     }
 }
 

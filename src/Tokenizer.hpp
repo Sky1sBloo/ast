@@ -1,13 +1,13 @@
 #pragma once
 
 #include <array>
-#include <sstream>
+#include <string>
 #include <vector>
 #include "Token.hpp"
 
 class Tokenizer {
 public:
-    Tokenizer(std::stringstream& sourceCode);
+    Tokenizer(std::string& sourceCode);
 
     const std::vector<TokenContainer>& getTokens() { return _tokens; }
 
