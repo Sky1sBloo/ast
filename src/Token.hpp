@@ -110,7 +110,7 @@ private:
 
 class TokenContainer {
 public:
-    TokenContainer(Token::Types newType, const std::string& newValue)
+    TokenContainer(Token::Types newType, const std::string& newValue = "")
         : _token(createTokenVariant(newType, newValue))
     {
     }
