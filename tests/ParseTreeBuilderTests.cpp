@@ -5,14 +5,13 @@
 
 #include <gtest/gtest.h>
 #include <optional>
-#include <sstream>
+#include <string>
 
 TEST(PARSE_TREE_TESTS, VARIABLE_SAVING)
 {
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
-    std::stringstream source;
-    source << "a = 5;";
+    std::string source = "a = 5";
     int expectedValue = 5;
 
     variableHandler->allocate("a");
@@ -35,8 +34,7 @@ TEST(PARSE_TREE_TESTS, MULTIPLE_STATEMENTS)
 {
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
-    std::stringstream source;
-    source << "a = 5; b = 6; a = 3;";
+    std::string source = "a = 5; b = 6; a = 3;";
     int expectedValueA = 3;
     int expectedValueB = 6;
 
