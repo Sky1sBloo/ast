@@ -1,7 +1,7 @@
 #include <array>
 #include <gtest/gtest.h>
 #include <ranges>
-#include <sstream>
+#include <string>
 #include <variant>
 
 #include "Token.hpp"
@@ -9,8 +9,7 @@
 
 TEST(TOKENIZER_TESTS, READING)
 {
-    std::stringstream source;
-    source << "var a = 5; var b = 2.0 + 5.0;\nvar c = \"fifty\";\n";
+    std::string source = "var a = 5; var b = 2.0 + 5.0;\nvar c = \"fifty\";\n";
     const std::array<Token::Types, 17> expectedTypes = {
         Token::Types::KEYWORD,
         Token::Types::IDENTIFIER,
@@ -23,8 +22,8 @@ TEST(TOKENIZER_TESTS, READING)
         Token::Types::LITERAL,
         Token::Types::OPERATOR,
         Token::Types::LITERAL,
-        Token::Types::STATEMENT_TERMINATE,
-        Token::Types::KEYWORD,
+        Token::Types::STATEMENT_TERMINATE, 
+        Token::Types::KEYWORD, 
         Token::Types::IDENTIFIER,
         Token::Types::ASSIGN,
         Token::Types::LITERAL,

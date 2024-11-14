@@ -14,7 +14,7 @@ public:
 private:
     std::vector<TokenContainer> _tokens;
 
-    Token::Types identitfyType(const std::string& word);
+    Token::Types identifyType(const std::string& word);
     /**
      * Checks the edge of string if it has termination character
      */
@@ -32,8 +32,8 @@ private:
     constexpr static std::array<std::string, 1> _keywordRuleset = {
         "var"
     };
-    constexpr static std::array<std::string, 4> _operationRuleset = {
-        "+", "-", "/", "*"
+    constexpr static std::array<char, 4> _operationRuleset = {
+        '+', '-', '/', '*'
     };
     constexpr static std::array<char, 2> _stringLiteralRuleset = {
         '\'', '\"'
@@ -41,10 +41,19 @@ private:
     constexpr static std::array<std::string, 4> _booleanLiteralRuleset = {
         "true", "True", "false", "False"
     };
-    constexpr static std::array<char, 8> _identifierInvalidCharacters = {
-        '\"', '\'', ';', '+', '-', '*', '/', '='
+    constexpr static std::array<char, 8> _identifierDelimeters = {
+        '\"', '\'', ';', '+', '-', '*', '/', '=' 
+    };
+    constexpr static std::array<char, 3> _delimeters = {
+        ' ', '\n', '\t'
     };
 
-    constexpr static std::string _assignmentRuleset = "=";
+    constexpr static char _assignmentRuleset = '=';
     constexpr static char _terminationChar = ';';
+
+    /**
+     * Helper function for constructor
+     * Modifies and empties tokenStr and prevType
+    */
+    void pushToken(Token::Types type, Token::Types& prevType, std::string& tokenStr);
 };
