@@ -75,3 +75,20 @@ TEST(PARSE_TREE_TESTS, MULTIPLE_STATEMENTS)
     EXPECT_EQ(expectedValueA, returnedValueA);
     EXPECT_EQ(expectedValueB, returnedValueB);
 }
+
+TEST(PARSE_TREE_TESTS, VARIABLE_INITIALIZATION)
+{
+    std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
+    std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
+    std::string source = "var test;";
+
+    Tokenizer tokens(source);
+    ParseTreeBuilder treeBuilder(tokens.getTokens(), variableHandler);
+    auto tree = treeBuilder.getTree();
+    tree->performAction();
+
+    MemoryCell valueA = variableHandler->getValue("test");
+    if (valueA.getType() != DataType::NULL_TYPE) {
+        FAIL() << "Returned variable isn't expected type NULL. Current type: ";
+    }
+}

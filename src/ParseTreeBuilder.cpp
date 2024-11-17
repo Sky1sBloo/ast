@@ -24,6 +24,11 @@ ParseTreeBuilder::ParseTreeBuilder(const std::vector<TokenContainer>& tokens, st
                 if (token.type == Token::Types::ASSIGN) {
                     auto assignExpr = getAssignmentExpr(valueTokens);
                     _container->insertExpr(std::move(assignExpr));
+                } else if (token.type == Token::Types::KEYWORD) {
+                    if (token.value == "var") {
+                        auto initializationExpr = getInitializationExpr(valueTokens);
+                        _container->insertExpr(std::move(initializationExpr));
+                    }
                 }
             }
         }
@@ -96,4 +101,31 @@ std::unique_ptr<AssignExpr> ParseTreeBuilder::getAssignmentExpr(std::stack<Value
     }
 
     return std::make_unique<AssignExpr>(identifier.value, std::make_unique<LiteralExpr>(value.value), _handler);
+}
+
+std::unique_ptr<InitializationExpr> ParseTreeBuilder::getInitializationExpr(std::stack<ValueToken>& valueTokens)
+{
+    if (valueTokens.size() < 1) {
+        throw std::invalid_argument("Initialization Expression argument missing");
+    }
+    if (valueTokens.size() == 1) {
+        const ValueToken& identifier = valueTokens.top();
+        valueTokens.pop();
+
+        if (identifier.type != Token::Types::IDENTIFIER) {
+            throw std::invalid_argument("Initialization Expression identifier not token");
+        }
+
+        return std::make_unique<InitializationExpr>(identifier.value, _handler);
+    }
+    const ValueToken& value = valueTokens.top();
+    valueTokens.pop();
+    const ValueToken& identifier = valueTokens.top();
+    valueTokens.pop();
+
+    if (identifier.type != Token::Types::IDENTIFIER) {
+        throw std::invalid_argument("Initialization Expression identifier not token");
+    }
+
+    return std::make_unique<InitializationExpr>(identifier.value, std::make_unique<LiteralExpr>(value.value), _handler);
 }

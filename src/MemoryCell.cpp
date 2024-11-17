@@ -42,6 +42,10 @@ void MemoryCell::typeDeducer(const std::string& value)
         return;
     if (strToBool(value))
         return;
+    if (value == "NULL") {
+        _value = std::monostate();
+        return;
+    }
     if (value != "") {
         _value = value;
     }

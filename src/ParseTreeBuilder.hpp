@@ -37,4 +37,12 @@ private:
      * Modifies valueStack
      */
     std::unique_ptr<AssignExpr> getAssignmentExpr(std::stack<ValueToken>& valueStack);
+
+    /**
+     * Constructs a initialization expr from valueStack
+     *
+     * @param valueStack contains value and identifier
+     * Modifies valueStack
+     */
+    std::unique_ptr<InitializationExpr> getInitializationExpr(std::stack<ValueToken>& valueStack);
 };
