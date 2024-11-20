@@ -105,6 +105,7 @@ private:
         { Types::ASSIGN, 0 },
         { Types::KEYWORD, 1 },
         { Types::OPERATOR, 2 },
+    { Types::STATEMENT_TERMINATE, -1}
     };
 };
 
