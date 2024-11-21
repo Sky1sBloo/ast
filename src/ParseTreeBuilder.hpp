@@ -26,7 +26,7 @@ private:
     /**
      * Identifies token
      */
-    std::unique_ptr<TerminalExpr> identifyStatement(const std::vector<Token>& statement);
+    std::unique_ptr<Expr> identifyStatement(const std::vector<Token>& statement);
 
     bool statementMatchesRuleset(const std::vector<Token>& statement, std::span<const Token> ruleset);
 

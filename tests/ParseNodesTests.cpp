@@ -63,9 +63,9 @@ TEST(PARSE_NODES_TEST, STATEMENT_CONTAINER_TEST)
     auto varAExpr = std::make_unique<InitializationExpr>(varA.first, std::make_unique<LiteralExpr>(std::to_string(varA.second)), varHandler);
     auto varBExpr = std::make_unique<InitializationExpr>(varB.first, std::make_unique<LiteralExpr>(std::to_string(varB.second)), varHandler);
     auto assignAExpr = std::make_unique<AssignExpr>(varA.first, std::make_unique<LiteralExpr>(std::to_string(assignA.second)), varHandler);
-    statementContainer.insertExpr(std::move(varAExpr));
-    statementContainer.insertExpr(std::move(varBExpr));
-    statementContainer.insertExpr(std::move(assignAExpr));
+    statementContainer.insertExpr(std::make_unique<Expr>(std::move(varAExpr)));
+    statementContainer.insertExpr(std::make_unique<Expr>(std::move(varBExpr)));
+    statementContainer.insertExpr(std::make_unique<Expr>(std::move(assignAExpr)));
 
     statementContainer.performAction();
 

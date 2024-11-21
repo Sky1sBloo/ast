@@ -30,21 +30,24 @@ void ParseTreeBuilder::getStatementTokens(const std::vector<Token>& tokens)
     }
 }
 
-std::unique_ptr<TerminalExpr> ParseTreeBuilder::identifyStatement(const std::vector<Token>& statement)
+std::unique_ptr<Expr> ParseTreeBuilder::identifyStatement(const std::vector<Token>& statement)
 {
     if (statementMatchesRuleset(statement, _varInitializationRuleset)) {
         const std::string& identifier = statement[1].getValue();
-        return std::make_unique<InitializationExpr>(identifier, _var_handler);
+        auto initializationExpr = std::make_unique<InitializationExpr>(identifier, _var_handler);
+        return std::make_unique<Expr>(std::move(initializationExpr));
     }
     if (statementMatchesRuleset(statement, _varAssignmentRuleset)) {
         const std::string& identifier = statement[0].getValue();
         const std::string& value = statement[2].getValue();
-        return std::make_unique<AssignExpr>(identifier, std::make_unique<LiteralExpr>(value), _var_handler);
+        auto assignExpr = std::make_unique<AssignExpr>(identifier, std::make_unique<LiteralExpr>(value), _var_handler);
+        return std::make_unique<Expr>(std::move(assignExpr));
     }
     if (statementMatchesRuleset(statement, _varInitializationAndAssignmentRuleset)) {
         const std::string& identifier = statement[1].getValue();
         const std::string& value = statement[3].getValue();
-        return std::make_unique<InitializationExpr>(identifier, std::make_unique<LiteralExpr>(value), _var_handler);
+        auto initializationExpr = std::make_unique<InitializationExpr>(identifier, std::make_unique<LiteralExpr>(value), _var_handler);
+        return std::make_unique<Expr>(std::move(initializationExpr));
     }
     throw std::domain_error("Cannot identify statement");
 }

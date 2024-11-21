@@ -1,11 +1,16 @@
 #pragma once
 #include <memory>
 #include <string>
+#include <variant>
 #include <vector>
 
 #include "MemoryCell.hpp"
 #include "VariableHandler.hpp"
 
+/**
+ * Class holding all expr types by variant
+ */
+class Expr;
 /**
  * Base class for all values that can contains value
  */
@@ -24,14 +29,36 @@ public:
     virtual void performAction() = 0;
 };
 
+class Expr {
+public:
+    Expr(std::unique_ptr<ReturnableExpr> returnableExpr)
+        : _expr(std::move(returnableExpr))
+    {
+    }
+
+    Expr(std::unique_ptr<TerminalExpr> terminalExpr)
+        : _expr(std::move(terminalExpr))
+    {
+    }
+
+    std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>>& getVariant() { return _expr; }
+
+private:
+    std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>> _expr;
+};
+
 class StatementContainer : public TerminalExpr {
 public:
-    StatementContainer() : _statements() {}
-    StatementContainer(std::vector<std::unique_ptr<TerminalExpr>> statements);
+    StatementContainer()
+        : _statements()
+    {
+    }
+    StatementContainer(std::vector<std::unique_ptr<Expr>> statements);
     void performAction() override;
-    void insertExpr(std::unique_ptr<TerminalExpr> expr);
+    void insertExpr(std::unique_ptr<Expr> expr);
+
 private:
-    std::vector<std::unique_ptr<TerminalExpr>> _statements;
+    std::vector<std::unique_ptr<Expr>> _statements;
 };
 
 /**
@@ -75,4 +102,15 @@ private:
     const std::string _id;
     std::unique_ptr<ReturnableExpr> _value;
     std::shared_ptr<VariableHandler> _handler;
+};
+
+class FunctionExpr : public ReturnableExpr {
+public:
+    FunctionExpr(const std::string& id, std::vector<std::unique_ptr<Expr>>& statements);
+
+    const MemoryCell& getValue() const override;
+
+private:
+    const std::string _id;
+    std::vector<std::unique_ptr<Expr>>& _statements;
 };
