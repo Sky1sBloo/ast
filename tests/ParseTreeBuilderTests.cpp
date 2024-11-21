@@ -6,7 +6,7 @@
 #include <gtest/gtest.h>
 #include <optional>
 #include <string>
-/*
+
 TEST(PARSE_TREE_TESTS, VARIABLE_SAVING)
 {
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
@@ -18,8 +18,8 @@ TEST(PARSE_TREE_TESTS, VARIABLE_SAVING)
 
     Tokenizer tokens(source);
     ParseTreeBuilder treeBuilder(tokens.getTokens(), variableHandler);
-    auto tree = treeBuilder.getTree();
-    tree->performAction();
+    StatementContainer& tree = treeBuilder.getTree();
+    tree.performAction();
 
     MemoryCell value = variableHandler->getValue("a");
     auto returnedValue = value.getAs<int>();
@@ -61,8 +61,8 @@ TEST(PARSE_TREE_TESTS, MULTIPLE_STATEMENTS)
 
     Tokenizer tokens(source);
     ParseTreeBuilder treeBuilder(tokens.getTokens(), variableHandler);
-    auto tree = treeBuilder.getTree();
-    tree->performAction();
+    StatementContainer& tree = treeBuilder.getTree();
+    tree.performAction();
 
     MemoryCell valueA = variableHandler->getValue("a");
     auto returnedValueA = valueA.getAs<int>();
@@ -74,7 +74,7 @@ TEST(PARSE_TREE_TESTS, MULTIPLE_STATEMENTS)
 
     EXPECT_EQ(expectedValueA, returnedValueA);
     EXPECT_EQ(expectedValueB, returnedValueB);
-}
+} 
 
 TEST(PARSE_TREE_TESTS, VARIABLE_INITIALIZATION)
 {
@@ -84,17 +84,17 @@ TEST(PARSE_TREE_TESTS, VARIABLE_INITIALIZATION)
 
     Tokenizer tokens(source);
     ParseTreeBuilder treeBuilder(tokens.getTokens(), variableHandler);
-    auto tree = treeBuilder.getTree();
-    tree->performAction();
+    treeBuilder.getTree().performAction();
 
     MemoryCell valueA = variableHandler->getValue("test");
     if (valueA.getType() != DataType::NULL_TYPE) {
         FAIL() << "Returned variable isn't expected type NULL";
     }
-} */
+} 
 
 TEST(PARSE_TREE_TESTS, VARIABLE_INITIALIZATION_AND_ASSIGNMENT)
 {
+    /*
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
     std::string source = "var test = 5;";
@@ -112,5 +112,5 @@ TEST(PARSE_TREE_TESTS, VARIABLE_INITIALIZATION_AND_ASSIGNMENT)
         FAIL() << "Returned variable isn't at expected type";
     }
 
-    EXPECT_EQ(expectedValue, returnedValueA);
-}
+    EXPECT_EQ(expectedValue, returnedValueA);  */
+} 

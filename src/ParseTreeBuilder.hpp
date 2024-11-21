@@ -3,46 +3,41 @@
 #include "Token.hpp"
 #include "VariableHandler.hpp"
 
+#include <array>
 #include <memory>
 #include <queue>
-#include <stack>
 
-template <class... TokenVariant>
-struct TokenVisitor : TokenVariant... {
-    using TokenVariant::operator()...;
-};
 class ParseTreeBuilder {
 public:
     ParseTreeBuilder(const std::vector<Token>& tokens, std::shared_ptr<VariableHandler> handler);
 
-    std::unique_ptr<StatementContainer> getTree() {
-        return std::move(_container);
-    } 
+    StatementContainer& getTree() { return _root; }
+
 private:
-    std::shared_ptr<VariableHandler> _handler;
-    std::unique_ptr<StatementContainer> _container;
-
-    using StatementToken = std::unique_ptr<std::vector<Token>>;
-
-    /**
-     * Returns a queue of statements separated by termination statement
-     */
-    StatementToken getPostFix(const std::vector<Token>& statement);
-    std::queue<StatementToken> getStatements(const std::vector<Token>& tokens);
+    std::shared_ptr<VariableHandler> _var_handler;
+    StatementContainer _root;
+    std::queue<std::vector<Token>> _statementTokens; // Tokens separated by statement termination
 
     /**
-     * Constructs a assign expr from valueStack
-     *
-     * @param valueStack contains value and identifier
-     * Modifies valueStack
+     * Separates tokens by statement termination
      */
-    std::unique_ptr<AssignExpr> getAssignmentExpr(std::stack<Token>& valueStack);
+    void getStatementTokens(const std::vector<Token>& tokens);
 
     /**
-     * Constructs a initialization expr from valueStack
-     *
-     * @param valueStack contains value and identifier
-     * Modifies valueStack
+     * Identifies token
      */
-    std::unique_ptr<InitializationExpr> getInitializationExpr(std::stack<Token>& valueStack);
+    std::unique_ptr<TerminalExpr> identifyStatement(const std::vector<Token>& statement);
+
+    bool statementIsVarInitialization(const std::vector<Token>& statement);
+    bool statementIsAssignment(const std::vector<Token>& statement);
+
+private:
+    inline static const std::array<Token, 2> _varInitializationRuleset = { { { Token::SubTypes::KEYWORD },
+        { Token::MainTypes::VALUE, Token::SubTypes::ANY } } };
+
+    inline static const std::array<Token, 3> _varAssignmentRuleset = { { { Token::SubTypes::IDENTIFIER },
+        { Token::SubTypes::ASSIGN }, { Token::MainTypes::VALUE, Token::SubTypes::ANY } } };
+
+    inline static const std::array<Token, 4> _varInitializationAndAssignmentRuleset = { { { Token::SubTypes::KEYWORD },
+        { Token::SubTypes::IDENTIFIER }, { Token::SubTypes::ASSIGN }, { Token::MainTypes::VALUE, Token::SubTypes::ANY } } };
 };

@@ -1,138 +1,72 @@
 #include "ParseTreeBuilder.hpp"
-#include "Token.hpp"
-#include <queue>
-#include <stack>
+#include "ParseNodes.hpp"
+#include <ranges>
 #include <stdexcept>
-#include <vector>
 
 ParseTreeBuilder::ParseTreeBuilder(const std::vector<Token>& tokens, std::shared_ptr<VariableHandler> handler)
-    : _container(std::make_unique<StatementContainer>())
-    , _handler(handler)
+    : _var_handler(handler)
+    , _root()
+    , _statementTokens()
 {
-    std::queue<StatementToken> statements = getStatements(tokens);
+    getStatementTokens(tokens);
 
-    // Iterate each statement
-    while (!statements.empty()) {
-        auto& statement = statements.front();
-        for (const Token& tokenContainer : *statement) {
+    while (!_statementTokens.empty()) {
+        _root.insertExpr(identifyStatement(_statementTokens.front()));
+        _statementTokens.pop();
+    }
 
+}
+
+void ParseTreeBuilder::getStatementTokens(const std::vector<Token>& tokens)
+{
+    std::vector<Token> currentStatement;
+    for (const Token& token : tokens) {
+        if (token.getSubType() == Token::SubTypes::STATEMENT_TERMINATE) {
+            _statementTokens.push(currentStatement);
+            currentStatement.clear();
+            continue;
         }
-        /*
-        std::stack<ValueToken> valueTokens;
-
-        for (const Token& tokenContainer : *statement) {
-            if (std::holds_alternative<ValueToken>(tokenContainer.getToken())) {
-                valueTokens.push(std::get<ValueToken>(tokenContainer.getToken()));
-            } else if (std::holds_alternative<TerminalToken>(tokenContainer.getToken())) {
-                const TerminalToken& token = std::get<TerminalToken>(tokenContainer.getToken());
-                if (token.type == Token::Types::ASSIGN) {
-                    auto assignExpr = getAssignmentExpr(valueTokens);
-                    _container->insertExpr(std::move(assignExpr));
-                } else if (token.type == Token::Types::KEYWORD) {
-                    if (token.value == "var") {
-                        auto initializationExpr = getInitializationExpr(valueTokens);
-                        _container->insertExpr(std::move(initializationExpr));
-                    }
-                }
-            }
-        } */
-        statements.pop();
+        currentStatement.push_back(token);
     }
 }
 
-std::queue<ParseTreeBuilder::StatementToken> ParseTreeBuilder::getStatements(const std::vector<Token>& tokens)
+std::unique_ptr<TerminalExpr> ParseTreeBuilder::identifyStatement(const std::vector<Token>& statement)
 {
-    // Todo make this more efficient
-    std::queue<StatementToken> statements;
-    std::vector<Token> statement;
-
-    /*
-    for (const Token& tokenContainer : tokens) {
-        std::visit([&](const Token& token) {
-            if (token.type == Token::SubTypes::STATEMENT_TERMINATE) {
-                StatementToken postFixStatement = getPostFix(statement);
-                statements.push(std::move(postFixStatement));
-                statement.clear();
-            } else {
-                statement.push_back(tokenContainer);
-            }
-        },
-            tokenContainer.getToken());
-    } */
-
-    return statements;
+    if (statementIsVarInitialization(statement)) {
+        const std::string& identifier = statement[1].getValue();
+        return std::make_unique<InitializationExpr>(identifier, _var_handler);
+    }
+    if (statementIsAssignment(statement)) {
+        const std::string& identifier = statement[0].getValue();
+        const std::string& value = statement[2].getValue();
+        return std::make_unique<AssignExpr>(identifier, std::make_unique<LiteralExpr>(value), _var_handler);
+    }
+    throw std::domain_error("Cannot identify statement");
 }
 
-ParseTreeBuilder::StatementToken ParseTreeBuilder::getPostFix(const std::vector<Token>& statement)
+bool ParseTreeBuilder::statementIsVarInitialization(const std::vector<Token>& statement)
 {
-    StatementToken postFixToken = std::make_unique<std::vector<Token>>();
-    std::stack<Token> terminalTokens;
-    /*
-    for (const Token& tokenContainer : statement) {
-        std::visit(TokenVisitor {
-                       [&postFixToken](const ValueToken& valueToken) {
-                           postFixToken->emplace_back(valueToken.type, valueToken.value);
-                       },
-                       [&postFixToken, &terminalTokens](const TerminalToken& terminalToken) {
-                           while (!terminalTokens.empty() && terminalTokens.top().getPrecedence() >= terminalToken.getPrecedence()) {
-                               postFixToken->emplace_back(terminalTokens.top().type, terminalTokens.top().value);
-                               terminalTokens.pop();
-                           }
-                           terminalTokens.push(terminalToken);
-                       } },
-            tokenContainer.getToken());
+    if (statement.size() != _varInitializationRuleset.size()) {
+        return false;
     }
 
-    while (!terminalTokens.empty()) {
-        postFixToken->emplace_back(terminalTokens.top().type, terminalTokens.top().value);
-        terminalTokens.pop();
-    } */
-
-    return postFixToken;
-}
-
-std::unique_ptr<AssignExpr> ParseTreeBuilder::getAssignmentExpr(std::stack<Token>& valueTokens)
-{
-    /*
-    if (valueTokens.size() < 2) {
-        throw std::invalid_argument("Assignment Expression missing arguments");
-    }
-    const ValueToken& value = valueTokens.top();
-    valueTokens.pop();
-    const ValueToken& identifier = valueTokens.top();
-    valueTokens.pop();
-
-    if (identifier.type != Token::Types::IDENTIFIER) {
-        throw std::invalid_argument("Assignment Expression identifier not token");
-    }
-
-    return std::make_unique<AssignExpr>(identifier.value, std::make_unique<LiteralExpr>(value.value), _handler); */
-}
-
-std::unique_ptr<InitializationExpr> ParseTreeBuilder::getInitializationExpr(std::stack<Token>& valueTokens)
-{
-    /*
-    if (valueTokens.size() < 1) {
-        throw std::invalid_argument("Initialization Expression argument missing");
-    }
-    if (valueTokens.size() == 1) {
-        const ValueToken& identifier = valueTokens.top();
-        valueTokens.pop();
-
-        if (identifier.type != Token::Types::IDENTIFIER) {
-            throw std::invalid_argument("Initialization Expression identifier not token");
+    for (const auto& [token, expectedToken] : std::views::zip(statement, _varInitializationRuleset)) {
+        if (token != expectedToken) {
+            return false;
         }
-
-        return std::make_unique<InitializationExpr>(identifier.value, _handler);
     }
-    const ValueToken& value = valueTokens.top();
-    valueTokens.pop();
-    const ValueToken& identifier = valueTokens.top();
-    valueTokens.pop();
+    return true;
+}
 
-    if (identifier.type != Token::Types::IDENTIFIER) {
-        throw std::invalid_argument("Initialization Expression identifier not token");
+bool ParseTreeBuilder::statementIsAssignment(const std::vector<Token>& statement)
+{
+    if (statement.size() != _varAssignmentRuleset.size()) {
+        return false;
     }
-
-    return std::make_unique<InitializationExpr>(identifier.value, std::make_unique<LiteralExpr>(value.value), _handler); */
-} 
+    for (const auto& [token, expectedToken] : std::views::zip(statement, _varAssignmentRuleset)) {
+        if (token != expectedToken) {
+            return false;
+        }
+    }
+    return true;
+}
