@@ -113,8 +113,18 @@ private:
     std::vector<std::unique_ptr<Expr>> _statements;
 };
 
+class TerminalFunctionExpr : public TerminalExpr {
+public:
+    TerminalFunctionExpr(const std::string& id);
+    void insertExpr(std::unique_ptr<Expr> expr);
+    void performAction() override;
+private:
+    const std::string _id;
+    std::vector<std::unique_ptr<Expr>> _statements;
+};
+
 /**
- * Node for non returnable functions
+ * Node for non named returnable functions
  */
 class StatementContainer : public TerminalExpr {
 public:
