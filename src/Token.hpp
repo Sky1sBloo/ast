@@ -51,6 +51,9 @@ public:
         , _subType(newSubType)
         , _value(newValue)
     {
+        if (newSubType == SubTypes::ANY) {
+            throw std::invalid_argument("Tried to defer main type from subtype ANY in Token");
+        }
         if (_terminalSubTypes.contains(newSubType)) {
             _mainType = MainTypes::TERMINAL;
         } else if (_valueSubTypes.contains(newSubType)) {
