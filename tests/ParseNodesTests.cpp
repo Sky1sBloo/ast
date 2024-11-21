@@ -91,9 +91,9 @@ TEST(PARSE_NODES_TEST, FUNCTION_EXPR_TEST)
     auto assignExpr = std::make_unique<AssignExpr>(identifier, std::make_unique<LiteralExpr>(std::to_string(secondValue)), varHandler);
     auto returnLiteral = std::make_unique<LiteralExpr>(std::to_string(returnValue));
 
-    functionExpr.insertStatement(std::make_unique<Expr>(std::move(varExpr)));
-    functionExpr.insertStatement(std::make_unique<Expr>(std::move(assignExpr)));
-    functionExpr.insertStatement(std::make_unique<Expr>(std::move(returnLiteral)));
+    functionExpr.insertExpr(std::make_unique<Expr>(std::move(varExpr)));
+    functionExpr.insertExpr(std::make_unique<Expr>(std::move(assignExpr)));
+    functionExpr.insertExpr(std::make_unique<Expr>(std::move(returnLiteral)));
 
     EXPECT_NO_THROW({ 
         int retrievedValue = functionExpr.getValue().getAs<int>().value();

@@ -104,7 +104,7 @@ private:
 class FunctionExpr : public ReturnableExpr {
 public:
     FunctionExpr(const std::string& id);
-    void insertStatement(std::unique_ptr<Expr> statement);
+    void insertExpr(std::unique_ptr<Expr> expr);
 
     const MemoryCell& getValue() const override;
 

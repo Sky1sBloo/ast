@@ -6,9 +6,9 @@ FunctionExpr::FunctionExpr(const std::string& id)
 {
 }
 
-void FunctionExpr::insertStatement(std::unique_ptr<Expr> statement)
+void FunctionExpr::insertExpr(std::unique_ptr<Expr> expr)
 {
-    _statements.push_back(std::move(statement));
+    _statements.push_back(std::move(expr));
 }
 
 const MemoryCell& FunctionExpr::getValue() const
