@@ -114,11 +114,12 @@ private:
 
 class FunctionExpr : public ReturnableExpr {
 public:
-    FunctionExpr(const std::string& id, std::vector<std::unique_ptr<Expr>>& statements);
+    FunctionExpr(const std::string& id);
+    void insertStatement(std::unique_ptr<Expr> statement);
 
     const MemoryCell& getValue() const override;
 
 private:
     const std::string _id;
-    std::vector<std::unique_ptr<Expr>>& _statements;
+    std::vector<std::unique_ptr<Expr>> _statements;
 };

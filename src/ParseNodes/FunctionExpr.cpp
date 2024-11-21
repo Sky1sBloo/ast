@@ -1,9 +1,14 @@
 #include "ParseNodes.hpp"
 
-FunctionExpr::FunctionExpr(const std::string& id, std::vector<std::unique_ptr<Expr>>& statements)
+FunctionExpr::FunctionExpr(const std::string& id)
     : _id(id)
-    , _statements(statements)
+    , _statements()
 {
+}
+
+void FunctionExpr::insertStatement(std::unique_ptr<Expr> statement)
+{
+    _statements.push_back(std::move(statement));
 }
 
 const MemoryCell& FunctionExpr::getValue() const

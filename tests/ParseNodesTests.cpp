@@ -86,16 +86,15 @@ TEST(PARSE_NODES_TEST, FUNCTION_EXPR_TEST)
     int secondValue = 10;
     int returnValue = 7;
 
-    std::vector<std::unique_ptr<Expr>> statements;
+    FunctionExpr functionExpr("testFunc");
     auto varExpr = std::make_unique<InitializationExpr>(identifier, std::make_unique<LiteralExpr>(std::to_string(value)), varHandler);
     auto assignExpr = std::make_unique<AssignExpr>(identifier, std::make_unique<LiteralExpr>(std::to_string(secondValue)), varHandler);
     auto returnLiteral = std::make_unique<LiteralExpr>(std::to_string(returnValue));
 
-    statements.push_back(std::make_unique<Expr>(std::move(varExpr)));
-    statements.push_back(std::make_unique<Expr>(std::move(assignExpr)));
-    statements.push_back(std::make_unique<Expr>(std::move(returnLiteral)));
+    functionExpr.insertStatement(std::make_unique<Expr>(std::move(varExpr)));
+    functionExpr.insertStatement(std::make_unique<Expr>(std::move(assignExpr)));
+    functionExpr.insertStatement(std::make_unique<Expr>(std::move(returnLiteral)));
 
-    FunctionExpr functionExpr("testFunc", statements);
     EXPECT_NO_THROW({ 
         int retrievedValue = functionExpr.getValue().getAs<int>().value();
         EXPECT_EQ(retrievedValue, returnValue);
