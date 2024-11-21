@@ -8,10 +8,6 @@
 #include "VariableHandler.hpp"
 
 /**
- * Class holding all expr types by variant
- */
-class Expr;
-/**
  * Base class for all values that can contains value
  */
 class ReturnableExpr {
@@ -29,6 +25,9 @@ public:
     virtual void performAction() = 0;
 };
 
+/**
+ * Class containing both returnable and terminal expr
+ */
 class Expr {
 public:
     Expr(std::unique_ptr<ReturnableExpr> returnableExpr)
