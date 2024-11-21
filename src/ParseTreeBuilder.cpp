@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-ParseTreeBuilder::ParseTreeBuilder(const std::vector<TokenContainer>& tokens, std::shared_ptr<VariableHandler> handler)
+ParseTreeBuilder::ParseTreeBuilder(const std::vector<Token>& tokens, std::shared_ptr<VariableHandler> handler)
     : _container(std::make_unique<StatementContainer>())
     , _handler(handler)
 {
@@ -14,9 +14,13 @@ ParseTreeBuilder::ParseTreeBuilder(const std::vector<TokenContainer>& tokens, st
     // Iterate each statement
     while (!statements.empty()) {
         auto& statement = statements.front();
+        for (const Token& tokenContainer : *statement) {
+
+        }
+        /*
         std::stack<ValueToken> valueTokens;
 
-        for (const TokenContainer& tokenContainer : *statement) {
+        for (const Token& tokenContainer : *statement) {
             if (std::holds_alternative<ValueToken>(tokenContainer.getToken())) {
                 valueTokens.push(std::get<ValueToken>(tokenContainer.getToken()));
             } else if (std::holds_alternative<TerminalToken>(tokenContainer.getToken())) {
@@ -31,20 +35,21 @@ ParseTreeBuilder::ParseTreeBuilder(const std::vector<TokenContainer>& tokens, st
                     }
                 }
             }
-        }
+        } */
         statements.pop();
     }
 }
 
-std::queue<ParseTreeBuilder::StatementToken> ParseTreeBuilder::getStatements(const std::vector<TokenContainer>& tokens)
+std::queue<ParseTreeBuilder::StatementToken> ParseTreeBuilder::getStatements(const std::vector<Token>& tokens)
 {
     // Todo make this more efficient
     std::queue<StatementToken> statements;
-    std::vector<TokenContainer> statement;
+    std::vector<Token> statement;
 
-    for (const TokenContainer& tokenContainer : tokens) {
+    /*
+    for (const Token& tokenContainer : tokens) {
         std::visit([&](const Token& token) {
-            if (token.type == Token::Types::STATEMENT_TERMINATE) {
+            if (token.type == Token::SubTypes::STATEMENT_TERMINATE) {
                 StatementToken postFixStatement = getPostFix(statement);
                 statements.push(std::move(postFixStatement));
                 statement.clear();
@@ -53,17 +58,17 @@ std::queue<ParseTreeBuilder::StatementToken> ParseTreeBuilder::getStatements(con
             }
         },
             tokenContainer.getToken());
-    }
+    } */
 
     return statements;
 }
 
-ParseTreeBuilder::StatementToken ParseTreeBuilder::getPostFix(const std::vector<TokenContainer>& statement)
+ParseTreeBuilder::StatementToken ParseTreeBuilder::getPostFix(const std::vector<Token>& statement)
 {
-    StatementToken postFixToken = std::make_unique<std::vector<TokenContainer>>();
-    std::stack<TerminalToken> terminalTokens;
-
-    for (const TokenContainer& tokenContainer : statement) {
+    StatementToken postFixToken = std::make_unique<std::vector<Token>>();
+    std::stack<Token> terminalTokens;
+    /*
+    for (const Token& tokenContainer : statement) {
         std::visit(TokenVisitor {
                        [&postFixToken](const ValueToken& valueToken) {
                            postFixToken->emplace_back(valueToken.type, valueToken.value);
@@ -81,13 +86,14 @@ ParseTreeBuilder::StatementToken ParseTreeBuilder::getPostFix(const std::vector<
     while (!terminalTokens.empty()) {
         postFixToken->emplace_back(terminalTokens.top().type, terminalTokens.top().value);
         terminalTokens.pop();
-    }
+    } */
 
     return postFixToken;
 }
 
-std::unique_ptr<AssignExpr> ParseTreeBuilder::getAssignmentExpr(std::stack<ValueToken>& valueTokens)
+std::unique_ptr<AssignExpr> ParseTreeBuilder::getAssignmentExpr(std::stack<Token>& valueTokens)
 {
+    /*
     if (valueTokens.size() < 2) {
         throw std::invalid_argument("Assignment Expression missing arguments");
     }
@@ -100,11 +106,12 @@ std::unique_ptr<AssignExpr> ParseTreeBuilder::getAssignmentExpr(std::stack<Value
         throw std::invalid_argument("Assignment Expression identifier not token");
     }
 
-    return std::make_unique<AssignExpr>(identifier.value, std::make_unique<LiteralExpr>(value.value), _handler);
+    return std::make_unique<AssignExpr>(identifier.value, std::make_unique<LiteralExpr>(value.value), _handler); */
 }
 
-std::unique_ptr<InitializationExpr> ParseTreeBuilder::getInitializationExpr(std::stack<ValueToken>& valueTokens)
+std::unique_ptr<InitializationExpr> ParseTreeBuilder::getInitializationExpr(std::stack<Token>& valueTokens)
 {
+    /*
     if (valueTokens.size() < 1) {
         throw std::invalid_argument("Initialization Expression argument missing");
     }
@@ -127,5 +134,5 @@ std::unique_ptr<InitializationExpr> ParseTreeBuilder::getInitializationExpr(std:
         throw std::invalid_argument("Initialization Expression identifier not token");
     }
 
-    return std::make_unique<InitializationExpr>(identifier.value, std::make_unique<LiteralExpr>(value.value), _handler);
-}
+    return std::make_unique<InitializationExpr>(identifier.value, std::make_unique<LiteralExpr>(value.value), _handler); */
+} 

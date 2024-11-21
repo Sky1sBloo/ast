@@ -1,9 +1,10 @@
 #include "Tokenizer.hpp"
 #include <algorithm>
 #include <cctype>
+#include <stdexcept>
 #include <string>
 
-void Tokenizer::pushToken(Token::Types type, Token::Types& prevType, std::string& tokenStr)
+void Tokenizer::pushToken(Token::SubTypes type, Token::SubTypes& prevType, std::string& tokenStr)
 {
     if (tokenStr.empty()) {
         return;
@@ -16,39 +17,41 @@ void Tokenizer::pushToken(Token::Types type, Token::Types& prevType, std::string
 Tokenizer::Tokenizer(std::string& sourceCode)
 {
     std::string tokenStr;
-    Token::Types prevType = Token::Types::INVALID;
+    Token::SubTypes prevType = Token::SubTypes::INVALID;
     bool prevIsDelimeter = false;
 
     for (char c : sourceCode) {
         if (c == ' ') {
-            Token::Types type = identifyType(tokenStr);
+            Token::SubTypes type = identifyType(tokenStr);
             pushToken(type, prevType, tokenStr);
             continue;
         }
 
         if (c == _terminationChar) {
             if (!tokenStr.empty()) {
-                Token::Types type = identifyType(tokenStr);
+                Token::SubTypes type = identifyType(tokenStr);
                 pushToken(type, prevType, tokenStr);
             }
             tokenStr = ";";
-            pushToken(Token::Types::STATEMENT_TERMINATE, prevType, tokenStr);
+            pushToken(Token::SubTypes::STATEMENT_TERMINATE, prevType, tokenStr);
             continue;
         }
         // TODO: Add ruleset for when to terminate
         switch (prevType) {
-        case Token::Types::LITERAL:
-        case Token::Types::KEYWORD:
-        case Token::Types::IDENTIFIER:
+        case Token::SubTypes::ANY:
+            throw std::runtime_error("Tried to tokenize an ANY subtype");
+        case Token::SubTypes::LITERAL:
+        case Token::SubTypes::KEYWORD:
+        case Token::SubTypes::IDENTIFIER:
             if (std::ranges::find(_delimeters, c) != _delimeters.end()) {
-                Token::Types type = identifyType(tokenStr);
+                Token::SubTypes type = identifyType(tokenStr);
                 pushToken(type, prevType, tokenStr);
             }
             break;
-        case Token::Types::OPERATOR:
-        case Token::Types::ASSIGN:
-        case Token::Types::INVALID:
-        case Token::Types::STATEMENT_TERMINATE:
+        case Token::SubTypes::OPERATOR:
+        case Token::SubTypes::ASSIGN:
+        case Token::SubTypes::INVALID:
+        case Token::SubTypes::STATEMENT_TERMINATE:
             break;
         };
 
@@ -63,25 +66,25 @@ bool Tokenizer::hasTerminateChar(const std::string& word) const
     return (word.back() == _terminationChar);
 }
 
-Token::Types Tokenizer::identifyType(const std::string& word)
+Token::SubTypes Tokenizer::identifyType(const std::string& word)
 {
     if (isKeyword(word)) {
-        return Token::Types::KEYWORD;
+        return Token::SubTypes::KEYWORD;
     }
     if (isOperation(word)) {
-        return Token::Types::OPERATOR;
+        return Token::SubTypes::OPERATOR;
     }
     if (isAssignment(word)) {
-        return Token::Types::ASSIGN;
+        return Token::SubTypes::ASSIGN;
     }
     if (isLiteral(word)) {
-        return Token::Types::LITERAL;
+        return Token::SubTypes::LITERAL;
     }
     if (isIdentifier(word)) {
-        return Token::Types::IDENTIFIER;
+        return Token::SubTypes::IDENTIFIER;
     }
 
-    return Token::Types::INVALID;
+    return Token::SubTypes::INVALID;
 };
 
 bool Tokenizer::isKeyword(const std::string& word) const

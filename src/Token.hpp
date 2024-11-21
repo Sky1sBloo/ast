@@ -1,21 +1,22 @@
 #pragma once
-#include <array>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
-#include <variant>
-
-/**
- * Class containing token variant
- */
-class TokenContainer;
+#include <unordered_set>
 
 /**
  * Base class for tokens
  */
 class Token {
 public:
-    enum class Types {
+    enum class MainTypes {
+        INVALID,
+        VALUE,
+        TERMINAL
+    };
+
+    enum class SubTypes {
+        ANY, // Used for checking parser ruleset and comparison. Ignores subtypes and only checks for maintype
         INVALID,
         LITERAL,
         KEYWORD,
@@ -25,111 +26,98 @@ public:
         STATEMENT_TERMINATE
     };
 
-    Types type;
-    std::string value;
-
-    Token(Types newType, const std::string& newValue)
-        : type(newType)
-        , value(newValue)
-    {
-    }
-};
-
-/**
- * Token representing a value or returnable
- */
-class ValueToken : public Token {
 public:
-    ValueToken(Types newType, const std::string& newValue)
-        : Token(newType, newValue)
+    Token(MainTypes newType, SubTypes newSubType, const std::string& newValue = "")
+        : _mainType(newType)
+        , _subType(newSubType)
+        , _value(newValue)
     {
-        if (!isValidType(type)) {
-            throw std::invalid_argument("ValueToken inherits invalid type");
-        }
-    }
-
-    constexpr static bool isValidType(Types typeCheck) noexcept
-    {
-        for (Types validType : valueTypes) {
-            if (typeCheck == validType) {
-                return true;
+        if (_mainType == MainTypes::TERMINAL) {
+            if (!_terminalSubTypes.contains(_subType)) {
+                throw std::invalid_argument("Tried to initialize invalid subtype on Terminal Token");
+            }
+        } else if (_mainType == MainTypes::VALUE) {
+            if (!_valueSubTypes.contains(_subType)) {
+                throw std::invalid_argument("Tried to initialize invalid subtype on Value Token");
             }
         }
-        return false;
     }
 
-private:
-    constexpr static std::array<Types, 2> valueTypes = {
-        Types::IDENTIFIER,
-        Types::LITERAL
-    };
-};
-
-/**
- * Token representing a terminal or non returnable
- */
-class TerminalToken : public Token {
-public:
-    TerminalToken(Types newType, const std::string& newValue)
-        : Token(newType, newValue)
+    /**
+     * Constructor with main type identification
+     */
+    Token(SubTypes newSubType, const std::string& newValue = "")
+        : _mainType(MainTypes::INVALID)
+        , _subType(newSubType)
+        , _value(newValue)
     {
-        if (!isValidType(newType)) {
-            throw std::invalid_argument("Terminal Token inherits invalid type");
+        if (_terminalSubTypes.contains(newSubType)) {
+            _mainType = MainTypes::TERMINAL;
+        } else if (_valueSubTypes.contains(newSubType)) {
+            _mainType = MainTypes::VALUE;
         }
     }
+
+    MainTypes getMainType() const { return _mainType; }
+    SubTypes getSubType() const { return _subType; }
+    const std::string& getValue() const { return _value; }
 
     int getPrecedence() const
     {
-        return precedenceTokens.at(type);
+        if (_mainType != MainTypes::TERMINAL) {
+            throw std::runtime_error("Tried to access precedence of token of non terminal type");
+        }
+        return _precedenceTokens.at(_subType);
     }
 
-    constexpr static bool isValidType(Types typeCheck) noexcept
+    /**
+     * Comparison operator with SubType any logic
+     */
+    friend bool operator==(const Token& lhs, const Token& rhs)
     {
-        for (Types validType : terminalTypes) {
-            if (typeCheck == validType) {
-                return true;
-            }
+        if (lhs._mainType != rhs._mainType) {
+            return false;
+        }
+        if (lhs._subType == SubTypes::ANY || rhs._subType == SubTypes::ANY) {
+            return true;
+        }
+        if (lhs._subType == rhs._subType) {
+            return true;
         }
         return false;
     }
 
 private:
-    constexpr static std::array<Types, 4> terminalTypes = {
-        Types::ASSIGN,
-        Types::KEYWORD,
-        Types::OPERATOR,
-        Types::STATEMENT_TERMINATE
+    MainTypes _mainType;
+    SubTypes _subType;
+    std::string _value;
+
+    inline const static std::unordered_set<SubTypes> _valueSubTypes = {
+        SubTypes::ANY,
+        SubTypes::IDENTIFIER,
+        SubTypes::LITERAL
     };
 
-    inline const static std::unordered_map<Types, int> precedenceTokens = {
-        { Types::ASSIGN, 0 },
-        { Types::KEYWORD, 1 },
-        { Types::OPERATOR, 2 },
-    { Types::STATEMENT_TERMINATE, -1}
+    inline const static std::unordered_set<SubTypes> _terminalSubTypes = {
+        SubTypes::ANY,
+        SubTypes::ASSIGN,
+        SubTypes::KEYWORD,
+        SubTypes::OPERATOR,
     };
-};
 
-class TokenContainer {
-public:
-    TokenContainer(Token::Types newType, const std::string& newValue = "")
-        : _token(createTokenVariant(newType, newValue))
+    inline const static std::unordered_map<SubTypes, int> _precedenceTokens = {
+        { SubTypes::ASSIGN, 0 },
+        { SubTypes::KEYWORD, 1 },
+        { SubTypes::OPERATOR, 2 }
+    };
+
+    bool isValidSubType(SubTypes type) const
     {
-    }
-
-    using TokenVariant = std::variant<ValueToken, TerminalToken>;
-    const TokenVariant& getToken() const { return _token; }
-
-private:
-    constexpr TokenVariant createTokenVariant(Token::Types newType, const std::string& newValue) const
-    {
-        if (ValueToken::isValidType(newType)) {
-            return ValueToken(newType, newValue);
-        } else if (TerminalToken::isValidType(newType)) {
-            return TerminalToken(newType, newValue);
-        } else {
-            throw std::invalid_argument("Token container cant identifiy type");
+        if (_mainType == MainTypes::VALUE) {
+            return _valueSubTypes.contains(type);
+        } else if (_mainType == MainTypes::TERMINAL) {
+            return _terminalSubTypes.contains(type);
         }
+        return false;
     }
-
-    TokenVariant _token;
 };
