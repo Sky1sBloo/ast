@@ -55,20 +55,6 @@ private:
     std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>> _expr;
 };
 
-class StatementContainer : public TerminalExpr {
-public:
-    StatementContainer()
-        : _statements()
-    {
-    }
-    StatementContainer(std::vector<std::unique_ptr<Expr>> statements);
-    void performAction() override;
-    void insertExpr(std::unique_ptr<Expr> expr);
-
-private:
-    std::vector<std::unique_ptr<Expr>> _statements;
-};
-
 /**
  * Node containing constant literals
  */
@@ -112,6 +98,9 @@ private:
     std::shared_ptr<VariableHandler> _handler;
 };
 
+/**
+ * Node for returnable functions
+ */
 class FunctionExpr : public ReturnableExpr {
 public:
     FunctionExpr(const std::string& id);
@@ -121,5 +110,22 @@ public:
 
 private:
     const std::string _id;
+    std::vector<std::unique_ptr<Expr>> _statements;
+};
+
+/**
+ * Node for non returnable functions
+ */
+class StatementContainer : public TerminalExpr {
+public:
+    StatementContainer()
+        : _statements()
+    {
+    }
+
+    void performAction() override;
+    void insertExpr(std::unique_ptr<Expr> expr);
+
+private:
     std::vector<std::unique_ptr<Expr>> _statements;
 };
