@@ -22,7 +22,7 @@ const MemoryCell& FunctionExpr::getValue() const
             statement->getVariant());
 
         if (foundReturnStatement) {
-            return std::get<std::unique_ptr<ReturnableExpr>>(statement->getVariant())->getValue();
+            return statement->getAs<ReturnableExpr>().getValue();
         }
     }
     throw std::runtime_error("Function Expression doesn't have returnable expression");

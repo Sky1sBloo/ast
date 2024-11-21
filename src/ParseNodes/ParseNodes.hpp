@@ -42,6 +42,11 @@ public:
     }
 
     const std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>>& getVariant() const { return _expr; }
+    template <typename T>
+    const T& getAs() const
+    {
+        return *std::get<std::unique_ptr<T>>(_expr);
+    }
 
 private:
     std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>> _expr;
