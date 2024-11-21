@@ -31,7 +31,7 @@ private:
     bool statementMatchesRuleset(const std::vector<Token>& statement, std::span<const Token> ruleset);
 
 private:
-    inline static const std::array<Token, 2> _varInitializationRuleset = { { { Token::SubTypes::KEYWORD },
+    inline static const std::array<Token, 2> _varInitializationRuleset = { { { Token::SubTypes::KEYWORD, "var" },
         { Token::MainTypes::VALUE, Token::SubTypes::ANY } } };
 
     inline static const std::array<Token, 3> _varAssignmentRuleset = { { { Token::SubTypes::IDENTIFIER },

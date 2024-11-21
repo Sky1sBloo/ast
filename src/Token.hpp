@@ -87,6 +87,9 @@ public:
         if (lhs._subType == rhs._subType) {
             return true;
         }
+        if (lhs._value == rhs._value) {
+            return true;
+        }
         return false;
     }
 

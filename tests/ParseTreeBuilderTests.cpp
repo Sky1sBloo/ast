@@ -111,4 +111,14 @@ TEST(PARSE_TREE_TESTS, VARIABLE_INITIALIZATION_AND_ASSIGNMENT)
     }
 
     EXPECT_EQ(expectedValue, returnedValueA); 
-} 
+}
+
+TEST(PARSE_TREE_TESTS, INVALID_KEYWORD) {
+    std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
+    std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
+    std::string source = "shit test = 5;";
+    int expectedValue = 5;
+
+    Tokenizer tokens(source);
+    EXPECT_THROW(ParseTreeBuilder treeBuilder(tokens.getTokens(), variableHandler), std::domain_error);
+}
