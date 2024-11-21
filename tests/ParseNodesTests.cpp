@@ -1,10 +1,12 @@
 #include "ParseNodes.hpp"
 #include "ProgramMemory.hpp"
 #include "VariableHandler.hpp"
+#include "gtest/gtest.h"
 #include <gtest/gtest.h>
 #include <memory>
+#include <string>
 
-TEST(PARSE_NOTES_TEST, INITIALIZATION_EXPR_TEST)
+TEST(PARSE_NODES_TEST, INITIALIZATION_EXPR_TEST)
 {
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> varHandler = std::make_shared<VariableHandler>(memory);
@@ -21,7 +23,7 @@ TEST(PARSE_NOTES_TEST, INITIALIZATION_EXPR_TEST)
     });
 }
 
-TEST(PARSE_NOTES_TEST, ASSIGNMENT_EXPR_TEST)
+TEST(PARSE_NODES_TEST, ASSIGNMENT_EXPR_TEST)
 {
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> varHandler = std::make_shared<VariableHandler>(memory);
@@ -45,4 +47,32 @@ TEST(PARSE_NOTES_TEST, ASSIGNMENT_EXPR_TEST)
     retrievedValue = varHandler->getValue(testVar).getAs<int>().value();
 
     EXPECT_EQ(retrievedValue, expectFinalValue);
+}
+
+TEST(PARSE_NODES_TEST, STATEMENT_CONTAINER_TEST)
+{
+    std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
+    std::shared_ptr<VariableHandler> varHandler = std::make_shared<VariableHandler>(memory);
+
+    using InitAndAssign = std::pair<std::string, int>;
+    InitAndAssign varA = { "varA", 5 };
+    InitAndAssign varB = { "varB", 6 };
+    InitAndAssign assignA = { "varA", 10 };
+
+    StatementContainer statementContainer;
+    auto varAExpr = std::make_unique<InitializationExpr>(varA.first, std::make_unique<LiteralExpr>(std::to_string(varA.second)), varHandler);
+    auto varBExpr = std::make_unique<InitializationExpr>(varB.first, std::make_unique<LiteralExpr>(std::to_string(varB.second)), varHandler);
+    auto assignAExpr = std::make_unique<AssignExpr>(varA.first, std::make_unique<LiteralExpr>(std::to_string(assignA.second)), varHandler);
+    statementContainer.insertExpr(std::move(varAExpr));
+    statementContainer.insertExpr(std::move(varBExpr));
+    statementContainer.insertExpr(std::move(assignAExpr));
+
+    statementContainer.performAction();
+
+    EXPECT_NO_THROW({
+        int retrievedValue = varHandler->getValue(varA.first).getAs<int>().value();
+        EXPECT_EQ(retrievedValue, assignA.second);
+        retrievedValue = varHandler->getValue(varB.first).getAs<int>().value();
+        EXPECT_EQ(retrievedValue, varB.second);
+    });
 }

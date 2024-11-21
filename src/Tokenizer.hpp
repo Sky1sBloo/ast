@@ -1,40 +1,20 @@
 #pragma once
 
-#include <array>
-#include <sstream>
+#include <unordered_set>
+#include <string>
 #include <vector>
-
-enum class TokenTypes {
-    INVALID,
-    LITERAL,
-    KEYWORD,
-    IDENTIFIER,
-    OPERATOR,
-    ASSIGN,
-    STATEMENT_TERMINATE
-};
-
-struct Token {
-    TokenTypes type;
-    std::string value;
-
-    Token(TokenTypes newType, const std::string& newValue)
-        : type(newType)
-        , value(newValue)
-    {
-    }
-};
+#include "Token.hpp"
 
 class Tokenizer {
 public:
-    Tokenizer(std::stringstream& sourceCode);
+    Tokenizer(std::string& sourceCode);
 
-    const std::vector<Token>& getTokens() const { return _tokens; }
+    const std::vector<Token>& getTokens() { return _tokens; }
 
 private:
     std::vector<Token> _tokens;
 
-    TokenTypes identitfyType(const std::string& word);
+    Token::SubTypes identifyType(const std::string& word);
     /**
      * Checks the edge of string if it has termination character
      */
@@ -49,22 +29,31 @@ private:
 
 private:
     // RULESETS
-    constexpr static std::array<std::string, 1> _keywordRuleset = {
+    inline const static std::unordered_set<std::string> _keywordRuleset = {
         "var"
     };
-    constexpr static std::array<std::string, 4> _operationRuleset = {
-        "+", "-", "/", "*"
+    inline const static std::unordered_set<char> _operationRuleset = {
+        '+', '-', '/', '*'
     };
-    constexpr static std::array<char, 2> _stringLiteralRuleset = {
+    inline const static std::unordered_set<char> _stringLiteralRuleset = {
         '\'', '\"'
     };
-    constexpr static std::array<std::string, 4> _booleanLiteralRuleset = {
+    inline const static std::unordered_set<std::string> _booleanLiteralRuleset = {
         "true", "True", "false", "False"
     };
-    constexpr static std::array<char, 8> _identifierInvalidCharacters = {
-        '\"', '\'', ';', '+', '-', '*', '/', '='
+    inline const static std::unordered_set<char> _identifierDelimeters = {
+        '\"', '\'', ';', '+', '-', '*', '/', '=' 
+    };
+    inline const static std::unordered_set<char> _delimeters = {
+        ' ', '\n', '\t'
     };
 
-    constexpr static std::string _assignmentRuleset = "=";
-    constexpr static char _terminationChar = ';';
+    const static char _assignmentRuleset = '=';
+    const static char _terminationChar = ';';
+
+    /**
+     * Helper function for constructor
+     * Modifies and empties tokenStr and prevType
+    */
+    void pushToken(Token::SubTypes type, Token::SubTypes& prevType, std::string& tokenStr);
 };

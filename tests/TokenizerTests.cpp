@@ -1,37 +1,37 @@
 #include <array>
 #include <gtest/gtest.h>
 #include <ranges>
-#include <sstream>
+#include <string>
 
+#include "Token.hpp"
 #include "Tokenizer.hpp"
 
 TEST(TOKENIZER_TESTS, READING)
 {
-    std::stringstream source;
-    source << "var a = 5; var b = 2.0 + 5.0;\nvar c = \"fifty\";\n";
-    const std::array<TokenTypes, 17> expectedTypes = {
-        TokenTypes::KEYWORD,
-        TokenTypes::IDENTIFIER,
-        TokenTypes::ASSIGN,
-        TokenTypes::LITERAL,
-        TokenTypes::STATEMENT_TERMINATE,
-        TokenTypes::KEYWORD,
-        TokenTypes::IDENTIFIER,
-        TokenTypes::ASSIGN,
-        TokenTypes::LITERAL,
-        TokenTypes::OPERATOR,
-        TokenTypes::LITERAL,
-        TokenTypes::STATEMENT_TERMINATE,
-        TokenTypes::KEYWORD,
-        TokenTypes::IDENTIFIER,
-        TokenTypes::ASSIGN,
-        TokenTypes::LITERAL,
-        TokenTypes::STATEMENT_TERMINATE
+    std::string source = "var a = 5; var b = 2.0 + 5.0;\nvar c = \"fifty\";\n";
+    const std::array<Token::SubTypes, 17> expectedSubTypes = {
+        Token::SubTypes::KEYWORD,
+        Token::SubTypes::IDENTIFIER,
+        Token::SubTypes::ASSIGN,
+        Token::SubTypes::LITERAL,
+        Token::SubTypes::STATEMENT_TERMINATE,
+        Token::SubTypes::KEYWORD,
+        Token::SubTypes::IDENTIFIER,
+        Token::SubTypes::ASSIGN,
+        Token::SubTypes::LITERAL,
+        Token::SubTypes::OPERATOR,
+        Token::SubTypes::LITERAL,
+        Token::SubTypes::STATEMENT_TERMINATE, 
+        Token::SubTypes::KEYWORD, 
+        Token::SubTypes::IDENTIFIER,
+        Token::SubTypes::ASSIGN,
+        Token::SubTypes::LITERAL,
+        Token::SubTypes::STATEMENT_TERMINATE
     };
 
     Tokenizer tokenizer(source);
 
-    for (auto [token, expectedToken] : std::views::zip(tokenizer.getTokens(), expectedTypes)) {
-        EXPECT_EQ(token.type, expectedToken);
+    for (const auto& [token, expectedToken] : std::views::zip(tokenizer.getTokens(), expectedSubTypes)) {
+        EXPECT_EQ(token.getSubType(), expectedToken);
     }
 }
