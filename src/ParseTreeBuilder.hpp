@@ -32,7 +32,7 @@ private:
 
 private:
     inline static const std::array<Token, 2> _varInitializationRuleset = { { { Token::SubTypes::KEYWORD, "var" },
-        { Token::MainTypes::VALUE, Token::SubTypes::ANY } } };
+        { Token::MainTypes::VALUE, Token::SubTypes::IDENTIFIER } } };
 
     inline static const std::array<Token, 3> _varAssignmentRuleset = { { { Token::SubTypes::IDENTIFIER },
         { Token::SubTypes::ASSIGN }, { Token::MainTypes::VALUE, Token::SubTypes::ANY } } };
