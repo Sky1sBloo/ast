@@ -41,7 +41,7 @@ public:
     {
     }
 
-    std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>>& getVariant() { return _expr; }
+    const std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>>& getVariant() const { return _expr; }
 
 private:
     std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>> _expr;
@@ -104,6 +104,10 @@ private:
     std::shared_ptr<VariableHandler> _handler;
 };
 
+template <class... ExprVariant>
+struct ExprVariantVisitor : ExprVariant... {
+    using ExprVariant::operator()...;
+};
 class FunctionExpr : public ReturnableExpr {
 public:
     FunctionExpr(const std::string& id, std::vector<std::unique_ptr<Expr>>& statements);

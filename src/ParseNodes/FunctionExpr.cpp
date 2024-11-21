@@ -8,4 +8,22 @@ FunctionExpr::FunctionExpr(const std::string& id, std::vector<std::unique_ptr<Ex
 
 const MemoryCell& FunctionExpr::getValue() const
 {
+    const MemoryCell* returnable = nullptr;
+    for (auto& statement : _statements) {
+        bool foundReturnStatement = std::visit(
+            ExprVariantVisitor {
+                [](const std::unique_ptr<TerminalExpr>& terminalExpr) {
+                    terminalExpr->performAction();
+                    return false;
+                },
+                [&returnable](const std::unique_ptr<ReturnableExpr>& returnableExpr) {
+                    return true;
+                } },
+            statement->getVariant());
+
+        if (foundReturnStatement) {
+            return std::get<std::unique_ptr<ReturnableExpr>>(statement->getVariant())->getValue();
+        }
+    }
+    throw std::runtime_error("Function Expression doesn't have returnable expression");
 }
