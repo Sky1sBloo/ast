@@ -28,8 +28,7 @@ private:
      */
     std::unique_ptr<TerminalExpr> identifyStatement(const std::vector<Token>& statement);
 
-    bool statementIsVarInitialization(const std::vector<Token>& statement);
-    bool statementIsAssignment(const std::vector<Token>& statement);
+    bool statementMatchesRuleset(const std::vector<Token>& statement, std::span<const Token> ruleset);
 
 private:
     inline static const std::array<Token, 2> _varInitializationRuleset = { { { Token::SubTypes::KEYWORD },

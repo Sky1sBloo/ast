@@ -32,41 +32,34 @@ void ParseTreeBuilder::getStatementTokens(const std::vector<Token>& tokens)
 
 std::unique_ptr<TerminalExpr> ParseTreeBuilder::identifyStatement(const std::vector<Token>& statement)
 {
-    if (statementIsVarInitialization(statement)) {
+    if (statementMatchesRuleset(statement, _varInitializationRuleset)) {
         const std::string& identifier = statement[1].getValue();
         return std::make_unique<InitializationExpr>(identifier, _var_handler);
     }
-    if (statementIsAssignment(statement)) {
+    if (statementMatchesRuleset(statement, _varAssignmentRuleset)) {
         const std::string& identifier = statement[0].getValue();
         const std::string& value = statement[2].getValue();
         return std::make_unique<AssignExpr>(identifier, std::make_unique<LiteralExpr>(value), _var_handler);
     }
+    if (statementMatchesRuleset(statement, _varInitializationAndAssignmentRuleset)) {
+        const std::string& identifier = statement[1].getValue();
+        const std::string& value = statement[3].getValue();
+        return std::make_unique<InitializationExpr>(identifier, std::make_unique<LiteralExpr>(value), _var_handler);
+    }
     throw std::domain_error("Cannot identify statement");
 }
 
-bool ParseTreeBuilder::statementIsVarInitialization(const std::vector<Token>& statement)
+bool ParseTreeBuilder::statementMatchesRuleset(const std::vector<Token>& statement, std::span<const Token> ruleset)
 {
-    if (statement.size() != _varInitializationRuleset.size()) {
+    if (statement.size() != ruleset.size()) {
         return false;
     }
 
-    for (const auto& [token, expectedToken] : std::views::zip(statement, _varInitializationRuleset)) {
+    for (const auto& [token, expectedToken] : std::views::zip(statement, ruleset)) {
         if (token != expectedToken) {
             return false;
         }
     }
     return true;
-}
 
-bool ParseTreeBuilder::statementIsAssignment(const std::vector<Token>& statement)
-{
-    if (statement.size() != _varAssignmentRuleset.size()) {
-        return false;
-    }
-    for (const auto& [token, expectedToken] : std::views::zip(statement, _varAssignmentRuleset)) {
-        if (token != expectedToken) {
-            return false;
-        }
-    }
-    return true;
 }

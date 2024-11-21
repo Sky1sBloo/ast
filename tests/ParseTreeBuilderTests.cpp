@@ -94,7 +94,6 @@ TEST(PARSE_TREE_TESTS, VARIABLE_INITIALIZATION)
 
 TEST(PARSE_TREE_TESTS, VARIABLE_INITIALIZATION_AND_ASSIGNMENT)
 {
-    /*
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
     std::string source = "var test = 5;";
@@ -102,8 +101,7 @@ TEST(PARSE_TREE_TESTS, VARIABLE_INITIALIZATION_AND_ASSIGNMENT)
 
     Tokenizer tokens(source);
     ParseTreeBuilder treeBuilder(tokens.getTokens(), variableHandler);
-    auto tree = treeBuilder.getTree();
-    tree->performAction();
+    treeBuilder.getTree().performAction();
 
     const MemoryCell& valueA = variableHandler->getValue("test");
     auto returnedValueA = valueA.getAs<int>();
@@ -112,5 +110,5 @@ TEST(PARSE_TREE_TESTS, VARIABLE_INITIALIZATION_AND_ASSIGNMENT)
         FAIL() << "Returned variable isn't at expected type";
     }
 
-    EXPECT_EQ(expectedValue, returnedValueA);  */
+    EXPECT_EQ(expectedValue, returnedValueA); 
 } 
