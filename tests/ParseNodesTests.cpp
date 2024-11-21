@@ -102,3 +102,25 @@ TEST(PARSE_NODES_TEST, FUNCTION_EXPR_TEST)
         EXPECT_EQ(retrievedVariableValue, secondValue);
     });
 }
+
+TEST(PARSE_NODES_TEST, TERMINAL_FUNCTION_TEST)
+{
+    std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
+    std::shared_ptr<VariableHandler> varHandler = std::make_shared<VariableHandler>(memory);
+    const std::string identifier = "testVar";
+    int value = 5;
+    int secondValue = 10;
+
+    TerminalFunctionExpr functionExpr("testFunc");
+    auto varExpr = std::make_unique<InitializationExpr>(identifier, std::make_unique<LiteralExpr>(std::to_string(value)), varHandler);
+    auto assignExpr = std::make_unique<AssignExpr>(identifier, std::make_unique<LiteralExpr>(std::to_string(secondValue)), varHandler);
+
+    functionExpr.insertExpr(std::make_unique<Expr>(std::move(varExpr)));
+    functionExpr.insertExpr(std::make_unique<Expr>(std::move(assignExpr)));
+    functionExpr.performAction();
+
+    EXPECT_NO_THROW({ 
+        int retrievedVariableValue = varHandler->getValue(identifier).getAs<int>().value();
+        EXPECT_EQ(retrievedVariableValue, secondValue);
+    });
+}

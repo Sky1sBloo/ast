@@ -113,6 +113,9 @@ private:
     std::vector<std::unique_ptr<Expr>> _statements;
 };
 
+/**
+ * Node for non returnable functions
+ */
 class TerminalFunctionExpr : public TerminalExpr {
 public:
     TerminalFunctionExpr(const std::string& id);
