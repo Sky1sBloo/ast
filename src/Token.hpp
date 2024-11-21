@@ -84,7 +84,11 @@ public:
         if (lhs._subType == SubTypes::ANY || rhs._subType == SubTypes::ANY) {
             return true;
         }
-        if (lhs._subType == rhs._subType) {
+        if (lhs._subType != rhs._subType) {
+            return false;
+        }
+        // TODO: Add checking where I expect it should have value but equality is not needed
+        if (lhs._value == "" || rhs._value == "") {
             return true;
         }
         if (lhs._value == rhs._value) {
