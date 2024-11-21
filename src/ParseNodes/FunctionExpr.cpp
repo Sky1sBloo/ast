@@ -16,7 +16,7 @@ const MemoryCell& FunctionExpr::getValue() const
                     terminalExpr->performAction();
                     return false;
                 },
-                [&returnable](const std::unique_ptr<ReturnableExpr>& returnableExpr) {
+                [](const std::unique_ptr<ReturnableExpr>& returnableExpr) {
                     return true;
                 } },
             statement->getVariant());
