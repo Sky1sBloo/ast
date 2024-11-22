@@ -16,6 +16,9 @@ public:
     int allocate(const std::string& value);
     int allocate(const MemoryCell& cell);
 
+    /**
+     * Deallocates the variable on memory
+     */
     void deallocate(int address);
 
     /**

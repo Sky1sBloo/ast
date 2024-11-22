@@ -14,7 +14,6 @@ void VariableHandler::allocate(const std::string& id, const std::string& value)
     _variables.insert({ id, _memory->allocate(value) });
 }
 
-
 void VariableHandler::allocate(const std::string& id, const MemoryCell& cell)
 {
     if (_variables.contains(id)) {
@@ -23,6 +22,13 @@ void VariableHandler::allocate(const std::string& id, const MemoryCell& cell)
     _variables.insert({ id, _memory->allocate(cell) });
 }
 
+void VariableHandler::deallocate(const std::string& id)
+{
+    if (!_variables.contains(id)) {
+        throw BadVariableHandling("Tried to deallocate nonexistent variable");
+    }
+    _memory->deallocate(_variables.at(id));
+}
 const MemoryCell& VariableHandler::getValue(const std::string& id) const
 {
     if (!_variables.contains(id)) {
@@ -38,7 +44,6 @@ void VariableHandler::setValue(const std::string& id, const std::string& value)
     }
     _memory->set(_variables.at(id), value);
 }
-
 
 void VariableHandler::setValue(const std::string& id, const MemoryCell& cell)
 {

@@ -23,6 +23,8 @@ public:
     void allocate(const std::string& id, const std::string& value = "NULL");
     void allocate(const std::string& id, const MemoryCell& cell);
 
+    void deallocate(const std::string& id);
+
     /**
      * Retrieves value of allocated variable
      *
