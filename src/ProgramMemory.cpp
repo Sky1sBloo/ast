@@ -6,7 +6,6 @@ ProgramMemory::ProgramMemory()
     : _highestPtr(0)
     , _unusedPtrs()
 {
-    _unusedPtrs.push(0);
 }
 
 int ProgramMemory::allocate(const std::string& value)
