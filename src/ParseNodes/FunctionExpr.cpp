@@ -1,9 +1,13 @@
 #include "ParseNodes.hpp"
 
-FunctionExpr::FunctionExpr(const std::string& id)
+FunctionExpr::FunctionExpr(const std::string& id, std::shared_ptr<VariableHandler> handler, std::initializer_list<std::string> params)
     : _id(id)
     , _statements()
+    , _handler(handler)
 {
+    for (const std::string& param : params) {
+        _handler->allocate(param);
+    }
 }
 
 void FunctionExpr::insertExpr(std::unique_ptr<Expr> expr)
