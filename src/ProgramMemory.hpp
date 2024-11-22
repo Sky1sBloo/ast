@@ -1,4 +1,5 @@
 #pragma once
+#include <queue>
 #include <unordered_map>
 
 #include "MemoryCell.hpp"
@@ -14,6 +15,8 @@ public:
      */
     int allocate(const std::string& value);
     int allocate(const MemoryCell& cell);
+
+    void deallocate(int address);
 
     /**
      * Retrieves the value of address
@@ -33,5 +36,6 @@ public:
 
 private:
     int _highestPtr; // To determine free memory
+    std::queue<int> _unusedPtrs;
     std::unordered_map<int, MemoryCell> _memory;
 };
