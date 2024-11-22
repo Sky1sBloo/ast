@@ -118,6 +118,7 @@ private:
 class FunctionExpr : public ReturnableExpr {
 public:
     FunctionExpr(const std::string& id, std::shared_ptr<VariableHandler> handler, std::initializer_list<std::string> params = {});
+    ~FunctionExpr();
     void insertExpr(std::unique_ptr<Expr> expr);
 
     const MemoryCell& getValue() const override;
@@ -125,6 +126,7 @@ public:
 private:
     const std::string _id;
     std::vector<std::unique_ptr<Expr>> _statements;
+    std::vector<std::string> _params;
     std::shared_ptr<VariableHandler> _handler;
 };
 

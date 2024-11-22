@@ -3,10 +3,18 @@
 FunctionExpr::FunctionExpr(const std::string& id, std::shared_ptr<VariableHandler> handler, std::initializer_list<std::string> params)
     : _id(id)
     , _statements()
+    , _params(params)
     , _handler(handler)
 {
     for (const std::string& param : params) {
         _handler->allocate(param);
+    }
+}
+
+FunctionExpr::~FunctionExpr()
+{
+    for (const std::string& param : _params) {
+        _handler->deallocate(param);
     }
 }
 
