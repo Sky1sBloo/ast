@@ -67,6 +67,20 @@ private:
     const MemoryCell _value;
 };
 
+class VariableIdentifier : public ReturnableExpr {
+public:
+    VariableIdentifier(const std::string& id, std::shared_ptr<VariableHandler> handler)
+        : _id(id)
+        , _handler(handler)
+    {
+    }
+
+    const MemoryCell& getValue() const override { return _handler->getValue(_id); }
+
+private:
+    const std::string _id;
+    std::shared_ptr<VariableHandler> _handler;
+};
 /**
  * Node for initialializing variables
  */
@@ -121,6 +135,7 @@ public:
     TerminalFunctionExpr(const std::string& id);
     void insertExpr(std::unique_ptr<Expr> expr);
     void performAction() override;
+
 private:
     const std::string _id;
     std::vector<std::unique_ptr<Expr>> _statements;
