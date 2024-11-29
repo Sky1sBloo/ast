@@ -102,6 +102,7 @@ private:
  */
 class FunctionExpr : public ReturnableExpr {
 public:
+    FunctionExpr(const std::string& id, std::shared_ptr<VariableHandler> handler);
     FunctionExpr(const std::string& id, std::shared_ptr<VariableHandler> handler, std::unique_ptr<FunctionParameterContainer> params);
     void insertExpr(std::unique_ptr<Expr> expr);
 
@@ -125,7 +126,7 @@ public:
 
 private:
     const std::string _id;
-    std::vector<std::unique_ptr<Expr>> _statements;
+    std::vector<std::unique_ptr<Expr>> _statement;
 };
 
 /**
