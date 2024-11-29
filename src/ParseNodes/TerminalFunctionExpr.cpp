@@ -1,4 +1,4 @@
-#include "ParseNodes.hpp"
+#include "FunctionNodes.hpp"
 
 TerminalFunctionExpr::TerminalFunctionExpr(const std::string& id)
     : _id(id)

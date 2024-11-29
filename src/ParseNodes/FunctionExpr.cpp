@@ -1,21 +1,11 @@
-#include "ParseNodes.hpp"
+#include "FunctionNodes.hpp"
 
-FunctionExpr::FunctionExpr(const std::string& id, std::shared_ptr<VariableHandler> handler, std::initializer_list<std::string> params)
+FunctionExpr::FunctionExpr(const std::string& id, std::shared_ptr<VariableHandler> handler, std::unique_ptr<FunctionParameterContainer> params)
     : _id(id)
     , _statements()
-    , _params(params)
     , _handler(handler)
+    , _params(std::move(params))
 {
-    for (const std::string& param : params) {
-        _handler->allocate(param);
-    }
-}
-
-FunctionExpr::~FunctionExpr()
-{
-    for (const std::string& param : _params) {
-        _handler->deallocate(param);
-    }
 }
 
 void FunctionExpr::insertExpr(std::unique_ptr<Expr> expr)
