@@ -126,7 +126,7 @@ public:
 
 private:
     const std::string _id;
-    std::vector<std::unique_ptr<Expr>> _statement;
+    std::vector<std::unique_ptr<Expr>> _statements;
 };
 
 /**
