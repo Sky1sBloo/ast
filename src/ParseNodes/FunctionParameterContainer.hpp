@@ -26,6 +26,10 @@ public:
         return _params.at(id)->getValue();
     }
 
+    bool hasParam(const std::string& id) const {
+        return _params.contains(id);
+    }
+
 private:
     std::unordered_map<std::string, std::unique_ptr<ReturnableExpr>> _params;
 };
