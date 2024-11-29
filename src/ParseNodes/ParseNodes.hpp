@@ -7,6 +7,7 @@
 #include "MemoryCell.hpp"
 #include "VariableHandler.hpp"
 #include "BaseParseNodes.hpp"
+#include "FunctionParameterContainer.hpp"
 
 
 /**
@@ -96,7 +97,36 @@ private:
     std::shared_ptr<VariableHandler> _handler;
 };
 
+/**
+ * Node for returnable functions
+ */
+class FunctionExpr : public ReturnableExpr {
+public:
+    FunctionExpr(const std::string& id, std::shared_ptr<VariableHandler> handler, std::unique_ptr<FunctionParameterContainer> params);
+    void insertExpr(std::unique_ptr<Expr> expr);
 
+    const MemoryCell& getValue() const override;
+
+private:
+    const std::string _id;
+    std::vector<std::unique_ptr<Expr>> _statements;
+    std::unique_ptr<FunctionParameterContainer> _params;
+    std::shared_ptr<VariableHandler> _handler;
+};
+
+/**
+ * Node for non returnable functions
+ */
+class TerminalFunctionExpr : public TerminalExpr {
+public:
+    TerminalFunctionExpr(const std::string& id);
+    void insertExpr(std::unique_ptr<Expr> expr);
+    void performAction() override;
+
+private:
+    const std::string _id;
+    std::vector<std::unique_ptr<Expr>> _statements;
+};
 
 /**
  * Node for non named returnable functions
