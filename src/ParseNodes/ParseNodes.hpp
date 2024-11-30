@@ -105,6 +105,8 @@ public:
     FunctionExpr(const std::string& id, std::shared_ptr<VariableHandler> handler);
     FunctionExpr(const std::string& id, std::shared_ptr<VariableHandler> handler, std::unique_ptr<FunctionParameterContainer> params);
     void insertExpr(std::unique_ptr<Expr> expr);
+    void insertExpr(std::unique_ptr<ReturnableExpr> expr);
+    void insertExpr(std::unique_ptr<TerminalExpr> expr);
 
     const MemoryCell& getValue() const override;
 
@@ -122,6 +124,8 @@ class TerminalFunctionExpr : public TerminalExpr {
 public:
     TerminalFunctionExpr(const std::string& id);
     void insertExpr(std::unique_ptr<Expr> expr);
+    void insertExpr(std::unique_ptr<ReturnableExpr> expr);
+    void insertExpr(std::unique_ptr<TerminalExpr> expr);
     void performAction() override;
 
 private:

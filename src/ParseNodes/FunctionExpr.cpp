@@ -21,6 +21,16 @@ void FunctionExpr::insertExpr(std::unique_ptr<Expr> expr)
     _statements.push_back(std::move(expr));
 }
 
+void FunctionExpr::insertExpr(std::unique_ptr<ReturnableExpr> expr)
+{
+    _statements.push_back(std::make_unique<Expr>(std::move(expr)));
+}
+
+void FunctionExpr::insertExpr(std::unique_ptr<TerminalExpr> expr)
+{
+    _statements.push_back(std::make_unique<Expr>(std::move(expr)));
+}
+
 const MemoryCell& FunctionExpr::getValue() const
 {
     const MemoryCell* returnable = nullptr;

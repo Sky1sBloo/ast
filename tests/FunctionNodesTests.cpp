@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include "ParseNodes.hpp"
+#include <gtest/gtest.h>
 
 TEST(FUNCTION_NODES_TEST, FUNCTION_EXPR_TEST)
 {
@@ -15,9 +15,9 @@ TEST(FUNCTION_NODES_TEST, FUNCTION_EXPR_TEST)
     auto assignExpr = std::make_unique<AssignExpr>(identifier, std::make_unique<LiteralExpr>(std::to_string(secondValue)), varHandler);
     auto returnLiteral = std::make_unique<LiteralExpr>(std::to_string(returnValue));
 
-    functionExpr.insertExpr(std::make_unique<Expr>(std::move(varExpr)));
-    functionExpr.insertExpr(std::make_unique<Expr>(std::move(assignExpr)));
-    functionExpr.insertExpr(std::make_unique<Expr>(std::move(returnLiteral)));
+    functionExpr.insertExpr(std::move(varExpr));
+    functionExpr.insertExpr(std::move(assignExpr));
+    functionExpr.insertExpr(std::move(returnLiteral));
 
     EXPECT_NO_THROW({
         int retrievedValue = functionExpr.getValue().getAs<int>().value();
@@ -61,8 +61,8 @@ TEST(FUNCTION_NODES_TEST, TERMINAL_FUNCTION_TEST)
     auto varExpr = std::make_unique<InitializationExpr>(identifier, std::make_unique<LiteralExpr>(std::to_string(value)), varHandler);
     auto assignExpr = std::make_unique<AssignExpr>(identifier, std::make_unique<LiteralExpr>(std::to_string(secondValue)), varHandler);
 
-    functionExpr.insertExpr(std::make_unique<Expr>(std::move(varExpr)));
-    functionExpr.insertExpr(std::make_unique<Expr>(std::move(assignExpr)));
+    functionExpr.insertExpr(std::move(varExpr));
+    functionExpr.insertExpr(std::move(assignExpr));
     functionExpr.performAction();
 
     EXPECT_NO_THROW({
@@ -85,13 +85,12 @@ TEST(FUNCTION_NODES_TEST, TERMINAL_FUNCTION_RETRUN_TEST)
     auto assignExpr = std::make_unique<AssignExpr>(identifier, std::make_unique<LiteralExpr>(std::to_string(secondValue)), varHandler);
     auto returnLiteral = std::make_unique<LiteralExpr>(std::to_string(returnValue));
 
-    functionExpr.insertExpr(std::make_unique<Expr>(std::move(varExpr)));
-    functionExpr.insertExpr(std::make_unique<Expr>(std::move(assignExpr)));
-    functionExpr.insertExpr(std::make_unique<Expr>(std::move(returnLiteral)));
+    functionExpr.insertExpr(std::move(varExpr));
+    functionExpr.insertExpr(std::move(assignExpr));
+    functionExpr.insertExpr(std::move(returnLiteral));
 
     EXPECT_THROW({
         functionExpr.performAction();
         int retrievedVariableValue = varHandler->getValue(identifier).getAs<int>().value();
-        EXPECT_EQ(retrievedVariableValue, secondValue);
-    }, std::runtime_error);
+        EXPECT_EQ(retrievedVariableValue, secondValue); }, std::runtime_error);
 }
