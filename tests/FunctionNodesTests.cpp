@@ -27,6 +27,33 @@ TEST(FUNCTION_NODES_TEST, FUNCTION_EXPR_TEST)
     });
 }
 
+TEST(FUNCTION_NODES_TEST, FUNCTION_PARAM_TEST)
+{
+    std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
+    std::shared_ptr<VariableHandler> varHandler = std::make_shared<VariableHandler>(memory);
+    const std::string variableIdentifier = "testVar";
+    const int variableInitialValue = 2;
+    const std::string paramName = "param";
+    const int paramValue = 3;
+
+    FunctionExpr functionExpr("paramFunc", varHandler, {paramName});
+    varHandler->setValue(paramName, std::to_string(paramValue));
+    auto varExpr = std::make_unique<InitializationExpr>(variableIdentifier, std::make_unique<LiteralExpr>(std::to_string(variableInitialValue)), varHandler);
+    auto assignExpr = std::make_unique<AssignExpr>(variableIdentifier, std::make_unique<VariableIdentifier>(paramName, varHandler), varHandler);
+    auto returnLiteral = std::make_unique<VariableIdentifier>(variableIdentifier, varHandler);
+
+    functionExpr.insertExpr(std::move(varExpr));
+    functionExpr.insertExpr(std::move(assignExpr));
+    functionExpr.insertExpr(std::move(returnLiteral));
+
+    EXPECT_NO_THROW({
+        int retrievedValue = functionExpr.getValue().getAs<int>().value();
+        EXPECT_EQ(retrievedValue, paramValue);
+        int retrievedVariableValue = varHandler->getValue(variableIdentifier).getAs<int>().value();
+        EXPECT_EQ(retrievedValue, paramValue);
+    });
+}
+
 TEST(FUNCTION_NODES_TEST, FUNCTION_NON_RETURN_TEST)
 {
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();

@@ -4,16 +4,26 @@ FunctionExpr::FunctionExpr(const std::string& id, std::shared_ptr<VariableHandle
     : _id(id)
     , _statements()
     , _handler(handler)
-    , _params(nullptr)
+    , _params()
 {
 }
 
-FunctionExpr::FunctionExpr(const std::string& id, std::shared_ptr<VariableHandler> handler, std::unique_ptr<FunctionParameterContainer> params)
+FunctionExpr::FunctionExpr(const std::string& id, std::shared_ptr<VariableHandler> handler, const std::vector<std::string>& params)
     : _id(id)
     , _statements()
     , _handler(handler)
-    , _params(std::move(params))
+    , _params(params)
 {
+    for (const std::string& paramId : params) {
+        _handler->allocate(paramId);
+    }
+}
+
+FunctionExpr::~FunctionExpr()
+{
+    for (const std::string& paramId : _params) {
+        _handler->deallocate(paramId);
+    }
 }
 
 void FunctionExpr::insertExpr(std::unique_ptr<Expr> expr)
