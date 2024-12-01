@@ -6,8 +6,7 @@
 #include "BaseParseNodes.hpp"
 #include "MemoryCell.hpp"
 #include "VariableHandler.hpp"
-#include "FunctionDefinitions.hpp"
-#include "FunctionDefinition.hpp"
+#include "FunctionContainer.hpp"
 
 /**
  * Node containing constant literals

@@ -10,7 +10,7 @@ class FunctionDefinition;
 /**
  * Class containing all function definitions
  */
-class FunctionDefinitions {
+class FunctionContainer {
 public:
     void insertFunction(std::unique_ptr<FunctionDefinition> newFunction);
 
