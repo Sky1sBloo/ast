@@ -1,6 +1,6 @@
-#include "ParseNodes.hpp"
+#include "FunctionDefinition.hpp"
 
-FunctionExpr::FunctionExpr(const std::string& id, std::shared_ptr<VariableHandler> handler)
+FunctionDefinition::FunctionDefinition(const std::string& id, std::shared_ptr<VariableHandler> handler)
     : _id(id)
     , _statements()
     , _handler(handler)
@@ -8,7 +8,7 @@ FunctionExpr::FunctionExpr(const std::string& id, std::shared_ptr<VariableHandle
 {
 }
 
-FunctionExpr::FunctionExpr(const std::string& id, std::shared_ptr<VariableHandler> handler, const std::vector<std::string>& params)
+FunctionDefinition::FunctionDefinition(const std::string& id, std::shared_ptr<VariableHandler> handler, const std::vector<std::string>& params)
     : _id(id)
     , _statements()
     , _handler(handler)
@@ -19,29 +19,29 @@ FunctionExpr::FunctionExpr(const std::string& id, std::shared_ptr<VariableHandle
     }
 }
 
-FunctionExpr::~FunctionExpr()
+FunctionDefinition::~FunctionDefinition()
 {
     for (const std::string& paramId : _params) {
         _handler->deallocate(paramId);
     }
 }
 
-void FunctionExpr::insertExpr(std::unique_ptr<Expr> expr)
+void FunctionDefinition::insertExpr(std::unique_ptr<Expr> expr)
 {
     _statements.push_back(std::move(expr));
 }
 
-void FunctionExpr::insertExpr(std::unique_ptr<ReturnableExpr> expr)
+void FunctionDefinition::insertExpr(std::unique_ptr<ReturnableExpr> expr)
 {
     _statements.push_back(std::make_unique<Expr>(std::move(expr)));
 }
 
-void FunctionExpr::insertExpr(std::unique_ptr<TerminalExpr> expr)
+void FunctionDefinition::insertExpr(std::unique_ptr<TerminalExpr> expr)
 {
     _statements.push_back(std::make_unique<Expr>(std::move(expr)));
 }
 
-const MemoryCell& FunctionExpr::getValue() const
+const MemoryCell& FunctionDefinition::getValue() const
 {
     const MemoryCell* returnable = nullptr;
     for (auto& statement : _statements) {

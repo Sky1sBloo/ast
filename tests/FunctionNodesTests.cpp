@@ -10,7 +10,7 @@ TEST(FUNCTION_NODES_TEST, FUNCTION_EXPR_TEST)
     int secondValue = 10;
     int returnValue = 7;
 
-    FunctionExpr functionExpr("testFunc", varHandler);
+    FunctionDefinition functionExpr("testFunc", varHandler);
     auto varExpr = std::make_unique<InitializationExpr>(identifier, std::make_unique<LiteralExpr>(std::to_string(value)), varHandler);
     auto assignExpr = std::make_unique<AssignExpr>(identifier, std::make_unique<LiteralExpr>(std::to_string(secondValue)), varHandler);
     auto returnLiteral = std::make_unique<LiteralExpr>(std::to_string(returnValue));
@@ -36,7 +36,7 @@ TEST(FUNCTION_NODES_TEST, FUNCTION_PARAM_TEST)
     const std::string paramName = "param";
     const int paramValue = 3;
 
-    FunctionExpr functionExpr("paramFunc", varHandler, {paramName});
+    FunctionDefinition functionExpr("paramFunc", varHandler, {paramName});
     varHandler->setValue(paramName, std::to_string(paramValue));
     auto varExpr = std::make_unique<InitializationExpr>(variableIdentifier, std::make_unique<LiteralExpr>(std::to_string(variableInitialValue)), varHandler);
     auto assignExpr = std::make_unique<AssignExpr>(variableIdentifier, std::make_unique<VariableIdentifier>(paramName, varHandler), varHandler);
@@ -63,7 +63,7 @@ TEST(FUNCTION_NODES_TEST, FUNCTION_NON_RETURN_TEST)
     int secondValue = 10;
     int returnValue = 7;
 
-    FunctionExpr functionExpr("testFunc", varHandler);
+    FunctionDefinition functionExpr("testFunc", varHandler);
     auto varExpr = std::make_unique<InitializationExpr>(identifier, std::make_unique<LiteralExpr>(std::to_string(value)), varHandler);
     auto assignExpr = std::make_unique<AssignExpr>(identifier, std::make_unique<LiteralExpr>(std::to_string(secondValue)), varHandler);
 

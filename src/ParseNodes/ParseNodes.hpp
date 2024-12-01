@@ -3,10 +3,11 @@
 #include <string>
 #include <vector>
 
+#include "BaseParseNodes.hpp"
 #include "MemoryCell.hpp"
 #include "VariableHandler.hpp"
-#include "BaseParseNodes.hpp"
-
+#include "FunctionDefinitions.hpp"
+#include "FunctionDefinition.hpp"
 
 /**
  * Node containing constant literals
@@ -65,29 +66,6 @@ private:
     std::shared_ptr<VariableHandler> _handler;
 };
 
-/**
- * Node for returnable functions
- */
-class FunctionExpr : public ReturnableExpr {
-public:
-    FunctionExpr(const std::string& id, std::shared_ptr<VariableHandler> handler);
-    FunctionExpr(const std::string& id, std::shared_ptr<VariableHandler> handler, const std::vector<std::string>& params);
-    ~FunctionExpr();
-    void insertExpr(std::unique_ptr<Expr> expr);
-    void insertExpr(std::unique_ptr<ReturnableExpr> expr);
-    void insertExpr(std::unique_ptr<TerminalExpr> expr);
-
-    const MemoryCell& getValue() const override;
-    const std::string& getId() const {
-        return _id;
-    }
-
-private:
-    const std::string _id;
-    std::vector<std::unique_ptr<Expr>> _statements;
-    std::vector<std::string> _params;
-    std::shared_ptr<VariableHandler> _handler;
-};
 
 /**
  * Node for non returnable functions
