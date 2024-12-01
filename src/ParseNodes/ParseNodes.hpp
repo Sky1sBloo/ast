@@ -1,43 +1,12 @@
 #pragma once
 #include <memory>
 #include <string>
-#include <variant>
 #include <vector>
 
 #include "MemoryCell.hpp"
 #include "VariableHandler.hpp"
 #include "BaseParseNodes.hpp"
 
-
-/**
- * Class containing both returnable and terminal expr
- */
-template <class... ExprVariant>
-struct ExprVariantVisitor : ExprVariant... {
-    using ExprVariant::operator()...;
-};
-class Expr {
-public:
-    Expr(std::unique_ptr<ReturnableExpr> returnableExpr)
-        : _expr(std::move(returnableExpr))
-    {
-    }
-
-    Expr(std::unique_ptr<TerminalExpr> terminalExpr)
-        : _expr(std::move(terminalExpr))
-    {
-    }
-
-    const std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>>& getVariant() const { return _expr; }
-    template <typename T>
-    const T& getAs() const
-    {
-        return *std::get<std::unique_ptr<T>>(_expr);
-    }
-
-private:
-    std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>> _expr;
-};
 
 /**
  * Node containing constant literals
@@ -109,6 +78,9 @@ public:
     void insertExpr(std::unique_ptr<TerminalExpr> expr);
 
     const MemoryCell& getValue() const override;
+    const std::string& getId() const {
+        return _id;
+    }
 
 private:
     const std::string _id;
