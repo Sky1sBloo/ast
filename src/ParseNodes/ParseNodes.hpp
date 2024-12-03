@@ -4,9 +4,9 @@
 #include <vector>
 
 #include "BaseParseNodes.hpp"
+#include "FunctionContainer.hpp"
 #include "MemoryCell.hpp"
 #include "VariableHandler.hpp"
-#include "FunctionContainer.hpp"
 
 /**
  * Node containing constant literals
@@ -65,7 +65,6 @@ private:
     std::shared_ptr<VariableHandler> _handler;
 };
 
-
 /**
  * Node for non returnable functions
  */
@@ -80,6 +79,23 @@ public:
 private:
     const std::string _id;
     std::vector<std::unique_ptr<Expr>> _statements;
+};
+
+class FunctionCallExpr : public ReturnableExpr {
+public:
+    FunctionCallExpr(const std::string& id, std::shared_ptr<FunctionContainer> functionDefinitions, std::shared_ptr<VariableHandler> handler);
+    /**
+     * Param is inserted by order
+     */
+    void insertParam(std::unique_ptr<ReturnableExpr> param);
+
+    const MemoryCell& getValue() const override;
+
+private:
+    std::string _id;
+    std::vector<std::unique_ptr<ReturnableExpr>> _params;
+    std::shared_ptr<FunctionContainer> _functionDefinitions;
+    std::shared_ptr<VariableHandler> _handler;
 };
 
 /**

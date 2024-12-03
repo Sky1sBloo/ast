@@ -4,11 +4,13 @@ add_library(ast-lib
     MemoryCell.cpp 
     VariableHandler.cpp 
     ParseTreeBuilder.cpp 
+    FunctionContainer.cpp
     ParseNodes/LiteralExpr.cpp 
     ParseNodes/InitializationExpr.cpp 
     ParseNodes/AssignExpr.cpp 
     ParseNodes/StatementContainer.cpp
     ParseNodes/FunctionDefinition.cpp
+    ParseNodes/FunctionCallExpr.cpp
     ParseNodes/TerminalFunctionExpr.cpp)
 target_include_directories(ast-lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/ParseNodes)
 

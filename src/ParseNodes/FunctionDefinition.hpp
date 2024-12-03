@@ -25,6 +25,10 @@ public:
         return _id;
     }
 
+    const std::vector<std::string>& getParams() const {
+        return _params;
+    }
+
 private:
     const std::string _id;
     std::vector<std::unique_ptr<Expr>> _statements;
