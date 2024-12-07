@@ -1,4 +1,5 @@
 #pragma once
+#include <list>
 #include <queue>
 #include <unordered_map>
 
@@ -36,9 +37,21 @@ public:
     void set(int address, const std::string& value);
     void set(int address, const MemoryCell& cell);
 
+    /**
+     * Increases the stack frame for scoped functions
+    */
+    void allocateStackFrame();
+
+    /**
+     * Gets out of current stack frame
+     * 
+     * Throws an exception if already empty
+    */
+    void deallocateStackFrame();
+
 
 private:
     int _highestPtr; // To determine free memory
     std::queue<int> _unusedPtrs;
-    std::unordered_map<int, MemoryCell> _memory;
+    std::list<std::unordered_map<int, MemoryCell>> _memory;
 };

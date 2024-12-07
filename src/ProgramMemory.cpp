@@ -6,18 +6,19 @@ ProgramMemory::ProgramMemory()
     : _highestPtr(0)
     , _unusedPtrs()
 {
+    allocateStackFrame();
 }
 
 int ProgramMemory::allocate(const std::string& value)
 {
     if (_unusedPtrs.empty()) {
-        _memory.emplace(_highestPtr, value);
+        _memory.back().emplace(_highestPtr, value);
         _highestPtr++;
         return _highestPtr - 1;
     } else {
         int currentPtr = _unusedPtrs.front();
         _unusedPtrs.pop();
-        _memory.emplace(currentPtr, value);
+        _memory.back().emplace(currentPtr, value);
         return currentPtr;
     }
 }
@@ -25,49 +26,68 @@ int ProgramMemory::allocate(const std::string& value)
 int ProgramMemory::allocate(const MemoryCell& cell)
 {
     if (_unusedPtrs.empty()) {
-        _memory.emplace(_highestPtr, cell);
+        _memory.back().emplace(_highestPtr, cell);
         _highestPtr++;
         return _highestPtr - 1;
     } else {
         int currentPtr = _unusedPtrs.front();
         _unusedPtrs.pop();
-        _memory.emplace(currentPtr, cell);
+        _memory.back().emplace(currentPtr, cell);
         return currentPtr;
     }
 }
 
 void ProgramMemory::deallocate(int address)
 {
-    std::unordered_map<int, MemoryCell>::iterator addressCell = _memory.find(address);
-    if (addressCell == _memory.end()) {
+    std::unordered_map<int, MemoryCell>::iterator addressCell = _memory.back().find(address);
+    if (addressCell == _memory.back().end()) {
         throw std::out_of_range("ProgramMemory at deallocate: Tried to deallocate unallocated address");
     }
-    _memory.erase(addressCell);
+    _memory.back().erase(addressCell);
     _unusedPtrs.push(address);
 }
 
 const MemoryCell& ProgramMemory::retrieve(int address) const
 {
-    if (_memory.contains(address)) {
-        return _memory.at(address);
+    for (auto it = _memory.rbegin(); it != _memory.rend(); it++) {
+        if ((*it).contains(address)) {
+            return (*it).at(address);
+        }
     }
     throw std::out_of_range("ProgramMemory at retrieve: Invalid address access");
 }
 
 void ProgramMemory::set(int address, const std::string& value)
 {
-    if (!_memory.contains(address)) {
-        throw std::out_of_range("ProgramMemory set: Invalid address access");
+    for (auto it = _memory.rbegin(); it != _memory.rend(); it++) {
+        if ((*it).contains(address)) {
+            _memory.back().at(address).set(value);
+            return;
+        }
     }
-
-    _memory.at(address).set(value);
+    throw std::out_of_range("ProgramMemory set: Invalid address access");
 }
 
 void ProgramMemory::set(int address, const MemoryCell& cell)
 {
-    if (!_memory.contains(address)) {
-        throw std::out_of_range("ProgramMemory set: Invalid address access");
+    for (auto it = _memory.rbegin(); it != _memory.rend(); it++) {
+        if ((*it).contains(address)) {
+            _memory.back().at(address) = cell;
+            return;
+        }
     }
+    throw std::out_of_range("ProgramMemory set: Invalid address access");
+}
 
-    _memory.at(address) = cell;
+void ProgramMemory::allocateStackFrame()
+{
+    _memory.emplace_back();
+}
+
+void ProgramMemory::deallocateStackFrame()
+{
+    if (_memory.size() == 0) {
+        throw std::out_of_range("Tried to deallocate an empty stack frame");
+    }
+    _memory.pop_back();
 }
