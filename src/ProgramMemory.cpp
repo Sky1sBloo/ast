@@ -61,7 +61,7 @@ void ProgramMemory::set(int address, const std::string& value)
 {
     for (auto it = _memory.rbegin(); it != _memory.rend(); it++) {
         if ((*it).contains(address)) {
-            _memory.back().at(address).set(value);
+            (*it).at(address).set(value);
             return;
         }
     }
@@ -72,7 +72,7 @@ void ProgramMemory::set(int address, const MemoryCell& cell)
 {
     for (auto it = _memory.rbegin(); it != _memory.rend(); it++) {
         if ((*it).contains(address)) {
-            _memory.back().at(address) = cell;
+            (*it).at(address) = cell;
             return;
         }
     }
