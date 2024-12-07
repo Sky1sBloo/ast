@@ -49,9 +49,9 @@ void ProgramMemory::deallocate(int address)
 
 const MemoryCell& ProgramMemory::retrieve(int address) const
 {
-    for (auto it = _memory.begin(); it != _memory.end(); it++) {
-        if ((*it).contains(address)) {
-            return (*it).at(address);
+    for (const auto& memoryStackFrame : _memory) {
+        if (memoryStackFrame.contains(address)) {
+            return memoryStackFrame.at(address);
         }
     }
     throw std::out_of_range("ProgramMemory at retrieve: Invalid address access");
@@ -59,9 +59,9 @@ const MemoryCell& ProgramMemory::retrieve(int address) const
 
 void ProgramMemory::set(int address, const std::string& value)
 {
-    for (auto it = _memory.begin(); it != _memory.end(); it++) {
-        if ((*it).contains(address)) {
-            (*it).at(address).set(value);
+    for (auto& memoryStackFrame : _memory) {
+        if (memoryStackFrame.contains(address)) {
+            memoryStackFrame.at(address).set(value);
             return;
         }
     }
@@ -70,9 +70,9 @@ void ProgramMemory::set(int address, const std::string& value)
 
 void ProgramMemory::set(int address, const MemoryCell& cell)
 {
-    for (auto it = _memory.rbegin(); it != _memory.rend(); it++) {
-        if ((*it).contains(address)) {
-            (*it).at(address) = cell;
+    for (auto& memoryStackFrame : _memory) {
+        if (memoryStackFrame.contains(address)) {
+            memoryStackFrame.at(address) = cell;
             return;
         }
     }
