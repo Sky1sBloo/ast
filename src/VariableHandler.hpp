@@ -1,4 +1,5 @@
 #pragma once
+#include <list>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -45,15 +46,17 @@ public:
     */
     void allocateStackFrame()
     {
+        _variables.emplace_front();
         _memory->allocateStackFrame();
     }
     void deallocateStackFrame()
     {
+        _variables.pop_front();
         _memory->deallocateStackFrame();
     }
 
 private:
-    std::unordered_map<std::string, int> _variables;
+    std::list<std::unordered_map<std::string, int>> _variables;
     std::shared_ptr<ProgramMemory> _memory;
 };
 
