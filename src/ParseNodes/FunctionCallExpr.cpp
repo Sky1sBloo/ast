@@ -6,12 +6,6 @@ FunctionCallExpr::FunctionCallExpr(const std::string& id, std::shared_ptr<Functi
     , _params()
     , _handler(handler)
 {
-    handler->allocateStackFrame();
-}
-
-FunctionCallExpr::~FunctionCallExpr()
-{
-    _handler->deallocateStackFrame();
 }
 
 void FunctionCallExpr::insertParam(std::unique_ptr<ReturnableExpr> param)
@@ -21,6 +15,7 @@ void FunctionCallExpr::insertParam(std::unique_ptr<ReturnableExpr> param)
 
 const MemoryCell& FunctionCallExpr::getValue() const
 {
+    _handler->allocateStackFrame();
     std::vector<MemoryCell> paramValues;
     paramValues.reserve(_params.size());
 
@@ -28,5 +23,7 @@ const MemoryCell& FunctionCallExpr::getValue() const
         paramValues.push_back(param->getValue());
     }
 
-    return _functionDefinitions->getFunction(_id, paramValues);
+    const MemoryCell& value = _functionDefinitions->getFunction(_id, paramValues);
+    _handler->deallocateStackFrame();
+    return value;
 }
