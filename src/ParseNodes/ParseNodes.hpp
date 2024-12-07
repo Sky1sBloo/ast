@@ -65,22 +65,6 @@ private:
     std::shared_ptr<VariableHandler> _handler;
 };
 
-/**
- * Node for non returnable functions
- */
-class TerminalFunctionExpr : public TerminalExpr {
-public:
-    TerminalFunctionExpr(const std::string& id);
-    void insertExpr(std::unique_ptr<Expr> expr);
-    void insertExpr(std::unique_ptr<ReturnableExpr> expr);
-    void insertExpr(std::unique_ptr<TerminalExpr> expr);
-    void performAction() override;
-
-private:
-    const std::string _id;
-    std::vector<std::unique_ptr<Expr>> _statements;
-};
-
 class FunctionCallExpr : public ReturnableExpr {
 public:
     FunctionCallExpr(const std::string& id, std::shared_ptr<FunctionContainer> functionDefinitions, std::shared_ptr<VariableHandler> handler);

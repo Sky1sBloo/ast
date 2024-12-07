@@ -10,7 +10,6 @@ add_library(ast-lib
     ParseNodes/AssignExpr.cpp 
     ParseNodes/StatementContainer.cpp
     ParseNodes/FunctionDefinition.cpp
-    ParseNodes/FunctionCallExpr.cpp
-    ParseNodes/TerminalFunctionExpr.cpp)
+    ParseNodes/FunctionCallExpr.cpp)
 target_include_directories(ast-lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/ParseNodes)
 
