@@ -4,8 +4,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "ProgramMemory.hpp"
 #include "MemoryCell.hpp"
+#include "ProgramMemory.hpp"
 
 /**
  * Class designed for allocation and deallocation of variables
@@ -29,16 +29,28 @@ public:
      * Retrieves value of allocated variable
      *
      * Throws BadVariableHandling on fail
-    */
+     */
     const MemoryCell& getValue(const std::string& id) const;
 
     /**
      * Sets the value of the allocated variable
      *
      * Throws BadVariableHandling on fail
-    */
+     */
     void setValue(const std::string& id, const std::string& value);
     void setValue(const std::string& id, const MemoryCell& cell);
+
+    /**
+     * Controls stack scope of program memory
+    */
+    void allocateStackFrame()
+    {
+        _memory->allocateStackFrame();
+    }
+    void deallocateStackFrame()
+    {
+        _memory->deallocateStackFrame();
+    }
 
 private:
     std::unordered_map<std::string, int> _variables;

@@ -6,6 +6,12 @@ FunctionCallExpr::FunctionCallExpr(const std::string& id, std::shared_ptr<Functi
     , _params()
     , _handler(handler)
 {
+    handler->allocateStackFrame();
+}
+
+FunctionCallExpr::~FunctionCallExpr()
+{
+    _handler->deallocateStackFrame();
 }
 
 void FunctionCallExpr::insertParam(std::unique_ptr<ReturnableExpr> param)

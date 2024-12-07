@@ -84,6 +84,7 @@ private:
 class FunctionCallExpr : public ReturnableExpr {
 public:
     FunctionCallExpr(const std::string& id, std::shared_ptr<FunctionContainer> functionDefinitions, std::shared_ptr<VariableHandler> handler);
+    ~FunctionCallExpr();
     /**
      * Param is inserted by order
      */
