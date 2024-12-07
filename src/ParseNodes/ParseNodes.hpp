@@ -65,6 +65,9 @@ private:
     std::shared_ptr<VariableHandler> _handler;
 };
 
+/**
+ * Node for calling functions
+ */
 class FunctionCallExpr : public ReturnableExpr {
 public:
     FunctionCallExpr(const std::string& id, std::shared_ptr<FunctionContainer> functionDefinitions, std::shared_ptr<VariableHandler> handler);
