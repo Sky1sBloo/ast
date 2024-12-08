@@ -37,7 +37,8 @@ const MemoryCell& VariableHandler::getValue(const std::string& id) const
             return _memory->retrieve(varMap.at(id));
         }
     }
-    throw BadVariableHandling("Tried to access nonexisting variable");
+    const std::string message = "Tried to access non existing variable of type: " + id;
+    throw BadVariableHandling(message.c_str());
 }
 
 void VariableHandler::setValue(const std::string& id, const std::string& value)

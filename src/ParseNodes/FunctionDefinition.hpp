@@ -18,8 +18,8 @@ public:
     void insertExpr(std::unique_ptr<ReturnableExpr> expr);
     void insertExpr(std::unique_ptr<TerminalExpr> expr);
 
-    const MemoryCell& getValue() const;
-    const MemoryCell& getValue(const std::vector<MemoryCell&>& params) const;
+    const MemoryCell& getValue();
+    const MemoryCell& getValue(const std::vector<MemoryCell&>& params);
     const std::string& getId() const
     {
         return _id;

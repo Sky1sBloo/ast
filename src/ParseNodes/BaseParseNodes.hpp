@@ -9,7 +9,7 @@
 class ReturnableExpr {
 public:
     virtual ~ReturnableExpr() = default;
-    virtual const MemoryCell& getValue() const = 0;
+    virtual const MemoryCell& getValue() = 0;
 };
 
 /**
@@ -42,7 +42,7 @@ public:
 
     const std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>>& getVariant() const { return _expr; }
     template <typename T>
-    const T& getAs() const
+    T& getAs() 
     {
         return *std::get<std::unique_ptr<T>>(_expr);
     }

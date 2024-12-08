@@ -23,6 +23,9 @@ public:
      * Empty string implies std::monostate
      */
     MemoryCell(const std::string& value = "");
+    MemoryCell(const MemoryCell& other);
+    MemoryCell& operator=(const MemoryCell& other);
+    
 
     void set(const std::string& value = "");
     const TypeVariants& get() const { return _value; }

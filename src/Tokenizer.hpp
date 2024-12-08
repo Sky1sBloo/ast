@@ -30,10 +30,10 @@ private:
 private:
     // RULESETS
     inline const static std::unordered_set<std::string> _keywordRuleset = {
-        "var"
+        "var", "func"
     };
     inline const static std::unordered_set<char> _operationRuleset = {
-        '+', '-', '/', '*'
+        '+', '-', '/', '*', '(', ')'
     };
     inline const static std::unordered_set<char> _stringLiteralRuleset = {
         '\'', '\"'
@@ -45,7 +45,7 @@ private:
         '\"', '\'', ';', '+', '-', '*', '/', '=' 
     };
     inline const static std::unordered_set<char> _delimeters = {
-        ' ', '\n', '\t'
+        ' ', '\n', '\t',
     };
 
     const static char _assignmentRuleset = '=';

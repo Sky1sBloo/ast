@@ -14,7 +14,7 @@
 class LiteralExpr : public ReturnableExpr {
 public:
     LiteralExpr(const std::string& value);
-    const MemoryCell& getValue() const override { return _value; }
+    const MemoryCell& getValue() override { return _value; }
 
 private:
     const MemoryCell _value;
@@ -28,7 +28,7 @@ public:
     {
     }
 
-    const MemoryCell& getValue() const override { return _handler->getValue(_id); }
+    const MemoryCell& getValue() override { return _handler->getValue(_id); }
 
 private:
     const std::string _id;
@@ -77,13 +77,15 @@ public:
      */
     void insertParam(std::unique_ptr<ReturnableExpr> param);
 
-    const MemoryCell& getValue() const override;
+    const MemoryCell& getValue() override;
 
 private:
     std::string _id;
     std::vector<std::unique_ptr<ReturnableExpr>> _params;
     std::shared_ptr<FunctionContainer> _functionDefinitions;
     std::shared_ptr<VariableHandler> _handler;
+
+    MemoryCell _value;  // Since it needs to take ownership
 };
 
 /**

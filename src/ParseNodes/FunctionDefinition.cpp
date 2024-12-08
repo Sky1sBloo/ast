@@ -41,7 +41,7 @@ void FunctionDefinition::insertExpr(std::unique_ptr<TerminalExpr> expr)
     _statements.push_back(std::make_unique<Expr>(std::move(expr)));
 }
 
-const MemoryCell& FunctionDefinition::getValue() const
+const MemoryCell& FunctionDefinition::getValue() 
 {
     const MemoryCell* returnable = nullptr;
     for (auto& statement : _statements) {

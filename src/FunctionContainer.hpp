@@ -16,7 +16,7 @@ public:
     FunctionContainer(std::shared_ptr<VariableHandler> handler);
     void insertFunction(std::unique_ptr<FunctionDefinition> newFunction);
 
-    const MemoryCell& getFunction(const std::string& id, const std::vector<MemoryCell>& params) const;
+    MemoryCell getFunction(const std::string& id, const std::vector<MemoryCell>& params) const;
 
 private:
     std::shared_ptr<VariableHandler> _handler;  // Used to update variables
