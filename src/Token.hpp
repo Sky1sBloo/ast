@@ -22,6 +22,7 @@ public:
         KEYWORD,
         IDENTIFIER,
         OPERATOR,
+        BRACE,
         ASSIGN,
         STATEMENT_TERMINATE
     };
@@ -113,6 +114,7 @@ private:
         SubTypes::ASSIGN,
         SubTypes::KEYWORD,
         SubTypes::OPERATOR,
+        SubTypes::BRACE
     };
 
     inline const static std::unordered_map<SubTypes, int> _precedenceTokens = {

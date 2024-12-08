@@ -23,7 +23,9 @@ Tokenizer::Tokenizer(std::string& sourceCode)
     for (char c : sourceCode) {
         if (c == ' ') {
             Token::SubTypes type = identifyType(tokenStr);
-            pushToken(type, prevType, tokenStr);
+            if (type != Token::SubTypes::INVALID) {
+                pushToken(type, prevType, tokenStr);
+            }
             continue;
         }
 
@@ -43,12 +45,13 @@ Tokenizer::Tokenizer(std::string& sourceCode)
         case Token::SubTypes::LITERAL:
         case Token::SubTypes::KEYWORD:
         case Token::SubTypes::IDENTIFIER:
-            if (std::ranges::find(_delimeters, c) != _delimeters.end()) {
+            if (std::ranges::find(_delimeters, c) != _delimeters.end() || isBrace(std::to_string(c)) || isOperation(std::to_string(c))) {
                 Token::SubTypes type = identifyType(tokenStr);
                 pushToken(type, prevType, tokenStr);
             }
             break;
         case Token::SubTypes::OPERATOR:
+        case Token::SubTypes::BRACE:
         case Token::SubTypes::ASSIGN:
         case Token::SubTypes::INVALID:
         case Token::SubTypes::STATEMENT_TERMINATE:
@@ -74,6 +77,9 @@ Token::SubTypes Tokenizer::identifyType(const std::string& word)
     if (isOperation(word)) {
         return Token::SubTypes::OPERATOR;
     }
+    if (isBrace(word)) {
+        return Token::SubTypes::BRACE;
+    }
     if (isAssignment(word)) {
         return Token::SubTypes::ASSIGN;
     }
@@ -98,6 +104,14 @@ bool Tokenizer::isOperation(const std::string& word) const
         return false;
     }
     return std::ranges::find(_operationRuleset, word[0]) != _operationRuleset.end();
+}
+
+bool Tokenizer::isBrace(const std::string& word) const
+{
+    if (word.length() != 1) {
+        return false;
+    }
+    return std::ranges::find(_braceRuleset, word[0]) != _braceRuleset.end();
 }
 
 bool Tokenizer::isAssignment(const std::string& word) const
