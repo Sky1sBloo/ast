@@ -5,6 +5,7 @@ add_library(ast-lib
     VariableHandler.cpp 
     ParseTreeBuilder.cpp 
     FunctionContainer.cpp
+    Parser.cpp
     ParseNodes/LiteralExpr.cpp 
     ParseNodes/InitializationExpr.cpp 
     ParseNodes/AssignExpr.cpp 
