@@ -2,6 +2,8 @@
 #include "ProgramMemory.hpp"
 #include "Tokenizer.hpp"
 #include "VariableHandler.hpp"
+#include "FunctionContainer.hpp"
+#include "FunctionDefinition.hpp"
 
 #include <gtest/gtest.h>
 #include <optional>
@@ -11,13 +13,14 @@ TEST(PARSE_TREE_TESTS, VARIABLE_SAVING)
 {
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
+    std::shared_ptr<FunctionContainer> functionContainer = std::make_shared<FunctionContainer>(variableHandler);
     std::string source = "a = 5;";
     int expectedValue = 5;
 
     variableHandler->allocate("a");
 
     Tokenizer tokens(source);
-    ParseTreeBuilder treeBuilder(tokens.getTokens(), variableHandler);
+    ParseTreeBuilder treeBuilder(tokens.getTokens(), variableHandler, functionContainer);
     StatementContainer& tree = treeBuilder.getTree();
     tree.performAction();
 
@@ -52,6 +55,7 @@ TEST(PARSE_TREE_TESTS, MULTIPLE_STATEMENTS)
 {
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
+    std::shared_ptr<FunctionContainer> functionContainer = std::make_shared<FunctionContainer>(variableHandler);
     std::string source = "a = 5; b = 6; a = 3;";
     int expectedValueA = 3;
     int expectedValueB = 6;
@@ -60,7 +64,7 @@ TEST(PARSE_TREE_TESTS, MULTIPLE_STATEMENTS)
     variableHandler->allocate("b");
 
     Tokenizer tokens(source);
-    ParseTreeBuilder treeBuilder(tokens.getTokens(), variableHandler);
+    ParseTreeBuilder treeBuilder(tokens.getTokens(), variableHandler, functionContainer);
     StatementContainer& tree = treeBuilder.getTree();
     tree.performAction();
 
@@ -80,10 +84,11 @@ TEST(PARSE_TREE_TESTS, VARIABLE_INITIALIZATION)
 {
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
+    std::shared_ptr<FunctionContainer> functionContainer = std::make_shared<FunctionContainer>(variableHandler);
     std::string source = "var test;";
 
     Tokenizer tokens(source);
-    ParseTreeBuilder treeBuilder(tokens.getTokens(), variableHandler);
+    ParseTreeBuilder treeBuilder(tokens.getTokens(), variableHandler, functionContainer);
     treeBuilder.getTree().performAction();
 
     MemoryCell valueA = variableHandler->getValue("test");
@@ -96,11 +101,12 @@ TEST(PARSE_TREE_TESTS, VARIABLE_INITIALIZATION_AND_ASSIGNMENT)
 {
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
+    std::shared_ptr<FunctionContainer> functionContainer = std::make_shared<FunctionContainer>(variableHandler);
     std::string source = "var test = 5;";
     int expectedValue = 5;
 
     Tokenizer tokens(source);
-    ParseTreeBuilder treeBuilder(tokens.getTokens(), variableHandler);
+    ParseTreeBuilder treeBuilder(tokens.getTokens(), variableHandler, functionContainer);
     treeBuilder.getTree().performAction();
 
     const MemoryCell& valueA = variableHandler->getValue("test");
@@ -116,9 +122,10 @@ TEST(PARSE_TREE_TESTS, VARIABLE_INITIALIZATION_AND_ASSIGNMENT)
 TEST(PARSE_TREE_TESTS, INVALID_KEYWORD) {
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
+    std::shared_ptr<FunctionContainer> functionContainer = std::make_shared<FunctionContainer>(variableHandler);
     std::string source = "shit test = 5;";
     int expectedValue = 5;
 
     Tokenizer tokens(source);
-    EXPECT_THROW(ParseTreeBuilder treeBuilder(tokens.getTokens(), variableHandler), std::domain_error);
+    EXPECT_THROW(ParseTreeBuilder treeBuilder(tokens.getTokens(), variableHandler, functionContainer), std::domain_error);
 }

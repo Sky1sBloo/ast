@@ -3,36 +3,10 @@
 #include <string>
 #include <vector>
 
+#include "BaseParseNodes.hpp"
+#include "FunctionContainer.hpp"
 #include "MemoryCell.hpp"
 #include "VariableHandler.hpp"
-
-/**
- * Base class for all values that can contains value
- */
-class ReturnableExpr {
-public:
-    virtual ~ReturnableExpr() = default;
-    virtual const MemoryCell& getValue() const = 0;
-};
-
-/**
- * Base class representing a terminal action
- */
-class TerminalExpr {
-public:
-    virtual ~TerminalExpr() = default;
-    virtual void performAction() = 0;
-};
-
-class StatementContainer : public TerminalExpr {
-public:
-    StatementContainer() : _statements() {}
-    StatementContainer(std::vector<std::unique_ptr<TerminalExpr>> statements);
-    void performAction() override;
-    void insertExpr(std::unique_ptr<TerminalExpr> expr);
-private:
-    std::vector<std::unique_ptr<TerminalExpr>> _statements;
-};
 
 /**
  * Node containing constant literals
@@ -40,12 +14,26 @@ private:
 class LiteralExpr : public ReturnableExpr {
 public:
     LiteralExpr(const std::string& value);
-    const MemoryCell& getValue() const override { return _value; }
+    const MemoryCell& getValue() override { return _value; }
 
 private:
     const MemoryCell _value;
 };
 
+class VariableIdentifier : public ReturnableExpr {
+public:
+    VariableIdentifier(const std::string& id, std::shared_ptr<VariableHandler> handler)
+        : _id(id)
+        , _handler(handler)
+    {
+    }
+
+    const MemoryCell& getValue() override { return _handler->getValue(_id); }
+
+private:
+    const std::string _id;
+    std::shared_ptr<VariableHandler> _handler;
+};
 /**
  * Node for initialializing variables
  */
@@ -75,4 +63,44 @@ private:
     const std::string _id;
     std::unique_ptr<ReturnableExpr> _value;
     std::shared_ptr<VariableHandler> _handler;
+};
+
+/**
+ * Node for calling functions
+ */
+class FunctionCallExpr : public ReturnableExpr {
+public:
+    FunctionCallExpr(const std::string& id, std::shared_ptr<FunctionContainer> functionDefinitions, std::shared_ptr<VariableHandler> handler);
+
+    /**
+     * Param is inserted by order
+     */
+    void insertParam(std::unique_ptr<ReturnableExpr> param);
+
+    const MemoryCell& getValue() override;
+
+private:
+    std::string _id;
+    std::vector<std::unique_ptr<ReturnableExpr>> _params;
+    std::shared_ptr<FunctionContainer> _functionDefinitions;
+    std::shared_ptr<VariableHandler> _handler;
+
+    MemoryCell _value;  // Since it needs to take ownership
+};
+
+/**
+ * Node for non named returnable functions
+ */
+class StatementContainer : public TerminalExpr {
+public:
+    StatementContainer()
+        : _statements()
+    {
+    }
+
+    void performAction() override;
+    void insertExpr(std::unique_ptr<Expr> expr);
+
+private:
+    std::vector<std::unique_ptr<Expr>> _statements;
 };

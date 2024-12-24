@@ -8,6 +8,17 @@ MemoryCell::MemoryCell(const std::string& value)
     typeDeducer(value);
 }
 
+MemoryCell::MemoryCell(const MemoryCell& other) :
+    _value(other._value)
+{
+}
+
+MemoryCell& MemoryCell::operator=(const MemoryCell& other)
+{
+    _value = other._value;
+    return *this;
+}
+
 void MemoryCell::set(const std::string& value)
 {
     typeDeducer(value);

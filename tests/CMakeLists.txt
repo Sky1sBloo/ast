@@ -5,6 +5,7 @@ add_executable(
     ProgramMemoryTests.cpp
     VariableHandlerTests.cpp
     ParseNodesTests.cpp
+    FunctionNodesTests.cpp
     ParseTreeBuilderTests.cpp
 )
 

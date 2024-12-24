@@ -1,4 +1,6 @@
 #pragma once
+#include <list>
+#include <queue>
 #include <unordered_map>
 
 #include "MemoryCell.hpp"
@@ -16,6 +18,11 @@ public:
     int allocate(const MemoryCell& cell);
 
     /**
+     * Deallocates the variable on memory
+     */
+    void deallocate(int address);
+
+    /**
      * Retrieves the value of address
      *
      * Throws std::out_of_range if address is invalid
@@ -30,8 +37,21 @@ public:
     void set(int address, const std::string& value);
     void set(int address, const MemoryCell& cell);
 
+    /**
+     * Increases the stack frame for scoped functions
+    */
+    void allocateStackFrame();
+
+    /**
+     * Gets out of current stack frame
+     * 
+     * Throws an exception if already empty
+    */
+    void deallocateStackFrame();
+
 
 private:
     int _highestPtr; // To determine free memory
-    std::unordered_map<int, MemoryCell> _memory;
+    std::queue<int> _unusedPtrs;
+    std::list<std::unordered_map<int, MemoryCell>> _memory;
 };

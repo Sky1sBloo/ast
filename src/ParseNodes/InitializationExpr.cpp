@@ -1,4 +1,5 @@
 #include "ParseNodes.hpp"
+#include <iostream>
 
 InitializationExpr::InitializationExpr(const std::string& id, std::shared_ptr<VariableHandler> handler)
     : _id(id)

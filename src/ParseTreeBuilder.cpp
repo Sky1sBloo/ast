@@ -1,20 +1,25 @@
 #include "ParseTreeBuilder.hpp"
+#include "FunctionDefinition.hpp"
 #include "ParseNodes.hpp"
+#include <optional>
 #include <ranges>
 #include <stdexcept>
 
-ParseTreeBuilder::ParseTreeBuilder(const std::vector<Token>& tokens, std::shared_ptr<VariableHandler> handler)
+ParseTreeBuilder::ParseTreeBuilder(const std::vector<Token>& tokens, std::shared_ptr<VariableHandler> handler, std::shared_ptr<FunctionContainer> funcContainer)
     : _var_handler(handler)
+    , _func_container(funcContainer)
     , _root()
     , _statementTokens()
 {
     getStatementTokens(tokens);
 
     while (!_statementTokens.empty()) {
-        _root.insertExpr(identifyStatement(_statementTokens.front()));
+        auto expr = identifyStatement(_statementTokens.front());
+        if (expr.has_value()) {
+            _root.insertExpr(std::move(expr.value()));
+        }
         _statementTokens.pop();
     }
-
 }
 
 void ParseTreeBuilder::getStatementTokens(const std::vector<Token>& tokens)
@@ -30,21 +35,29 @@ void ParseTreeBuilder::getStatementTokens(const std::vector<Token>& tokens)
     }
 }
 
-std::unique_ptr<TerminalExpr> ParseTreeBuilder::identifyStatement(const std::vector<Token>& statement)
+std::optional<std::unique_ptr<Expr>> ParseTreeBuilder::identifyStatement(const std::vector<Token>& statement)
 {
     if (statementMatchesRuleset(statement, _varInitializationRuleset)) {
         const std::string& identifier = statement[1].getValue();
-        return std::make_unique<InitializationExpr>(identifier, _var_handler);
+        auto initializationExpr = std::make_unique<InitializationExpr>(identifier, _var_handler);
+        return std::make_unique<Expr>(std::move(initializationExpr));
     }
     if (statementMatchesRuleset(statement, _varAssignmentRuleset)) {
         const std::string& identifier = statement[0].getValue();
         const std::string& value = statement[2].getValue();
-        return std::make_unique<AssignExpr>(identifier, std::make_unique<LiteralExpr>(value), _var_handler);
+        auto assignExpr = std::make_unique<AssignExpr>(identifier, std::make_unique<LiteralExpr>(value), _var_handler);
+        return std::make_unique<Expr>(std::move(assignExpr));
     }
     if (statementMatchesRuleset(statement, _varInitializationAndAssignmentRuleset)) {
         const std::string& identifier = statement[1].getValue();
         const std::string& value = statement[3].getValue();
-        return std::make_unique<InitializationExpr>(identifier, std::make_unique<LiteralExpr>(value), _var_handler);
+        auto initializationExpr = std::make_unique<InitializationExpr>(identifier, std::make_unique<LiteralExpr>(value), _var_handler);
+        return std::make_unique<Expr>(std::move(initializationExpr));
+    }
+    if (statementMatchesRuleset(statement, _functionDefinitionRuleset)) {
+        const std::string& identifier = statement[1].getValue();
+        _func_container->insertFunction(std::make_unique<FunctionDefinition>(identifier, _var_handler));
+        return std::nullopt;
     }
     throw std::domain_error("Cannot identify statement");
 }
@@ -61,5 +74,4 @@ bool ParseTreeBuilder::statementMatchesRuleset(const std::vector<Token>& stateme
         }
     }
     return true;
-
 }
