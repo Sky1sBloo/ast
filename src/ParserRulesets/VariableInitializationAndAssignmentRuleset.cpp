@@ -1,12 +1,12 @@
 #include "ParseNodes.hpp"
 #include "ParserRulesets.hpp"
 
-VariableInitializatonAndAssignmentRuleset::VariableInitializatonAndAssignmentRuleset(std::shared_ptr<VariableHandler> handler)
+VariableInitializationAndAssignmentRuleset::VariableInitializationAndAssignmentRuleset(std::shared_ptr<VariableHandler> handler)
     : ParserRuleset(handler)
 {
 }
 
-std::unique_ptr<Expr> VariableInitializatonAndAssignmentRuleset::createExpr(const std::vector<Token>& statement)
+std::unique_ptr<Expr> VariableInitializationAndAssignmentRuleset::createExpr(const std::vector<Token>& statement)
 {
     if (!statementMatchesRuleset(statement, _ruleset)) {
         return nullptr;

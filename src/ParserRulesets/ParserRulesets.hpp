@@ -20,6 +20,8 @@ public:
     {
     }
 
+    virtual ~ParserRuleset() { }
+
     /**
      * Creates and determines if the statement is a valid rule
      *
@@ -65,9 +67,12 @@ private:
         { Token::SubTypes::ASSIGN }, { Token::MainTypes::VALUE, Token::SubTypes::ANY }, { Token::SubTypes::STATEMENT_TERMINATE } } };
 };
 
-class VariableInitializatonAndAssignmentRuleset : public ParserRuleset {
+/**
+ * Class for handling initialization and assignment ruleset
+ */
+class VariableInitializationAndAssignmentRuleset : public ParserRuleset {
 public:
-    VariableInitializatonAndAssignmentRuleset(std::shared_ptr<VariableHandler> handler);
+    VariableInitializationAndAssignmentRuleset(std::shared_ptr<VariableHandler> handler);
     std::unique_ptr<Expr> createExpr(const std::vector<Token>& statement) override;
 
 private:
