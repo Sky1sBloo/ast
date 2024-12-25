@@ -51,3 +51,27 @@ private:
         { Token::SubTypes::IDENTIFIER },
         { Token::SubTypes::STATEMENT_TERMINATE } } };
 };
+
+/**
+ * Class for handling assignment ruleset
+ */
+class VariableAssignmentRuleset : public ParserRuleset {
+public:
+    VariableAssignmentRuleset(std::shared_ptr<VariableHandler> handler);
+    std::unique_ptr<Expr> createExpr(const std::vector<Token>& statement) override;
+
+private:
+    inline static const std::vector<Token> _ruleset = { { { Token::SubTypes::IDENTIFIER },
+        { Token::SubTypes::ASSIGN }, { Token::MainTypes::VALUE, Token::SubTypes::ANY }, { Token::SubTypes::STATEMENT_TERMINATE } } };
+};
+
+class VariableInitializatonAndAssignmentRuleset : public ParserRuleset {
+public:
+    VariableInitializatonAndAssignmentRuleset(std::shared_ptr<VariableHandler> handler);
+    std::unique_ptr<Expr> createExpr(const std::vector<Token>& statement) override;
+
+private:
+    inline static const std::vector<Token> _ruleset = { { { Token::SubTypes::KEYWORD },
+        { Token::SubTypes::IDENTIFIER }, { Token::SubTypes::ASSIGN }, { Token::MainTypes::VALUE, Token::SubTypes::ANY },
+        { Token::SubTypes::STATEMENT_TERMINATE } } };
+};
