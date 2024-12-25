@@ -7,6 +7,7 @@ add_executable(
     ParseNodesTests.cpp
     FunctionNodesTests.cpp
     ParseTreeBuilderTests.cpp
+    ParserTests.cpp
 )
 
 target_link_libraries(
