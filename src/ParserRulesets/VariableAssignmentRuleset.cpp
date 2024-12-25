@@ -7,7 +7,7 @@ VariableAssignmentRuleset::VariableAssignmentRuleset(std::shared_ptr<VariableHan
 {
 }
 
-std::unique_ptr<Expr> VariableAssignmentRuleset::createExpr(const std::vector<Token>& statement) 
+std::unique_ptr<Expr> VariableAssignmentRuleset::createExpr(const std::vector<Token>& statement) const
 {
     if (!statementMatchesRuleset(statement, _ruleset)) {
         return nullptr;

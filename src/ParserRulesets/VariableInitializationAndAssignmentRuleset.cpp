@@ -6,7 +6,7 @@ VariableInitializationAndAssignmentRuleset::VariableInitializationAndAssignmentR
 {
 }
 
-std::unique_ptr<Expr> VariableInitializationAndAssignmentRuleset::createExpr(const std::vector<Token>& statement)
+std::unique_ptr<Expr> VariableInitializationAndAssignmentRuleset::createExpr(const std::vector<Token>& statement) const
 {
     if (!statementMatchesRuleset(statement, _ruleset)) {
         return nullptr;

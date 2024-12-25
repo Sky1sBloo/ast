@@ -28,7 +28,7 @@ public:
      * @param statement Statement to be checked
      * @return nullptr if invalid
      */
-    virtual std::unique_ptr<Expr> createExpr(const std::vector<Token>& statement) = 0;
+    virtual std::unique_ptr<Expr> createExpr(const std::vector<Token>& statement) const = 0;
 
     /**
      * Function for handling exact match ruleset
@@ -46,7 +46,7 @@ class VariableInitializationRuleset : public ParserRuleset {
 public:
     VariableInitializationRuleset(std::shared_ptr<VariableHandler> handler);
 
-    std::unique_ptr<Expr> createExpr(const std::vector<Token>& statement) override;
+    std::unique_ptr<Expr> createExpr(const std::vector<Token>& statement) const override;
 
 private:
     inline static const std::vector<Token> _ruleset = { { { Token::SubTypes::KEYWORD, "var" },
@@ -60,7 +60,7 @@ private:
 class VariableAssignmentRuleset : public ParserRuleset {
 public:
     VariableAssignmentRuleset(std::shared_ptr<VariableHandler> handler);
-    std::unique_ptr<Expr> createExpr(const std::vector<Token>& statement) override;
+    std::unique_ptr<Expr> createExpr(const std::vector<Token>& statement) const override;
 
 private:
     inline static const std::vector<Token> _ruleset = { { { Token::SubTypes::IDENTIFIER },
@@ -73,7 +73,7 @@ private:
 class VariableInitializationAndAssignmentRuleset : public ParserRuleset {
 public:
     VariableInitializationAndAssignmentRuleset(std::shared_ptr<VariableHandler> handler);
-    std::unique_ptr<Expr> createExpr(const std::vector<Token>& statement) override;
+    std::unique_ptr<Expr> createExpr(const std::vector<Token>& statement) const override;
 
 private:
     inline static const std::vector<Token> _ruleset = { { { Token::SubTypes::KEYWORD },
