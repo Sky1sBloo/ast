@@ -47,3 +47,82 @@ TEST(PARSE_TESTS, VARIABLE_SAVING)
 
     EXPECT_EQ(expectedValue, returnedValue);   
 }
+
+TEST(PARSE_TESTS, MULTIPLE_STATEMENTS)
+{
+    std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
+    std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
+    std::shared_ptr<FunctionContainer> functionContainer = std::make_shared<FunctionContainer>(variableHandler);
+    std::string source = "a = 5; b = 6; a = 3;";
+    int expectedValueA = 3;
+    int expectedValueB = 6;
+
+    variableHandler->allocate("a");
+    variableHandler->allocate("b");
+
+    Tokenizer tokens(source);
+    Parser treeBuilder(tokens.getTokens(), variableHandler, functionContainer);
+    StatementContainer& tree = treeBuilder.getTree();
+    tree.performAction();
+
+    MemoryCell valueA = variableHandler->getValue("a");
+    auto returnedValueA = valueA.getAs<int>();
+    MemoryCell valueB = variableHandler->getValue("b");
+    auto returnedValueB = valueB.getAs<int>();
+    if (returnedValueA == std::nullopt || returnedValueB == std::nullopt) {
+        FAIL() << "Returned variable value isn't at expected type";
+    }
+
+    EXPECT_EQ(expectedValueA, returnedValueA);
+    EXPECT_EQ(expectedValueB, returnedValueB);
+} 
+
+TEST(PARSE_TESTS, VARIABLE_INITIALIZATION)
+{
+    std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
+    std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
+    std::shared_ptr<FunctionContainer> functionContainer = std::make_shared<FunctionContainer>(variableHandler);
+    std::string source = "var test;";
+
+    Tokenizer tokens(source);
+    Parser treeBuilder(tokens.getTokens(), variableHandler, functionContainer);
+    treeBuilder.getTree().performAction();
+
+    MemoryCell valueA = variableHandler->getValue("test");
+    if (valueA.getType() != DataType::NULL_TYPE) {
+        FAIL() << "Returned variable isn't expected type NULL";
+    }
+} 
+
+TEST(PARSE_TESTS, VARIABLE_INITIALIZATION_AND_ASSIGNMENT)
+{
+    std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
+    std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
+    std::shared_ptr<FunctionContainer> functionContainer = std::make_shared<FunctionContainer>(variableHandler);
+    std::string source = "var test = 5;";
+    int expectedValue = 5;
+
+    Tokenizer tokens(source);
+    Parser treeBuilder(tokens.getTokens(), variableHandler, functionContainer);
+    treeBuilder.getTree().performAction();
+
+    const MemoryCell& valueA = variableHandler->getValue("test");
+    auto returnedValueA = valueA.getAs<int>();
+
+    if (returnedValueA == std::nullopt) {
+        FAIL() << "Returned variable isn't at expected type";
+    }
+
+    EXPECT_EQ(expectedValue, returnedValueA); 
+}
+
+TEST(PARSE_TESTS, INVALID_KEYWORD) {
+    std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
+    std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
+    std::shared_ptr<FunctionContainer> functionContainer = std::make_shared<FunctionContainer>(variableHandler);
+    std::string source = "shit test = 5;";
+    int expectedValue = 5;
+
+    Tokenizer tokens(source);
+    EXPECT_THROW(Parser treeBuilder(tokens.getTokens(), variableHandler, functionContainer), std::invalid_argument);
+}
