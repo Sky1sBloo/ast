@@ -2,7 +2,6 @@
 #include <stdexcept>
 
 RulesetHandler::RulesetHandler(std::shared_ptr<VariableHandler> handler)
-    : _rulesets(3)
 {
     _rulesets.push_back(std::make_unique<VariableInitializationRuleset>(handler));
     _rulesets.push_back(std::make_unique<VariableAssignmentRuleset>(handler));
