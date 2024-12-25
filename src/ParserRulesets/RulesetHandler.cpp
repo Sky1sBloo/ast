@@ -1,5 +1,4 @@
 #include "RulesetHandler.hpp"
-#include "ParserRulesets/ParserRulesets.hpp"
 #include <stdexcept>
 
 RulesetHandler::RulesetHandler(std::shared_ptr<VariableHandler> handler)

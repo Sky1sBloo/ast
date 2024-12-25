@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BaseParseNodes.hpp"
-#include "ParserRulesets/ParserRulesets.hpp"
+#include "ParserRulesets.hpp"
 #include "Token.hpp"
 #include "VariableHandler.hpp"
 #include <memory>
