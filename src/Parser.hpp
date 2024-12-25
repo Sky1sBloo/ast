@@ -25,10 +25,10 @@ private:
     RulesetHandler _rulesetHandler;
 
     StatementContainer _root;
+
 private:
-    
     /**
      * Separates tokens by delimiters
-    */
+     */
     void retrieveStatements(const std::vector<Token>& tokens);
 };

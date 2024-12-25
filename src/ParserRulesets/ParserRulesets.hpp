@@ -4,11 +4,15 @@
 #pragma once
 
 #include "BaseParseNodes.hpp"
+#include "FunctionDefinition.hpp"
 #include "Token.hpp"
 #include "VariableHandler.hpp"
 #include <initializer_list>
 #include <memory>
+#include <variant>
 #include <vector>
+
+using RulesetExpr = std::variant<std::monostate, std::unique_ptr<Expr>, std::unique_ptr<FunctionDefinition>>;
 
 /**
  * Base class for a ruleset
@@ -28,8 +32,9 @@ public:
      * @param statement Statement to be checked
      * @return nullptr if invalid
      */
-    virtual std::unique_ptr<Expr> createExpr(const std::vector<Token>& statement) const = 0;
+    virtual RulesetExpr createExpr(const std::vector<Token>& statement) const = 0;
 
+protected:
     /**
      * Function for handling exact match ruleset
      */
@@ -46,7 +51,7 @@ class VariableInitializationRuleset : public ParserRuleset {
 public:
     VariableInitializationRuleset(std::shared_ptr<VariableHandler> handler);
 
-    std::unique_ptr<Expr> createExpr(const std::vector<Token>& statement) const override;
+    RulesetExpr createExpr(const std::vector<Token>& statement) const override;
 
 private:
     inline static const std::vector<Token> _ruleset = { { { Token::SubTypes::KEYWORD, "var" },
@@ -60,7 +65,7 @@ private:
 class VariableAssignmentRuleset : public ParserRuleset {
 public:
     VariableAssignmentRuleset(std::shared_ptr<VariableHandler> handler);
-    std::unique_ptr<Expr> createExpr(const std::vector<Token>& statement) const override;
+    RulesetExpr createExpr(const std::vector<Token>& statement) const override;
 
 private:
     inline static const std::vector<Token> _ruleset = { { { Token::SubTypes::IDENTIFIER },
@@ -73,7 +78,7 @@ private:
 class VariableInitializationAndAssignmentRuleset : public ParserRuleset {
 public:
     VariableInitializationAndAssignmentRuleset(std::shared_ptr<VariableHandler> handler);
-    std::unique_ptr<Expr> createExpr(const std::vector<Token>& statement) const override;
+    RulesetExpr createExpr(const std::vector<Token>& statement) const override;
 
 private:
     inline static const std::vector<Token> _ruleset = { { { Token::SubTypes::KEYWORD },

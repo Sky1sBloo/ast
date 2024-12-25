@@ -6,15 +6,15 @@ VariableInitializationAndAssignmentRuleset::VariableInitializationAndAssignmentR
 {
 }
 
-std::unique_ptr<Expr> VariableInitializationAndAssignmentRuleset::createExpr(const std::vector<Token>& statement) const
+RulesetExpr VariableInitializationAndAssignmentRuleset::createExpr(const std::vector<Token>& statement) const
 {
     if (!statementMatchesRuleset(statement, _ruleset)) {
-        return nullptr;
+        return RulesetExpr{std::monostate{}};
     }
 
     const std::string& identifier = statement[1].getValue();
     const std::string& value = statement[3].getValue();
 
     auto initializationExpr = std::make_unique<InitializationExpr>(identifier, std::make_unique<LiteralExpr>(value), _handler);
-    return std::make_unique<Expr>(std::move(initializationExpr));
+    return RulesetExpr{std::make_unique<Expr>(std::move(initializationExpr))};
 }
