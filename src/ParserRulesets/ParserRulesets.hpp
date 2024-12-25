@@ -31,7 +31,7 @@ public:
     /**
      * Function for handling exact match ruleset
      */
-    static bool statementMatchesRulest(const std::vector<Token>& statement, const std::vector<Token>& ruleset);
+    static bool statementMatchesRuleset(const std::vector<Token>& statement, const std::vector<Token>& ruleset);
 
 protected:
     std::shared_ptr<VariableHandler> _handler;

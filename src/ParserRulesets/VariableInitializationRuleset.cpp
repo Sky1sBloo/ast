@@ -9,7 +9,7 @@ VariableInitializationRuleset::VariableInitializationRuleset(std::shared_ptr<Var
 
 std::unique_ptr<Expr> VariableInitializationRuleset::createExpr(const std::vector<Token>& statement)
 {
-    if (!statementMatchesRulest(statement, _ruleset)) {
+    if (!statementMatchesRulset(statement, _ruleset)) {
         return nullptr;
     }
 

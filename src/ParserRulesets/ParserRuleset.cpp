@@ -1,7 +1,7 @@
 #include "ParserRulesets/ParserRulesets.hpp"
 #include <ranges>
 
-bool ParserRuleset::statementMatchesRulest(const std::vector<Token>& statement, const std::vector<Token>& ruleset)
+bool ParserRuleset::statementMatchesRuleset(const std::vector<Token>& statement, const std::vector<Token>& ruleset)
 {
     if (statement.size() != ruleset.size()) {
         return false;
