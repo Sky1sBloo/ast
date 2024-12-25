@@ -6,6 +6,7 @@ add_library(ast-lib
     ParseTreeBuilder.cpp 
     FunctionContainer.cpp
     Parser.cpp
+    ParserRulesets/RulesetHandler.cpp
     ParserRulesets/ParserRuleset.cpp
     ParserRulesets/VariableInitializationRuleset.cpp
     ParserRulesets/VariableInitializationAndAssignmentRuleset.cpp
