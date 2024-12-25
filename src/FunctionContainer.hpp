@@ -2,12 +2,12 @@
 
 #include "MemoryCell.hpp"
 #include "VariableHandler.hpp"
+#include "FunctionDefinition.hpp"
 #include <string>
 #include <unordered_map>
 #include <memory>
 #include <vector>
 
-class FunctionDefinition;
 /**
  * Class containing all function definitions
  */
