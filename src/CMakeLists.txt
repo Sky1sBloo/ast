@@ -8,6 +8,7 @@ add_library(ast-lib
     Parser.cpp
     ParserRulesets/RulesetHandler.cpp
     ParserRulesets/ParserRuleset.cpp
+    ParserRulesets/VariableAssignmentRuleset.cpp
     ParserRulesets/VariableInitializationRuleset.cpp
     ParserRulesets/VariableInitializationAndAssignmentRuleset.cpp
     ParseNodes/LiteralExpr.cpp 
