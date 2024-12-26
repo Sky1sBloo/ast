@@ -129,7 +129,7 @@ bool Tokenizer::isLiteral(const std::string& word) const
         return true;
     }
 
-    bool isString = word.front() == word.back() && std::ranges::find(_stringLiteralRuleset, word.front()) != _stringLiteralRuleset.end();
+    bool isString = !word.empty() && word.front() == word.back() && std::ranges::find(_stringLiteralRuleset, word.front()) != _stringLiteralRuleset.end();
     if (isString) {
         return true;
     }
