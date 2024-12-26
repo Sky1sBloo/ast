@@ -48,7 +48,7 @@ std::vector<std::string> FunctionDefinitionRuleset::getFunctionParams(const std:
             throw std::invalid_argument("First param does not match ruleset");
             // Throw error
         }
-        if (i != paramStartIdx && statement[i + 1] != _parameterRuleset[1]) {
+        if (i != paramStartIdx && i != paramEndIdx && statement[i + 1] != _parameterRuleset[1]) {
             throw std::invalid_argument("No commas between params");
         }
         params.push_back(statement[i].getValue());
