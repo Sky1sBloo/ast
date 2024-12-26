@@ -14,7 +14,7 @@ TEST(FUNCTION_TEST, FUNCTION_RETURN_TEST)
     int returnValue = 7;
     const std::string funcIdentifier = "testFunc";
 
-    auto functionExpr = std::make_unique<FunctionDefinition>(funcIdentifier, varHandler);
+    auto functionExpr = std::make_unique<FunctionDefinition>(funcIdentifier);
     auto varExpr = std::make_unique<InitializationExpr>(varIdentifier, varHandler);
     auto assignExpr = std::make_unique<AssignExpr>(varIdentifier, std::make_unique<LiteralExpr>(std::to_string(varSetValue)), varHandler);
     auto returnLiteral = std::make_unique<LiteralExpr>(std::to_string(returnValue));
@@ -45,7 +45,7 @@ TEST(FUNCTION_TEST, FUNCTION_PARAM_TEST)
     const std::string funcIdentifier = "testFunc";
 
     std::vector<std::string> funcParams = { "param_1", "param_2" };
-    auto functionExpr = std::make_unique<FunctionDefinition>(funcIdentifier, varHandler, funcParams);
+    auto functionExpr = std::make_unique<FunctionDefinition>(funcIdentifier, funcParams);
     auto assignExpr = std::make_unique<InitializationExpr>(varIdentifier, std::make_unique<LiteralExpr>(std::to_string(varSetValue)), varHandler);
     auto varExpr = std::make_unique<AssignExpr>(varIdentifier, std::make_unique<VariableIdentifier>("param_1", varHandler), varHandler);
     auto returnLiteral = std::make_unique<VariableIdentifier>("param_2", varHandler);

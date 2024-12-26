@@ -1,7 +1,6 @@
 #pragma once
 
 #include "BaseParseNodes.hpp"
-#include "VariableHandler.hpp"
 #include <string>
 #include <memory>
 #include <vector>
@@ -11,8 +10,8 @@
  */
 class FunctionDefinition {
 public:
-    FunctionDefinition(const std::string& id, std::shared_ptr<VariableHandler> handler);
-    FunctionDefinition(const std::string& id, std::shared_ptr<VariableHandler> handler, const std::vector<std::string>& params);
+    FunctionDefinition(const std::string& id);
+    FunctionDefinition(const std::string& id, const std::vector<std::string>& params);
     ~FunctionDefinition();
     void insertExpr(std::unique_ptr<Expr> expr);
     void insertExpr(std::unique_ptr<ReturnableExpr> expr);
@@ -33,5 +32,4 @@ private:
     const std::string _id;
     std::vector<std::unique_ptr<Expr>> _statements;
     std::vector<std::string> _params;
-    std::shared_ptr<VariableHandler> _handler;
 };

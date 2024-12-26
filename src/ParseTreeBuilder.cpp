@@ -56,7 +56,7 @@ std::optional<std::unique_ptr<Expr>> ParseTreeBuilder::identifyStatement(const s
     }
     if (statementMatchesRuleset(statement, _functionDefinitionRuleset)) {
         const std::string& identifier = statement[1].getValue();
-        _func_container->insertFunction(std::make_unique<FunctionDefinition>(identifier, _var_handler));
+        _func_container->insertFunction(std::make_unique<FunctionDefinition>(identifier));
         return std::nullopt;
     }
     throw std::domain_error("Cannot identify statement");

@@ -32,7 +32,7 @@ RulesetExpr FunctionDefinitionRuleset::createExpr(const std::vector<Token>& stat
     const std::string& identifier = statement[1].getValue();
     std::unique_ptr<FunctionDefinition> functionExpr;
 
-    functionExpr = std::make_unique<FunctionDefinition>(identifier, _handler, params);
+    functionExpr = std::make_unique<FunctionDefinition>(identifier, params);
     return RulesetExpr { std::move(functionExpr) };
 }
 
