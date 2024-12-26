@@ -7,6 +7,7 @@
 #include "VariableHandler.hpp"
 #include <memory>
 #include <queue>
+#include <stack>
 #include <vector>
 
 /**
@@ -22,8 +23,11 @@ private:
     std::shared_ptr<VariableHandler> _variableHandler;
     std::shared_ptr<FunctionContainer> _functionContainer;
     std::queue<std::vector<Token>> _statementTokens;
+
     RulesetHandler _rulesetHandler;
 
+    // Function to append new expression
+    std::stack<std::unique_ptr<FunctionDefinition>> _currentFunction;
     StatementContainer _root;
 
 private:

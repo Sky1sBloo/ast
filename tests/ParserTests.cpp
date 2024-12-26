@@ -1,9 +1,11 @@
 #include "FunctionContainer.hpp"
+#include "MemoryCell.hpp"
 #include "Parser.hpp"
 #include "ProgramMemory.hpp"
 #include "Tokenizer.hpp"
 #include "VariableHandler.hpp"
 #include <gtest/gtest.h>
+#include <optional>
 
 TEST(PARSE_TESTS, VARIABLE_SAVING)
 {
@@ -133,8 +135,18 @@ TEST(PARSE_TESTS, FUNCTION_DEFINITION)
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
     std::shared_ptr<FunctionContainer> functionContainer = std::make_shared<FunctionContainer>(variableHandler);
-    std::string source = "func testFunc() {";
+    std::string source = "var a; func testFunc() { a = 5; }";
+    int expectedValue = 5;
 
     Tokenizer tokens(source);
     Parser treeBuilder(tokens.getTokens(), variableHandler, functionContainer);
+    treeBuilder.getTree().performAction();
+
+    const MemoryCell& varA = variableHandler->getValue("a");
+    auto retrievedVarA = varA.getAs<int>();
+
+    if (retrievedVarA == std::nullopt) {
+        FAIL() << "Returned variable isn't at expected type";
+    }
+    EXPECT_EQ(expectedValue, retrievedVarA);
 }
