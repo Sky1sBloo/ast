@@ -9,6 +9,7 @@
 #include "VariableHandler.hpp"
 #include <initializer_list>
 #include <memory>
+#include <string>
 #include <variant>
 #include <vector>
 
@@ -84,4 +85,25 @@ private:
     inline static const std::vector<Token> _ruleset = { { { Token::SubTypes::KEYWORD },
         { Token::SubTypes::IDENTIFIER }, { Token::SubTypes::ASSIGN }, { Token::MainTypes::VALUE, Token::SubTypes::ANY },
         { Token::SubTypes::STATEMENT_TERMINATE } } };
+};
+
+class FunctionDefinitionRuleset : public ParserRuleset {
+public:
+    FunctionDefinitionRuleset(std::shared_ptr<VariableHandler> handler);
+    RulesetExpr createExpr(const std::vector<Token>& statement) const override;
+
+private:
+    /**
+     * Separates the function params and gets its identifier
+     *
+     * @throws invalid_argument If param doesnt match _parameterRuleset
+     */
+    std::vector<std::string> getFunctionParams(const std::vector<Token>& statement) const;
+
+private:
+    inline static const std::vector<Token> _openingRuleset = { { { Token::SubTypes::KEYWORD, "func" },
+        { Token::SubTypes::IDENTIFIER }, { Token::SubTypes::BRACE, "(" } } };
+    inline static const std::vector<Token> _parameterRuleset = { { { Token::SubTypes::IDENTIFIER }, { Token::SubTypes::OPERATOR, "," } } };
+    inline static const std::vector<Token> _closingRuleset = { { { Token::SubTypes::BRACE, ")" },
+        { Token::SubTypes::BRACE, "{" } } };
 };

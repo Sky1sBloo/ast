@@ -7,6 +7,7 @@ add_executable(
     ParseNodesTests.cpp
     FunctionNodesTests.cpp
     ParseTreeBuilderTests.cpp
+    RulesetHandlerTests.cpp
     ParserTests.cpp
 )
 

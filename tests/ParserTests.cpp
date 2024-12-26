@@ -45,7 +45,7 @@ TEST(PARSE_TESTS, VARIABLE_SAVING)
         FAIL() << "Returned variable value isn't at expected type. Type is: " << type;
     }
 
-    EXPECT_EQ(expectedValue, returnedValue);   
+    EXPECT_EQ(expectedValue, returnedValue);
 }
 
 TEST(PARSE_TESTS, MULTIPLE_STATEMENTS)
@@ -75,7 +75,7 @@ TEST(PARSE_TESTS, MULTIPLE_STATEMENTS)
 
     EXPECT_EQ(expectedValueA, returnedValueA);
     EXPECT_EQ(expectedValueB, returnedValueB);
-} 
+}
 
 TEST(PARSE_TESTS, VARIABLE_INITIALIZATION)
 {
@@ -92,7 +92,7 @@ TEST(PARSE_TESTS, VARIABLE_INITIALIZATION)
     if (valueA.getType() != DataType::NULL_TYPE) {
         FAIL() << "Returned variable isn't expected type NULL";
     }
-} 
+}
 
 TEST(PARSE_TESTS, VARIABLE_INITIALIZATION_AND_ASSIGNMENT)
 {
@@ -113,10 +113,11 @@ TEST(PARSE_TESTS, VARIABLE_INITIALIZATION_AND_ASSIGNMENT)
         FAIL() << "Returned variable isn't at expected type";
     }
 
-    EXPECT_EQ(expectedValue, returnedValueA); 
+    EXPECT_EQ(expectedValue, returnedValueA);
 }
 
-TEST(PARSE_TESTS, INVALID_KEYWORD) {
+TEST(PARSE_TESTS, INVALID_KEYWORD)
+{
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
     std::shared_ptr<FunctionContainer> functionContainer = std::make_shared<FunctionContainer>(variableHandler);
@@ -125,4 +126,15 @@ TEST(PARSE_TESTS, INVALID_KEYWORD) {
 
     Tokenizer tokens(source);
     EXPECT_THROW(Parser treeBuilder(tokens.getTokens(), variableHandler, functionContainer), std::invalid_argument);
+}
+
+TEST(PARSE_TESTS, FUNCTION_DEFINITION)
+{
+    std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
+    std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
+    std::shared_ptr<FunctionContainer> functionContainer = std::make_shared<FunctionContainer>(variableHandler);
+    std::string source = "func testFunc() {";
+
+    Tokenizer tokens(source);
+    Parser treeBuilder(tokens.getTokens(), variableHandler, functionContainer);
 }
