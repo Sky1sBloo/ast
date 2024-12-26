@@ -39,7 +39,7 @@ TEST(TOKENIZER_TESTS, READING)
 TEST(TOKENIZER_TESTS, FUNCTION)
 {
     std::string source = "func test() {}";
-    const std::array<Token::SubTypes, 17> expectedSubTypes = {
+    const std::array<Token::SubTypes, 6> expectedSubTypes = {
         Token::SubTypes::KEYWORD,
         Token::SubTypes::IDENTIFIER,
         Token::SubTypes::BRACE,
