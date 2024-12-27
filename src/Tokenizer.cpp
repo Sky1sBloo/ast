@@ -95,7 +95,7 @@ Token::SubTypes Tokenizer::identifyType(const std::string& word)
 
 bool Tokenizer::isKeyword(const std::string& word) const
 {
-    return std::ranges::find(_keywordRuleset, word) != _keywordRuleset.end();
+    return _keywordRuleset.contains(word);
 }
 
 bool Tokenizer::isOperation(const std::string& word) const
@@ -103,7 +103,7 @@ bool Tokenizer::isOperation(const std::string& word) const
     if (word.length() != 1) {
         return false;
     }
-    return std::ranges::find(_operationRuleset, word[0]) != _operationRuleset.end();
+    return _operationRuleset.contains(word[0]);
 }
 
 bool Tokenizer::isBrace(const std::string& word) const
@@ -111,7 +111,7 @@ bool Tokenizer::isBrace(const std::string& word) const
     if (word.length() != 1) {
         return false;
     }
-    return std::ranges::find(_braceRuleset, word[0]) != _braceRuleset.end();
+    return _braceRuleset.contains(word[0]);
 }
 
 bool Tokenizer::isAssignment(const std::string& word) const
@@ -129,13 +129,12 @@ bool Tokenizer::isLiteral(const std::string& word) const
         return true;
     }
 
-    bool isString = !word.empty() && word.front() == word.back() && std::ranges::find(_stringLiteralRuleset, word.front()) != _stringLiteralRuleset.end();
+    bool isString = !word.empty() && word.front() == word.back() && _stringLiteralRuleset.contains(word.front());
     if (isString) {
         return true;
     }
 
-    bool isBoolean = std::ranges::find(_booleanLiteralRuleset, word) != _booleanLiteralRuleset.end();
-    if (isBoolean) {
+    if (_booleanLiteralRuleset.contains(word)) {
         return true;
     }
 
