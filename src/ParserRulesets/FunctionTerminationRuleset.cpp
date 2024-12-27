@@ -8,10 +8,10 @@ FunctionTerminationRuleset::FunctionTerminationRuleset(std::shared_ptr<VariableH
 RulesetExpr FunctionTerminationRuleset::createExpr(const std::vector<Token>& statement) const
 {
     if (statement.size() != 1) {
-        return std::monostate();
+        return RulesetExpr {};
     }
     if (statement[0] != _ruleset) {
-        return std::monostate();
+        return RulesetExpr {};
     }
-    return RulesetExpr{ FunctionTermination {}};
+    return RulesetExpr { RulesetExpr::Types::FUNCTION_TERMINATION };
 }

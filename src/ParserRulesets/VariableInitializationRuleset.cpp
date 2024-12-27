@@ -10,7 +10,7 @@ VariableInitializationRuleset::VariableInitializationRuleset(std::shared_ptr<Var
 RulesetExpr VariableInitializationRuleset::createExpr(const std::vector<Token>& statement) const
 {
     if (!statementMatchesRuleset(statement, _ruleset)) {
-        return RulesetExpr { std::monostate() };
+        return RulesetExpr {};
     }
 
     const std::string& identifier = statement[1].getValue();
