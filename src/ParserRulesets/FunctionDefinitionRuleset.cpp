@@ -2,7 +2,6 @@
 #include "ParserRulesets.hpp"
 #include "Token.hpp"
 #include <algorithm>
-#include <iostream>
 #include <stdexcept>
 
 FunctionDefinitionRuleset::FunctionDefinitionRuleset(std::shared_ptr<VariableHandler> handler)
@@ -13,20 +12,20 @@ FunctionDefinitionRuleset::FunctionDefinitionRuleset(std::shared_ptr<VariableHan
 RulesetExpr FunctionDefinitionRuleset::createExpr(const std::vector<Token>& statement) const
 {
     if (statement.size() < _openingRuleset.size() + _closingRuleset.size()) {
-        return RulesetExpr { std::monostate() };
+        return RulesetExpr {};
     }
 
     // To check for constant ruleset ends doesnt match
     if (!std::equal(_openingRuleset.begin(), _openingRuleset.end(), statement.begin())
         || !std::equal(_closingRuleset.rbegin(), _closingRuleset.rend(), statement.rbegin())) {
-        return RulesetExpr { std::monostate() };
+        return RulesetExpr {};
     }
 
     std::vector<std::string> params;
     try {
         params = getFunctionParams(statement);
     } catch (const std::invalid_argument& ev) {
-        return RulesetExpr { std::monostate() };
+        return RulesetExpr {};
     }
 
     const std::string& identifier = statement[1].getValue();

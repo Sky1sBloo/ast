@@ -3,24 +3,13 @@
  */
 #pragma once
 
-#include "BaseParseNodes.hpp"
-#include "FunctionDefinition.hpp"
+#include "RulesetExpr.hpp"
 #include "Token.hpp"
 #include "VariableHandler.hpp"
 #include <initializer_list>
 #include <memory>
 #include <string>
-#include <variant>
 #include <vector>
-
-/**
- * Class for stopping a function
- * Had to separate it from expr since it wont be entered in the AST
- */
-struct FunctionTermination {
-};
-
-using RulesetExpr = std::variant<std::monostate, std::unique_ptr<Expr>, std::unique_ptr<FunctionDefinition>, FunctionTermination>;
 
 /**
  * Base class for a ruleset

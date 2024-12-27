@@ -5,6 +5,7 @@ add_library(ast-lib
     VariableHandler.cpp 
     FunctionContainer.cpp
     Parser.cpp
+    ParserRulesets/RulesetExpr.cpp
     ParserRulesets/RulesetHandler.cpp
     ParserRulesets/ParserRuleset.cpp
     ParserRulesets/VariableAssignmentRuleset.cpp

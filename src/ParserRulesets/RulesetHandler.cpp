@@ -16,7 +16,7 @@ RulesetExpr RulesetHandler::getExpression(const std::vector<Token>& statement)
 {
     for (const auto& ruleset : _rulesets) {
         RulesetExpr rulesetExpr = ruleset->createExpr(statement);
-        if (!std::holds_alternative<std::monostate>(rulesetExpr)) {
+        if (rulesetExpr.getTypes() != RulesetExpr::Types::INVALID) {
             return rulesetExpr;
         }
     }

@@ -11,7 +11,7 @@ VariableAssignmentRuleset::VariableAssignmentRuleset(std::shared_ptr<VariableHan
 RulesetExpr VariableAssignmentRuleset::createExpr(const std::vector<Token>& statement) const
 {
     if (!statementMatchesRuleset(statement, _ruleset)) {
-        return RulesetExpr{std::monostate()};
+        return RulesetExpr{};
     }
 
     const std::string& identifier = statement[0].getValue();

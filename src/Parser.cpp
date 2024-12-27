@@ -1,9 +1,7 @@
 #include "Parser.hpp"
 #include "BaseParseNodes.hpp"
 #include "FunctionDefinition.hpp"
-#include "ParserRulesets/ParserRulesets.hpp"
 #include <stdexcept>
-#include <variant>
 
 Parser::Parser(const std::vector<Token>& tokens, std::shared_ptr<VariableHandler> handler, std::shared_ptr<FunctionContainer> container)
     : _variableHandler(handler)
@@ -26,28 +24,27 @@ void Parser::buildTree()
                 throw std::runtime_error("Empty statement on parser");
             }
             RulesetExpr rulesetExpr = _rulesetHandler.getExpression(statement);
-            std::visit(ExprVariantVisitor {
-                           [](const std::monostate&) {
-                               throw std::invalid_argument("Cannot find ruleset for statement");
-                           },
-                           [this](std::unique_ptr<Expr>& expr) {
-                               if (_currentFunction.empty()) {
-                                   _root.insertExpr(std::move(expr));
-                               } else {
-                                   _currentFunction.top()->insertExpr(std::move(expr));
-                               }
-                           },
-                           [this](std::unique_ptr<FunctionDefinition>& function) {
-                               _currentFunction.push(std::move(function));
-                           },
-                           [this](const FunctionTermination&) {
-                               if (_currentFunction.empty()) {
-                                   throw std::runtime_error("Tried to close unopened function");
-                               }
-                               _functionContainer->insertFunction(std::move(_currentFunction.top()));
-                               _currentFunction.pop();
-                           } },
-                rulesetExpr);
+            rulesetExpr.visit(
+                [this](std::unique_ptr<Expr>& expr) {
+                    if (_currentFunction.empty()) {
+                        _root.insertExpr(std::move(expr));
+                    } else {
+                        _currentFunction.top()->insertExpr(std::move(expr));
+                    }
+                },
+                [this](std::unique_ptr<FunctionDefinition>& function) {
+                    _currentFunction.push(std::move(function));
+                },
+                [this]() {
+                    if (_currentFunction.empty()) {
+                        throw std::runtime_error("Tried to close unopened function");
+                    }
+                    _functionContainer->insertFunction(std::move(_currentFunction.top()));
+                    _currentFunction.pop();
+                },
+                []() {
+                    throw std::runtime_error("Invalid ruleset type");
+                });
         } catch (std::invalid_argument ex) {
             // TODO: Log this error
             throw ex;
