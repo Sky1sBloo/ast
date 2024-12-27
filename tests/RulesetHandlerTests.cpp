@@ -18,7 +18,7 @@ TEST(RULESET_HANDLER, FUNCTION_DEFINITION)
     RulesetHandler handler(varHandler);
     RulesetExpr rulesetExpr = handler.getExpression(statement);
 
-    EXPECT_TRUE(std::holds_alternative<std::unique_ptr<FunctionDefinition>>(rulesetExpr));
+    EXPECT_EQ(RulesetExpr::Types::FUNCTION_DEFINITION, rulesetExpr.getTypes());
 }
 
 TEST(RULESET_HANDLER, FUNCTION_DEFINITION_PARAM)
@@ -48,16 +48,14 @@ TEST(RULESET_HANDLER, FUNCTION_DEFINITION_PARAM)
     RulesetExpr singleRulesetExpr = handler.getExpression(singleParamStatement);
     RulesetExpr multiRulesetExpr = handler.getExpression(multiParamStatement);
 
-    EXPECT_TRUE(std::holds_alternative<std::unique_ptr<FunctionDefinition>>(singleRulesetExpr));
-    EXPECT_TRUE(std::holds_alternative<std::unique_ptr<FunctionDefinition>>(multiRulesetExpr));
-    auto singleFuncExpr = std::move(std::get<std::unique_ptr<FunctionDefinition>>(singleRulesetExpr));
-    auto multiFuncExpr = std::move(std::get<std::unique_ptr<FunctionDefinition>>(multiRulesetExpr));
-
-    std::vector<std::string> singleParamExpected = { "param1" };
-    std::vector<std::string> multiParamExpected = { "param1", "param2", "param3" };
-
-    EXPECT_EQ(singleParamExpected.size(), singleFuncExpr->getParams().size());
-    EXPECT_TRUE(std::ranges::equal(singleParamExpected, singleFuncExpr->getParams()));
-    EXPECT_EQ(multiParamExpected.size(), multiFuncExpr->getParams().size());
-    EXPECT_TRUE(std::ranges::equal(multiParamExpected, multiFuncExpr->getParams()));
+    EXPECT_EQ(RulesetExpr::Types::FUNCTION_DEFINITION, singleRulesetExpr.getTypes());
+    EXPECT_EQ(RulesetExpr::Types::FUNCTION_DEFINITION, multiRulesetExpr.getTypes());
+    singleRulesetExpr.visit([](std::unique_ptr<Expr>&) {}, [](std::unique_ptr<FunctionDefinition>& func) {
+        std::vector<std::string> singleParamExpected = { "param1" };
+        EXPECT_EQ(singleParamExpected.size(), func->getParams().size());
+        EXPECT_TRUE(std::ranges::equal(singleParamExpected, func->getParams())); }, []() {}, []() {});
+    multiRulesetExpr.visit([](std::unique_ptr<Expr>&) {}, [](std::unique_ptr<FunctionDefinition>& func) {
+        std::vector<std::string> multiParamExpected = { "param1", "param2", "param3" };
+        EXPECT_EQ(multiParamExpected.size(), func->getParams().size());
+        EXPECT_TRUE(std::ranges::equal(multiParamExpected, func->getParams())); }, []() {}, []() {});
 }
