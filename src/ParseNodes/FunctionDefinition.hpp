@@ -32,4 +32,7 @@ private:
     const std::string _id;
     std::vector<std::unique_ptr<Expr>> _statements;
     std::vector<std::string> _params;
+
+    // Incase function returns void
+    inline static const MemoryCell voidValue{"NULL"};
 };

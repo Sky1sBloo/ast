@@ -52,5 +52,6 @@ const MemoryCell& FunctionDefinition::getValue()
             return statement->getAs<ReturnableExpr>().getValue();
         }
     }
-    throw std::runtime_error("Function Expression doesn't have returnable expression");
+    return voidValue;
+    //throw std::runtime_error("Function Expression doesn't have returnable expression");
 }
