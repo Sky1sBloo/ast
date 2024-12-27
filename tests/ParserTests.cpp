@@ -80,6 +80,35 @@ TEST(PARSE_TESTS, MULTIPLE_STATEMENTS)
     EXPECT_EQ(expectedValueB, returnedValueB);
 }
 
+TEST(PARSE_TESTS, VARIABLE_ASSIGN_TO_VARIABLE)
+{
+    std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
+    std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
+    std::shared_ptr<FunctionContainer> functionContainer = std::make_shared<FunctionContainer>(variableHandler);
+    std::string source = "a = 5; b = a; a = 3;";
+    int expectedValueA = 3;
+    int expectedValueB = 5;
+
+    variableHandler->allocate("a");
+    variableHandler->allocate("b");
+
+    Tokenizer tokens(source);
+    Parser treeBuilder(tokens.getTokens(), variableHandler, functionContainer);
+    StatementContainer& tree = treeBuilder.getTree();
+    tree.performAction();
+
+    MemoryCell valueA = variableHandler->getValue("a");
+    auto returnedValueA = valueA.getAs<int>();
+    MemoryCell valueB = variableHandler->getValue("b");
+    auto returnedValueB = valueB.getAs<int>();
+    if (returnedValueA == std::nullopt || returnedValueB == std::nullopt) {
+        FAIL() << "Returned variable value isn't at expected type";
+    }
+
+    EXPECT_EQ(expectedValueA, returnedValueA);
+    EXPECT_EQ(expectedValueB, returnedValueB);
+}
+
 TEST(PARSE_TESTS, VARIABLE_INITIALIZATION)
 {
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();

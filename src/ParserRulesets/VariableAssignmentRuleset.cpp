@@ -1,3 +1,4 @@
+#include "BaseParseNodes.hpp"
 #include "ParseNodes.hpp"
 #include "ParserRulesets.hpp"
 #include <memory>
@@ -14,8 +15,14 @@ RulesetExpr VariableAssignmentRuleset::createExpr(const std::vector<Token>& stat
     }
 
     const std::string& identifier = statement[0].getValue();
-    const std::string& value = statement[2].getValue();
+    const Token& value = statement[2];
+    std::unique_ptr<ReturnableExpr> valueExpr;
+    if (value.getSubType() == Token::SubTypes::IDENTIFIER) {
+        valueExpr = std::make_unique<VariableIdentifier>(value.getValue(), _handler);
+    } else if (value.getSubType() == Token::SubTypes::LITERAL){
+        valueExpr = std::make_unique<LiteralExpr>(value.getValue());
+    }
 
-    auto assignmentExpr = std::make_unique<AssignExpr>(identifier, std::make_unique<LiteralExpr>(value), _handler);
+    auto assignmentExpr = std::make_unique<AssignExpr>(identifier, std::move(valueExpr), _handler);
     return RulesetExpr{std::make_unique<Expr>(std::move(assignmentExpr))};
 }
