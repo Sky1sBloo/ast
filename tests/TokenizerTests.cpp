@@ -31,6 +31,7 @@ TEST(TOKENIZER_TESTS, READING)
 
     Tokenizer tokenizer(source);
 
+    EXPECT_EQ(tokenizer.getTokens().size(), expectedSubTypes.size());
     for (const auto& [token, expectedToken] : std::views::zip(tokenizer.getTokens(), expectedSubTypes)) {
         EXPECT_EQ(token.getSubType(), expectedToken);
     }
@@ -50,6 +51,7 @@ TEST(TOKENIZER_TESTS, FUNCTION)
 
     Tokenizer tokenizer(source);
 
+    EXPECT_EQ(tokenizer.getTokens().size(), expectedSubTypes.size());
     for (const auto& [token, expectedToken] : std::views::zip(tokenizer.getTokens(), expectedSubTypes)) {
         EXPECT_EQ(token.getSubType(), expectedToken);
     }
