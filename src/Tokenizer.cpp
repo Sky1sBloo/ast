@@ -38,7 +38,7 @@ Tokenizer::Tokenizer(std::string& sourceCode)
             continue;
         }
 
-        if (_delimeters.contains(c) || _braceRuleset.contains(c) || _operationRuleset.contains(c)) {
+        if (_delimeters.contains(c) || _braceRuleset.contains(c) || _operationRuleset.contains(c) || _assignmentRuleset == c) {
             Token::SubTypes type = identifyType(tokenStr);
             pushToken(type, prevType, tokenStr);
             tokenStr += c;
