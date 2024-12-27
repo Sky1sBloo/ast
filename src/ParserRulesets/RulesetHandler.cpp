@@ -20,5 +20,9 @@ RulesetExpr RulesetHandler::getExpression(const std::vector<Token>& statement)
         }
     }
 
-    throw std::invalid_argument("Statement ruleset is unkown");
+    std::string errorMsg = "Statement ruleset is unkown of type";
+    for (const Token& token : statement) {
+        errorMsg +=  token.getValue() + ", ";
+    }
+    throw std::invalid_argument(errorMsg);
 }
