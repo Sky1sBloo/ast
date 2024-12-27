@@ -3,7 +3,6 @@ add_library(ast-lib
     ProgramMemory.cpp 
     MemoryCell.cpp 
     VariableHandler.cpp 
-    ParseTreeBuilder.cpp 
     FunctionContainer.cpp
     Parser.cpp
     ParserRulesets/RulesetHandler.cpp
