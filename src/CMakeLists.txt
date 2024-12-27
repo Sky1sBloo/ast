@@ -3,8 +3,14 @@ add_library(ast-lib
     ProgramMemory.cpp 
     MemoryCell.cpp 
     VariableHandler.cpp 
-    ParseTreeBuilder.cpp 
     FunctionContainer.cpp
+    Parser.cpp
+    ParserRulesets/RulesetHandler.cpp
+    ParserRulesets/ParserRuleset.cpp
+    ParserRulesets/VariableAssignmentRuleset.cpp
+    ParserRulesets/VariableInitializationRuleset.cpp
+    ParserRulesets/VariableInitializationAndAssignmentRuleset.cpp
+    ParserRulesets/FunctionDefinitionRuleset.cpp
     ParseNodes/LiteralExpr.cpp 
     ParseNodes/InitializationExpr.cpp 
     ParseNodes/AssignExpr.cpp 

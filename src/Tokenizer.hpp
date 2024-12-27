@@ -34,7 +34,7 @@ private:
         "var", "func"
     };
     inline const static std::unordered_set<char> _operationRuleset = {
-        '+', '-', '/', '*' 
+        '+', '-', '/', '*', ','
     };
 
     inline const static std::unordered_set<char> _braceRuleset = {
@@ -47,7 +47,7 @@ private:
         "true", "True", "false", "False"
     };
     inline const static std::unordered_set<char> _identifierDelimeters = {
-        '\"', '\'', ';', '+', '-', '*', '/', '=' 
+        '\"', '\'', ';', '+', '-', '*', '/', '=', ','
     };
     inline const static std::unordered_set<char> _delimeters = {
         ' ', '\n', '\t',
