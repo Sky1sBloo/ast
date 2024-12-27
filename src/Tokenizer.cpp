@@ -38,31 +38,16 @@ Tokenizer::Tokenizer(std::string& sourceCode)
             continue;
         }
 
-        /*
-        switch (prevType) {
-        case Token::SubTypes::ANY:
-            throw std::runtime_error("Tried to tokenize an ANY subtype");
-        case Token::SubTypes::LITERAL:
-        case Token::SubTypes::KEYWORD:
-        case Token::SubTypes::IDENTIFIER:
-
-            break;
-        case Token::SubTypes::OPERATOR:
-        case Token::SubTypes::BRACE:
-        case Token::SubTypes::ASSIGN:
-        case Token::SubTypes::INVALID:
-        case Token::SubTypes::STATEMENT_TERMINATE:
-            break;
-        }; */
-
         if (_delimeters.contains(c) || _braceRuleset.contains(c) || _operationRuleset.contains(c)) {
             Token::SubTypes type = identifyType(tokenStr);
             pushToken(type, prevType, tokenStr);
+            tokenStr += c;
+            type = identifyType(tokenStr);
+            pushToken(type, prevType, tokenStr);
+            continue;
         }
 
-        if (!_delimeters.contains(c)) {
-            tokenStr += c;
-        }
+        tokenStr += c;
     }
 
     if (!tokenStr.empty()) {

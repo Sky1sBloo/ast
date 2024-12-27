@@ -184,3 +184,30 @@ TEST(PARSE_TESTS, FUNCTION_DEFINITION)
     }
     EXPECT_EQ(expectedValue, retrievedVarA);
 }
+
+TEST(PARSE_TESTS, FUNCTION_PARAM_TEST)
+{
+    std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
+    std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
+    std::shared_ptr<FunctionContainer> functionContainer = std::make_shared<FunctionContainer>(variableHandler);
+    std::string source = "var a = \"str\"; func testFunc(param) { a = param; }";
+    int expectedValue = 5;
+
+    Tokenizer tokens(source);
+    Parser treeBuilder(tokens.getTokens(), variableHandler, functionContainer);
+    treeBuilder.getTree().performAction();
+
+    FunctionCallExpr expr { "testFunc", functionContainer, variableHandler };
+    expr.insertParam(std::make_unique<LiteralExpr>(std::to_string(expectedValue)));
+
+    const MemoryCell& cell = expr.getValue();
+    EXPECT_EQ(cell.getType(), DataType::NULL_TYPE);
+
+    const MemoryCell& varA = variableHandler->getValue("a");
+    auto retrievedVarA = varA.getAs<int>();
+
+    if (retrievedVarA == std::nullopt) {
+        FAIL() << "Returned variable isn't at expected type. Current Type: " << static_cast<int>(varA.getType()) << std::endl;
+    }
+    EXPECT_EQ(expectedValue, retrievedVarA);
+}
