@@ -9,6 +9,7 @@ RulesetHandler::RulesetHandler(std::shared_ptr<VariableHandler> handler)
     _rulesets.push_back(std::make_unique<VariableAssignmentRuleset>(handler));
     _rulesets.push_back(std::make_unique<VariableInitializationAndAssignmentRuleset>(handler));
     _rulesets.push_back(std::make_unique<FunctionDefinitionRuleset>(handler));
+    _rulesets.push_back(std::make_unique<FunctionTerminationRuleset>(handler));
 }
 
 RulesetExpr RulesetHandler::getExpression(const std::vector<Token>& statement)

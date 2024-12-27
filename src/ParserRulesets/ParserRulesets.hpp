@@ -13,7 +13,14 @@
 #include <variant>
 #include <vector>
 
-using RulesetExpr = std::variant<std::monostate, std::unique_ptr<Expr>, std::unique_ptr<FunctionDefinition>>;
+/**
+ * Class for stopping a function
+ * Had to separate it from expr since it wont be entered in the AST
+ */
+struct FunctionTermination {
+};
+
+using RulesetExpr = std::variant<std::monostate, std::unique_ptr<Expr>, std::unique_ptr<FunctionDefinition>, FunctionTermination>;
 
 /**
  * Base class for a ruleset
@@ -106,4 +113,16 @@ private:
     inline static const std::vector<Token> _parameterRuleset = { { { Token::SubTypes::IDENTIFIER }, { Token::SubTypes::OPERATOR, "," } } };
     inline static const std::vector<Token> _closingRuleset = { { { Token::SubTypes::BRACE, ")" },
         { Token::SubTypes::BRACE, "{" } } };
+};
+
+/**
+ * Class for handling function termination
+ */
+class FunctionTerminationRuleset : public ParserRuleset {
+public:
+    FunctionTerminationRuleset(std::shared_ptr<VariableHandler> handler);
+    RulesetExpr createExpr(const std::vector<Token>& statement) const override;
+
+private:
+    inline static const Token _ruleset = { Token::SubTypes::BRACE, "}" };
 };
