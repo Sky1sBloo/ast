@@ -35,4 +35,9 @@ private:
      * Separates tokens by delimiters
      */
     void retrieveStatements(const std::vector<Token>& tokens);
+
+    /**
+     * Builds the parse tree
+     */
+    void buildTree();
 };

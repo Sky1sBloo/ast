@@ -13,19 +13,36 @@ Parser::Parser(const std::vector<Token>& tokens, std::shared_ptr<VariableHandler
     , _root()
 {
     retrieveStatements(tokens);
+    buildTree();
+}
 
+void Parser::buildTree()
+{
     while (!_statementTokens.empty()) {
         try {
-            RulesetExpr rulesetExpr = _rulesetHandler.getExpression(_statementTokens.front());
-            if (std::holds_alternative<std::unique_ptr<Expr>>(rulesetExpr)) {
-                // To insert on function when its defined
+            const std::vector<Token>& statement = _statementTokens.front();
+            if (statement.empty()) {
+                throw std::runtime_error("Empty statement on parser");
+            }
+            // Closing function definition
+            if (statement.front().getValue() == "}") {
                 if (_currentFunction.empty()) {
-                    _root.insertExpr(std::move(std::get<std::unique_ptr<Expr>>(rulesetExpr)));
-                } else {
-                    _currentFunction.top()->insertExpr(std::move(std::get<std::unique_ptr<Expr>>(rulesetExpr)));
+                    throw std::runtime_error("Tried to close unopened function");
                 }
-            } else if (std::holds_alternative<std::unique_ptr<FunctionDefinition>>(rulesetExpr)) {
-                _currentFunction.push(std::move(std::get<std::unique_ptr<FunctionDefinition>>(rulesetExpr)));
+                _functionContainer->insertFunction(std::move(_currentFunction.top()));
+                _currentFunction.pop();
+            } else {
+                RulesetExpr rulesetExpr = _rulesetHandler.getExpression(statement);
+                if (std::holds_alternative<std::unique_ptr<Expr>>(rulesetExpr)) {
+                    // To insert on function when its defined
+                    if (_currentFunction.empty()) {
+                        _root.insertExpr(std::move(std::get<std::unique_ptr<Expr>>(rulesetExpr)));
+                    } else {
+                        _currentFunction.top()->insertExpr(std::move(std::get<std::unique_ptr<Expr>>(rulesetExpr)));
+                    }
+                } else if (std::holds_alternative<std::unique_ptr<FunctionDefinition>>(rulesetExpr)) {
+                    _currentFunction.push(std::move(std::get<std::unique_ptr<FunctionDefinition>>(rulesetExpr)));
+                }
             }
         } catch (std::invalid_argument ex) {
             // TODO: Log this error
@@ -54,13 +71,15 @@ void Parser::retrieveStatements(const std::vector<Token>& tokens)
                 _statementTokens.push(currentStatement);
                 currentStatement.clear();
                 continue;
-            } else if (token.getValue() == "}") {
-                if (_currentFunction.empty()) {
-                    // Todo: Log this error
-                    throw std::invalid_argument("Tried to close brace on unopened function");
+            }
+            if (token.getValue() == "}") {
+                if (!currentStatement.empty()) {
+                    _statementTokens.push(currentStatement);
+                    currentStatement.clear();
                 }
-                _functionContainer->insertFunction(std::move(_currentFunction.top()));
-                _currentFunction.pop();
+                currentStatement.push_back(token);
+                _statementTokens.push(currentStatement);
+                currentStatement.clear();
                 continue;
             }
         }
