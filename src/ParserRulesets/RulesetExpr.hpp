@@ -10,7 +10,7 @@
 class RulesetExpr {
 public:
     enum class Types {
-        NONE,
+        INVALID,  // It means that the ruleset is not valid for that specific ruleset
         EXPR,
         FUNCTION_DEFINITION,
         FUNCTION_TERMINATION

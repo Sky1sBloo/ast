@@ -22,7 +22,7 @@ RulesetExpr::RulesetExpr(Types type)
 
 RulesetExpr::RulesetExpr()
     : _variant(std::monostate())
-    , _type(Types::NONE)
+    , _type(Types::INVALID)
 {
 }
 
@@ -40,7 +40,7 @@ void RulesetExpr::visit(std::function<void(std::unique_ptr<Expr>&)> exprVisitor,
     case Types::FUNCTION_TERMINATION:
         terminationVisitor();
         break;
-    case Types::NONE:
+    case Types::INVALID:
         noneVisitor();
         break;
     }
