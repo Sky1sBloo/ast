@@ -13,7 +13,7 @@ TEST(PARSE_TESTS, VARIABLE_SAVING)
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
     std::shared_ptr<FunctionContainer> functionContainer = std::make_shared<FunctionContainer>(variableHandler);
-    std::string source = "a = 5;";
+    std::string source = "a=5;";
     int expectedValue = 5;
 
     variableHandler->allocate("a");
