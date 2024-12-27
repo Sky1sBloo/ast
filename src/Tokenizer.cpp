@@ -21,34 +21,31 @@ Tokenizer::Tokenizer(std::string& sourceCode)
     bool prevIsDelimeter = false;
 
     for (char c : sourceCode) {
-        if (c == ' ') {
+        if (_delimeters.contains(c) || c == _terminationChar) {
             Token::SubTypes type = identifyType(tokenStr);
-            if (type != Token::SubTypes::INVALID) {
-                pushToken(type, prevType, tokenStr);
+            if (type == Token::SubTypes::INVALID) {
+                throw std::invalid_argument("Cannot identify token");
+            }
+            if (type == Token::SubTypes::ANY) {
+                throw std::invalid_argument("Tried to tokenize any subtype");
+            }
+            pushToken(type, prevType, tokenStr);
+
+            if (c == _terminationChar) {
+                tokenStr = std::string(1, _terminationChar);
+                pushToken(Token::SubTypes::STATEMENT_TERMINATE, prevType, tokenStr);
             }
             continue;
         }
 
-        if (c == _terminationChar) {
-            if (!tokenStr.empty()) {
-                Token::SubTypes type = identifyType(tokenStr);
-                pushToken(type, prevType, tokenStr);
-            }
-            tokenStr = ";";
-            pushToken(Token::SubTypes::STATEMENT_TERMINATE, prevType, tokenStr);
-            continue;
-        }
-        // TODO: Add ruleset for when to terminate
+        /*
         switch (prevType) {
         case Token::SubTypes::ANY:
             throw std::runtime_error("Tried to tokenize an ANY subtype");
         case Token::SubTypes::LITERAL:
         case Token::SubTypes::KEYWORD:
         case Token::SubTypes::IDENTIFIER:
-            if (std::ranges::find(_delimeters, c) != _delimeters.end() || isBrace(std::to_string(c)) || isOperation(std::to_string(c))) {
-                Token::SubTypes type = identifyType(tokenStr);
-                pushToken(type, prevType, tokenStr);
-            }
+
             break;
         case Token::SubTypes::OPERATOR:
         case Token::SubTypes::BRACE:
@@ -56,10 +53,22 @@ Tokenizer::Tokenizer(std::string& sourceCode)
         case Token::SubTypes::INVALID:
         case Token::SubTypes::STATEMENT_TERMINATE:
             break;
-        };
+        }; */
 
-        if (std::ranges::find(_delimeters, c) == _delimeters.end()) {
+        if (_delimeters.contains(c) || _braceRuleset.contains(c) || _operationRuleset.contains(c)) {
+            Token::SubTypes type = identifyType(tokenStr);
+            pushToken(type, prevType, tokenStr);
+        }
+
+        if (!_delimeters.contains(c)) {
             tokenStr += c;
+        }
+    }
+
+    if (!tokenStr.empty()) {
+        Token::SubTypes type = identifyType(tokenStr);
+        if (type != Token::SubTypes::INVALID) {
+            pushToken(type, prevType, tokenStr);
         }
     }
 }
