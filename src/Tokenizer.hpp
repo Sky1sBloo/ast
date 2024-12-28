@@ -31,7 +31,7 @@ private:
 private:
     // RULESETS
     inline const static std::unordered_set<std::string> _keywordRuleset = {
-        "var", "func"
+        "var", "func", "return"
     };
     inline const static std::unordered_set<char> _operationRuleset = {
         '+', '-', '/', '*', ','

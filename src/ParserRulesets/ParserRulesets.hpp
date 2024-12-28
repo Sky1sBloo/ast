@@ -104,6 +104,15 @@ private:
         { Token::SubTypes::BRACE, "{" } } };
 };
 
+class FunctionReturnRuleset : public ParserRuleset {
+public:
+    FunctionReturnRuleset(std::shared_ptr<VariableHandler> handler);
+    RulesetExpr createExpr(const std::vector<Token>& statement) const override;
+private:
+    inline static const std::vector<Token> _ruleset = { { { Token::SubTypes::KEYWORD, "return" }, { Token::MainTypes::VALUE, Token::SubTypes::ANY },
+        { Token::SubTypes::STATEMENT_TERMINATE } } };
+};
+
 /**
  * Class for handling function termination
  */
