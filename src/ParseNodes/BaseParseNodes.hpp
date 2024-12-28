@@ -25,14 +25,14 @@ public:
 /**
  * Class representing for returning a value from a function
  */
-class FunctionReturnExpr : public ReturnableExpr {
+class FunctionReturnExpr {
 public:
     FunctionReturnExpr(std::unique_ptr<ReturnableExpr> value)
         : _value(std::move(value))
     {
     }
 
-    const MemoryCell& getValue() override { return _value->getValue(); }
+    const MemoryCell& getValue() { return _value->getValue(); }
 private:
     std::unique_ptr<ReturnableExpr> _value;
 };
