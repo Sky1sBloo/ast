@@ -22,6 +22,21 @@ public:
 };
 
 /**
+ * Class representing for returning a value from a function
+ */
+class FunctionReturnExpr : public ReturnableExpr {
+public:
+    FunctionReturnExpr(std::unique_ptr<ReturnableExpr> value)
+        : _value(std::move(value))
+    {
+    }
+
+    const MemoryCell& getValue() override { return _value->getValue(); }
+private:
+    std::unique_ptr<ReturnableExpr> _value;
+};
+
+/**
  * Class containing both returnable and terminal expr
  */
 template <class... ExprVariant>
@@ -40,7 +55,7 @@ public:
     {
     }
 
-    const std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>>& getVariant() const { return _expr; }
+    const std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>, std::unique_ptr<FunctionReturnExpr>>& getVariant() const { return _expr; }
     template <typename T>
     T& getAs() 
     {
@@ -48,6 +63,6 @@ public:
     }
 
 private:
-    std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>> _expr;
+    std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>, std::unique_ptr<FunctionReturnExpr>> _expr;
 };
 
