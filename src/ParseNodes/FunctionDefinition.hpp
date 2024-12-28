@@ -16,6 +16,7 @@ public:
     void insertExpr(std::unique_ptr<Expr> expr);
     void insertExpr(std::unique_ptr<ReturnableExpr> expr);
     void insertExpr(std::unique_ptr<TerminalExpr> expr);
+    void insertExpr(std::unique_ptr<FunctionReturnExpr> expr);
 
     const MemoryCell& getValue();
     const MemoryCell& getValue(const std::vector<MemoryCell&>& params);

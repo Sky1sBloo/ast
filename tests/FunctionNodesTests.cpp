@@ -17,7 +17,7 @@ TEST(FUNCTION_TEST, FUNCTION_RETURN_TEST)
     auto functionExpr = std::make_unique<FunctionDefinition>(funcIdentifier);
     auto varExpr = std::make_unique<InitializationExpr>(varIdentifier, varHandler);
     auto assignExpr = std::make_unique<AssignExpr>(varIdentifier, std::make_unique<LiteralExpr>(std::to_string(varSetValue)), varHandler);
-    auto returnLiteral = std::make_unique<LiteralExpr>(std::to_string(returnValue));
+    auto returnLiteral = std::make_unique<FunctionReturnExpr>(std::make_unique<LiteralExpr>(std::to_string(returnValue)));
 
     functionExpr->insertExpr(std::move(assignExpr));
     functionExpr->insertExpr(std::move(returnLiteral));
@@ -48,7 +48,7 @@ TEST(FUNCTION_TEST, FUNCTION_PARAM_TEST)
     auto functionExpr = std::make_unique<FunctionDefinition>(funcIdentifier, funcParams);
     auto assignExpr = std::make_unique<InitializationExpr>(varIdentifier, std::make_unique<LiteralExpr>(std::to_string(varSetValue)), varHandler);
     auto varExpr = std::make_unique<AssignExpr>(varIdentifier, std::make_unique<VariableIdentifier>("param_1", varHandler), varHandler);
-    auto returnLiteral = std::make_unique<VariableIdentifier>("param_2", varHandler);
+    auto returnLiteral = std::make_unique<FunctionReturnExpr>(std::make_unique<VariableIdentifier>("param_2", varHandler));
 
     functionExpr->insertExpr(std::move(varExpr));
     functionExpr->insertExpr(std::move(returnLiteral));

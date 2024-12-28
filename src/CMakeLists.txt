@@ -13,6 +13,7 @@ add_library(ast-lib
     ParserRulesets/VariableInitializationAndAssignmentRuleset.cpp
     ParserRulesets/FunctionDefinitionRuleset.cpp
     ParserRulesets/FunctionTerminationRuleset.cpp
+    ParseNodes/Expr.cpp
     ParseNodes/LiteralExpr.cpp 
     ParseNodes/InitializationExpr.cpp 
     ParseNodes/AssignExpr.cpp 
