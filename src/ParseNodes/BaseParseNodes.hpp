@@ -46,6 +46,8 @@ public:
 
     Expr(std::unique_ptr<TerminalExpr> terminalExpr);
 
+    Expr(std::unique_ptr<FunctionReturnExpr> functionReturnExpr);
+
     const std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>, std::unique_ptr<FunctionReturnExpr>>& getVariant() const { return _expr; }
     template <typename T>
     T& getAs() 

@@ -10,6 +10,11 @@ Expr::Expr(std::unique_ptr<TerminalExpr> terminalExpr)
 {
 }
 
+Expr::Expr(std::unique_ptr<FunctionReturnExpr> functionReturnExpr)
+    : _expr(std::move(functionReturnExpr))
+{
+}
+
 template <class... ExprVariant>
 struct ExprVariantVisitor : ExprVariant... {
     using ExprVariant::operator()...;
