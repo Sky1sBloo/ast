@@ -1,7 +1,6 @@
 #include "RulesetHandler.hpp"
 #include "ParserRulesets/ParserRulesets.hpp"
 #include <stdexcept>
-#include <variant>
 
 RulesetHandler::RulesetHandler(std::shared_ptr<VariableHandler> handler)
 {
@@ -10,6 +9,7 @@ RulesetHandler::RulesetHandler(std::shared_ptr<VariableHandler> handler)
     _rulesets.push_back(std::make_unique<VariableInitializationAndAssignmentRuleset>(handler));
     _rulesets.push_back(std::make_unique<FunctionDefinitionRuleset>(handler));
     _rulesets.push_back(std::make_unique<FunctionTerminationRuleset>(handler));
+    _rulesets.push_back(std::make_unique<FunctionReturnRuleset>(handler));
 }
 
 RulesetExpr RulesetHandler::getExpression(const std::vector<Token>& statement)

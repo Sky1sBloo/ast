@@ -190,7 +190,7 @@ TEST(PARSE_TESTS, FUNCTION_PARAM_TEST)
     std::shared_ptr<ProgramMemory> memory = std::make_shared<ProgramMemory>();
     std::shared_ptr<VariableHandler> variableHandler = std::make_shared<VariableHandler>(memory);
     std::shared_ptr<FunctionContainer> functionContainer = std::make_shared<FunctionContainer>(variableHandler);
-    std::string source = "var a = \"str\"; func testFunc(param) { a = param; }";
+    std::string source = "var a = \"str\"; func testFunc(param) { a = param; param = 2; return param; }";
     int expectedValue = 5;
 
     Tokenizer tokens(source);
@@ -201,7 +201,8 @@ TEST(PARSE_TESTS, FUNCTION_PARAM_TEST)
     expr.insertParam(std::make_unique<LiteralExpr>(std::to_string(expectedValue)));
 
     const MemoryCell& cell = expr.getValue();
-    EXPECT_EQ(cell.getType(), DataType::NULL_TYPE);
+    EXPECT_EQ(cell.getType(), DataType::INT);
+    EXPECT_EQ(cell.getAs<int>(), 2);
 
     const MemoryCell& varA = variableHandler->getValue("a");
     auto retrievedVarA = varA.getAs<int>();
