@@ -1,5 +1,6 @@
 #pragma once
 #include "MemoryCell.hpp"
+#include <functional>
 #include <memory>
 #include <variant>
 
@@ -39,21 +40,11 @@ private:
 /**
  * Class containing both returnable and terminal expr
  */
-template <class... ExprVariant>
-struct ExprVariantVisitor : ExprVariant... {
-    using ExprVariant::operator()...;
-};
 class Expr {
 public:
-    Expr(std::unique_ptr<ReturnableExpr> returnableExpr)
-        : _expr(std::move(returnableExpr))
-    {
-    }
+    Expr(std::unique_ptr<ReturnableExpr> returnableExpr);
 
-    Expr(std::unique_ptr<TerminalExpr> terminalExpr)
-        : _expr(std::move(terminalExpr))
-    {
-    }
+    Expr(std::unique_ptr<TerminalExpr> terminalExpr);
 
     const std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>, std::unique_ptr<FunctionReturnExpr>>& getVariant() const { return _expr; }
     template <typename T>
@@ -61,6 +52,17 @@ public:
     {
         return *std::get<std::unique_ptr<T>>(_expr);
     }
+
+    /**
+     * Function for visiting the variant
+     *
+     * @param returnableExprFunc Function for handling returnable expressions
+     * @param terminalExprFunc Function for handling terminal expressions
+     * @param functionReturnExprFunc Function for handling function return expressions
+    */
+    void visit(std::function<void(std::unique_ptr<ReturnableExpr>&)> returnableExprFunc, 
+               std::function<void(std::unique_ptr<TerminalExpr>&)> terminalExprFunc, 
+               std::function<void(std::unique_ptr<FunctionReturnExpr>&)> functionReturnExprFunc);
 
 private:
     std::variant<std::unique_ptr<ReturnableExpr>, std::unique_ptr<TerminalExpr>, std::unique_ptr<FunctionReturnExpr>> _expr;
